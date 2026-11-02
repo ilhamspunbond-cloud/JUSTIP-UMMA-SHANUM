@@ -10,6 +10,10 @@
             filter: grayscale(100%) blur(1px);
             opacity: 0.6;
         }
+        /* Memastikan seluruh gambar upload transparan & rapi */
+        img {
+            background-color: transparent !important;
+        }
     </style>
 </head>
 <body id="app-body" class="bg-gray-100 font-sans text-gray-800 bg-cover bg-center bg-fixed" style="background-image: none;">
@@ -66,10 +70,10 @@
                         <label class="text-xs font-semibold text-gray-600">Alamat Lengkap / Wilayah</label>
                         <textarea id="auth-address" placeholder="Cth: Jl. Raya Rajeg No.10, Tangerang" class="w-full p-2 border rounded-lg text-sm"></textarea>
                     </div>
-                    <!-- UPLOAD LOGO TOKO KHUSUS PENJUAL -->
+                    <!-- UPLOAD LOGO TOKO KHUSUS PENJUAL (TRANSPARAN) -->
                     <div id="field-store-logo" class="hidden">
-                        <label class="text-xs font-semibold text-gray-600">Upload Logo Toko (PNG/JPG)</label>
-                        <input type="file" id="auth-store-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
+                        <label class="text-xs font-semibold text-gray-600">Upload Logo Toko (PNG Transparan / JPG)</label>
+                        <input type="file" id="auth-store-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
                     </div>
                     <div id="field-bank" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Info Rekening / E-Wallet (Pencairan Dana)</label>
@@ -171,7 +175,7 @@
         <section id="view-seller-dashboard" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <div id="seller-dashboard-logo" class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 border"></div>
+                    <div id="seller-dashboard-logo" class="w-12 h-12 rounded-full overflow-hidden bg-transparent flex-shrink-0 border"></div>
                     <div>
                         <h3 id="seller-shop-name" class="font-bold text-lg">Toko Saya</h3>
                         <p id="seller-shop-category" class="text-xs text-gray-500 font-medium">Kategori: -</p>
@@ -189,8 +193,8 @@
                     <input type="text" id="prod-name" placeholder="Nama Menu/Produk" required class="w-full p-2 border rounded-lg text-sm">
                     <input type="number" id="prod-price" placeholder="Harga Dasar / Modal (Rp)" required class="w-full p-2 border rounded-lg text-sm">
                     <div>
-                        <label class="text-xs font-semibold text-gray-600">Upload Foto Produk</label>
-                        <input type="file" id="prod-image-file" accept="image/*" required class="w-full p-1.5 border rounded-lg text-xs mt-1 bg-white">
+                        <label class="text-xs font-semibold text-gray-600">Upload Foto Produk (PNG Transparan)</label>
+                        <input type="file" id="prod-image-file" accept="image/*" required class="w-full p-1.5 border rounded-lg text-xs mt-1 bg-transparent">
                     </div>
                     <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg text-xs font-semibold">Simpan Produk</button>
                 </form>
@@ -249,24 +253,24 @@
                     <input type="text" id="admin-setting-rajaongkir" placeholder="Masukkan API Key RajaOngkir..." class="w-full p-2 border rounded-lg text-sm">
                 </div>
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek / Marketplace (PNG / GIF)</label>
-                    <input type="file" id="admin-marketplace-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
+                    <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek / Marketplace (PNG Transparan / GIF)</label>
+                    <input type="file" id="admin-marketplace-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
                 </div>
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🎨 Upload Logo Banner & Wallpaper</label>
-                    <div><span class="text-[11px] text-gray-600 font-semibold">Logo Header Navbar:</span><input type="file" id="admin-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
-                    <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Wallpaper Background:</span><input type="file" id="admin-wallpaper-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
+                    <div><span class="text-[11px] text-gray-600 font-semibold">Logo Header Navbar (PNG Transparan):</span><input type="file" id="admin-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
+                    <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Wallpaper Background:</span><input type="file" id="admin-wallpaper-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
                 </div>
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🎁 Pengaturan Iklan Banner / GIF Promo</label>
-                    <div><span class="text-[11px] text-gray-600 font-semibold">Banner Promo ATAS (JPG/PNG/GIF):</span><input type="file" id="admin-promo-top-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
-                    <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Banner Promo BAWAH (JPG/PNG/GIF):</span><input type="file" id="admin-promo-bottom-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
+                    <div><span class="text-[11px] text-gray-600 font-semibold">Banner Promo ATAS (JPG/PNG/GIF):</span><input type="file" id="admin-promo-top-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
+                    <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Banner Promo BAWAH (JPG/PNG/GIF):</span><input type="file" id="admin-promo-bottom-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
                 </div>
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">📂 Kelola Kategori Etalase & Ikon</label>
+                    <label class="text-xs font-bold text-emerald-700">📂 Kelola Kategori Etalase & Ikon (PNG Transparan)</label>
                     <div class="space-y-2 bg-gray-50 p-3 rounded border">
                         <input type="text" id="new-category-name" placeholder="Nama Kategori" class="w-full p-1.5 border rounded text-xs">
-                        <input type="file" id="new-category-icon-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
+                        <input type="file" id="new-category-icon-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
                         <button onclick="addNewCategoryWithIcon()" class="w-full bg-blue-600 text-white py-1.5 rounded text-xs font-semibold">Tambah Kategori + Ikon</button>
                     </div>
                     <div id="admin-category-list" class="space-y-2 mt-2 text-xs"></div>
@@ -314,6 +318,7 @@
             audio.play().catch(e => console.log("Audio blocked"));
         }
 
+        // Kompresi PNG dengan tetap mempertahankan transparansi alpha channel
         function compressImage(file, maxWidth, maxHeight, quality, callback) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -327,8 +332,12 @@
                     const canvas = document.createElement('canvas');
                     canvas.width = width; canvas.height = height;
                     const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, width, height); // Bersihkan canvas untuk menjaga transparansi PNG
                     ctx.drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/jpeg', quality));
+                    
+                    // Jika file berjenis PNG, gunakan format image/png agar transparan tidak hilang
+                    let mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+                    callback(canvas.toDataURL(mimeType, quality));
                 }
             }
         }
@@ -344,7 +353,7 @@
             const marketLogoDisplay = document.getElementById('auth-brand-logo-display');
             const authFormLogo = document.getElementById('auth-form-brand-logo');
             if (appConfig.marketLogoBase64) {
-                let logoHtml = `<img src="${appConfig.marketLogoBase64}" class="h-14 max-w-[240px] object-contain filter drop-shadow">`;
+                let logoHtml = `<img src="${appConfig.marketLogoBase64}" class="h-14 max-w-[240px] object-contain bg-transparent filter drop-shadow">`;
                 marketLogoDisplay.innerHTML = logoHtml;
                 authFormLogo.innerHTML = logoHtml;
             } else {
@@ -355,7 +364,7 @@
 
             const logoContainer = document.getElementById('brand-logo-container');
             if (appConfig.logoBannerBase64) {
-                logoContainer.innerHTML = `<img src="${appConfig.logoBannerBase64}" class="h-9 max-w-[190px] object-contain filter drop-shadow">`;
+                logoContainer.innerHTML = `<img src="${appConfig.logoBannerBase64}" class="h-9 max-w-[190px] object-contain bg-transparent filter drop-shadow">`;
             } else {
                 logoContainer.innerHTML = `<span class="text-xl font-bold">🛒 ${appConfig.brandName}</span>`;
             }
@@ -453,7 +462,7 @@
                 if (activeRole === 'seller') {
                     const storeLogoFile = document.getElementById('auth-store-logo-file');
                     if (storeLogoFile.files && storeLogoFile.files[0]) {
-                        compressImage(storeLogoFile.files[0], 200, 200, 0.7, function(base64Logo) {
+                        compressImage(storeLogoFile.files[0], 200, 200, 0.9, function(base64Logo) {
                             saveNewUser(name, wa, pass, address, base64Logo);
                         });
                         return;
@@ -500,12 +509,12 @@
             
             const topBannerContainer = document.getElementById('promo-banner-top-container');
             if (appConfig.promoTopBase64) {
-                topBannerContainer.innerHTML = `<div class="mb-3 rounded-xl overflow-hidden shadow-md"><img src="${appConfig.promoTopBase64}" class="w-full h-auto object-cover max-h-40"></div>`;
+                topBannerContainer.innerHTML = `<div class="mb-3 rounded-xl overflow-hidden shadow-md bg-transparent"><img src="${appConfig.promoTopBase64}" class="w-full h-auto object-cover max-h-40 bg-transparent"></div>`;
             } else { topBannerContainer.innerHTML = ''; }
 
             const bottomBannerContainer = document.getElementById('promo-banner-bottom-container');
             if (appConfig.promoBottomBase64) {
-                bottomBannerContainer.innerHTML = `<div class="mt-4 rounded-xl overflow-hidden shadow-md"><img src="${appConfig.promoBottomBase64}" class="w-full h-auto object-cover max-h-40"></div>`;
+                bottomBannerContainer.innerHTML = `<div class="mt-4 rounded-xl overflow-hidden shadow-md bg-transparent"><img src="${appConfig.promoBottomBase64}" class="w-full h-auto object-cover max-h-40 bg-transparent"></div>`;
             } else { bottomBannerContainer.innerHTML = ''; }
 
             const filterContainer = document.getElementById('category-filters-container');
@@ -513,7 +522,7 @@
             
             appConfig.categories.forEach(cat => {
                 let cName = typeof cat === 'string' ? cat : cat.name;
-                let cIcon = (typeof cat === 'object' && cat.icon) ? `<img src="${cat.icon}" class="w-8 h-8 object-cover rounded-full mb-1">` : `<span class="text-lg">🏷️</span>`;
+                let cIcon = (typeof cat === 'object' && cat.icon) ? `<img src="${cat.icon}" class="w-8 h-8 object-cover rounded-full mb-1 bg-transparent">` : `<span class="text-lg">🏷️</span>`;
                 const isActive = selectedCategoryFilter === cName;
                 filterContainer.innerHTML += `
                     <button onclick="filterByCategory('${cName}')" class="flex flex-col items-center p-2 rounded-xl text-xs font-semibold min-w-[70px] ${isActive ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}">
@@ -528,7 +537,6 @@
             let sellers = users.filter(u => u.role === 'seller');
             if (selectedCategoryFilter !== 'Semua') sellers = sellers.filter(s => s.category === selectedCategoryFilter);
 
-            // SIMULASI URUTKAN TOKO BERDASARKAN KEDEKATAN (Wilayah Pembeli vs Toko)
             let userDefaultCity = currentUser.addresses && currentUser.addresses[0] ? currentUser.addresses[0].detail.toLowerCase() : '';
             sellers.sort((a, b) => {
                 let aAddr = a.addresses && a.addresses[0] ? a.addresses[0].detail.toLowerCase() : '';
@@ -546,7 +554,7 @@
                     let storeReviews = reviews.filter(r => r.storeId === seller.id);
                     let avgRating = storeReviews.length > 0 ? (storeReviews.reduce((sum, r) => sum + r.rating, 0) / storeReviews.length).toFixed(1) : 'Belum ada rating';
                     const statusBadge = isOpen ? '<span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-semibold">BUKA</span>' : '<span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded font-semibold">TUTUP</span>';
-                    let storeLogoHtml = seller.storeLogo ? `<img src="${seller.storeLogo}" class="w-12 h-12 object-cover rounded-full mr-3 border flex-shrink-0">` : `<div class="w-12 h-12 bg-emerald-100 text-emerald-700 font-bold rounded-full mr-3 flex items-center justify-center flex-shrink-0">🛒</div>`;
+                    let storeLogoHtml = seller.storeLogo ? `<img src="${seller.storeLogo}" class="w-12 h-12 object-cover rounded-full mr-3 border bg-transparent flex-shrink-0">` : `<div class="w-12 h-12 bg-emerald-100 text-emerald-700 font-bold rounded-full mr-3 flex items-center justify-center flex-shrink-0">🛒</div>`;
 
                     container.innerHTML += `
                         <div onclick="openStoreCatalog('${seller.id}')" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md cursor-pointer transition hover:shadow-lg ${isOpen ? '' : 'shop-closed'} flex items-center">
@@ -633,8 +641,8 @@
                             </select>
                             <input type="text" id="rev_text_${ord.id}" placeholder="Tulis komentar ulasan..." class="w-full p-1 border rounded text-xs">
                             <div>
-                                <label class="text-[10px] font-semibold text-gray-600">Upload Foto Fisik Produk (Auto-Compress):</label>
-                                <input type="file" id="rev_file_${ord.id}" accept="image/*" class="w-full p-1 border rounded text-xs bg-white">
+                                <label class="text-[10px] font-semibold text-gray-600">Upload Foto Fisik Produk (Transparan):</label>
+                                <input type="file" id="rev_file_${ord.id}" accept="image/*" class="w-full p-1 border rounded text-xs bg-transparent">
                             </div>
                             <button onclick="submitReviewWithPhoto('${ord.id}', '${ord.storeId}')" class="w-full bg-purple-600 text-white py-1 rounded text-xs font-semibold">Kirim Ulasan & Foto</button>
                         </div>
@@ -662,7 +670,7 @@
             if (!comment) { alert("Tuliskan komentar ulasan Anda!"); return; }
 
             if (fileInput.files && fileInput.files[0]) {
-                compressImage(fileInput.files[0], 400, 400, 0.6, function(base64Photo) {
+                compressImage(fileInput.files[0], 400, 400, 0.9, function(base64Photo) {
                     saveReviewData(orderId, storeId, rating, comment, base64Photo);
                 });
             } else {
@@ -695,7 +703,7 @@
             
             let storeReviews = reviews.filter(r => r.storeId === sellerId);
             let avgRating = storeReviews.length > 0 ? (storeReviews.reduce((sum, r) => sum + r.rating, 0) / storeReviews.length).toFixed(1) : 'Belum ada';
-            let storeLogoHtml = seller.storeLogo ? `<img src="${seller.storeLogo}" class="w-14 h-14 object-cover rounded-full border shadow-sm">` : `<div class="w-14 h-14 bg-emerald-100 text-emerald-700 font-bold rounded-full flex items-center justify-center">🛒</div>`;
+            let storeLogoHtml = seller.storeLogo ? `<img src="${seller.storeLogo}" class="w-14 h-14 object-cover rounded-full border bg-transparent shadow-sm">` : `<div class="w-14 h-14 bg-emerald-100 text-emerald-700 font-bold rounded-full flex items-center justify-center">🛒</div>`;
 
             document.getElementById('store-catalog-header').innerHTML = `
                 <div class="flex items-center space-x-3 mb-2">
@@ -716,7 +724,7 @@
             } else {
                 storeReviews.slice().reverse().forEach(rev => {
                     let stars = '⭐'.repeat(rev.rating);
-                    let photoHtml = rev.photo ? `<div class="mt-1"><img src="${rev.photo}" class="w-20 h-20 object-cover rounded border"></div>` : '';
+                    let photoHtml = rev.photo ? `<div class="mt-1"><img src="${rev.photo}" class="w-20 h-20 object-cover rounded border bg-transparent"></div>` : '';
                     revContainer.innerHTML += `
                         <div class="border p-2 rounded bg-white space-y-1">
                             <div class="flex justify-between font-bold text-gray-700"><span>${rev.buyerName}</span><span>${stars}</span></div>
@@ -746,7 +754,7 @@
             storeProds.forEach(prod => {
                 const markupPrice = prod.basePrice + 10000;
                 const buyBtn = isOpen ? `<button onclick="addToCart('${prod.id}', '${prod.name}', ${prod.basePrice}, ${markupPrice})" class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg font-semibold">Tambah</button>` : `<span class="text-xs text-red-500">Tutup</span>`;
-                let imgTag = prod.image ? `<img src="${prod.image}" class="w-16 h-16 object-cover rounded-lg mr-3 shadow-sm">` : `<div class="w-16 h-16 bg-gray-200 rounded-lg mr-3 flex items-center justify-center text-xs text-gray-400">No Img</div>`;
+                let imgTag = prod.image ? `<img src="${prod.image}" class="w-16 h-16 object-cover rounded-lg mr-3 bg-transparent shadow-sm">` : `<div class="w-16 h-16 bg-gray-200 rounded-lg mr-3 flex items-center justify-center text-xs text-gray-400">No Img</div>`;
                 prodContainer.innerHTML += `
                     <div class="bg-white/95 backdrop-blur p-3 rounded-xl shadow-sm flex items-center justify-between">
                         <div class="flex items-center">
@@ -813,7 +821,7 @@
             
             const sellerLogoContainer = document.getElementById('seller-dashboard-logo');
             if(currentUser.storeLogo) {
-                sellerLogoContainer.innerHTML = `<img src="${currentUser.storeLogo}" class="w-full h-full object-cover">`;
+                sellerLogoContainer.innerHTML = `<img src="${currentUser.storeLogo}" class="w-full h-full object-cover bg-transparent">`;
             } else {
                 sellerLogoContainer.innerHTML = `<div class="w-full h-full flex items-center justify-center font-bold text-emerald-700 bg-emerald-100">🛒</div>`;
             }
@@ -841,7 +849,7 @@
             const fileInput = document.getElementById('prod-image-file');
 
             if (fileInput.files && fileInput.files[0]) {
-                compressImage(fileInput.files[0], 500, 500, 0.7, function(base64Img) {
+                compressImage(fileInput.files[0], 500, 500, 0.9, function(base64Img) {
                     let allProducts = JSON.parse(localStorage.getItem('umah_products')) || [];
                     allProducts.push({ id: 'prd_' + Date.now(), sellerId: currentUser.id, name, basePrice, image: base64Img });
                     localStorage.setItem('umah_products', JSON.stringify(allProducts));
@@ -933,7 +941,7 @@
             const iconFile = document.getElementById('new-category-icon-file');
             if (!name) { alert("Nama kategori wajib diisi!"); return; }
             if (iconFile.files && iconFile.files[0]) {
-                compressImage(iconFile.files[0], 150, 150, 0.7, function(base64Icon) {
+                compressImage(iconFile.files[0], 150, 150, 0.9, function(base64Icon) {
                     appConfig.categories.push({ name: name, icon: base64Icon });
                     localStorage.setItem('umah_config', JSON.stringify(appConfig));
                     renderAdminCategoryList();
@@ -984,19 +992,19 @@
                 alert("Pengaturan admin berhasil disimpan!");
             } else {
                 if(marketLogoFile.files[0]) {
-                    compressImage(marketLogoFile.files[0], 500, 200, 0.8, function(base64) {
+                    compressImage(marketLogoFile.files[0], 500, 200, 0.9, function(base64) {
                         appConfig.marketLogoBase64 = base64;
                         checkDone();
                     });
                 }
                 if(topPromoFile.files[0]) {
-                    compressImage(topPromoFile.files[0], 600, 250, 0.75, function(base64) {
+                    compressImage(topPromoFile.files[0], 600, 250, 0.9, function(base64) {
                         appConfig.promoTopBase64 = base64;
                         checkDone();
                     });
                 }
                 if(bottomPromoFile.files[0]) {
-                    compressImage(bottomPromoFile.files[0], 600, 250, 0.75, function(base64) {
+                    compressImage(bottomPromoFile.files[0], 600, 250, 0.9, function(base64) {
                         appConfig.promoBottomBase64 = base64;
                         checkDone();
                     });
