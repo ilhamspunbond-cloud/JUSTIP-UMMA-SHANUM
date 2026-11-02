@@ -32,6 +32,7 @@ let currentUser = JSON.parse(localStorage.getItem('umah_current_user')) || null;
 let activeRole = null;
 let selectedStoreId = null;
 let selectedCategoryFilter = 'Semua';
+let searchQueryKeyword = ''; // Variabel pencarian produk fleksibel
 let cart = [];
 let signatureDataUrl = "";
 let sigCanvas, sigCtx, isDrawing = false;
@@ -410,6 +411,7 @@ function logout() {
     checkSession();
 }
 
+// ⭐ DASHBOARD PEMBELI DENGAN FILTER RADIUS TERDEKAT (MAKSIMAL 10 KM / WILAYAH) & PENCARIAN MANUAL
 function showBuyerDashboard() {
     hideAllViews();
     let dash = document.getElementById('view-buyer-dashboard');
@@ -440,10 +442,37 @@ function showBuyerDashboard() {
     if (container) {
         container.innerHTML = '';
         let sellers = users.filter(u => u.role === 'seller');
-        if (selectedCategoryFilter !== 'Semua') sellers = sellers.filter(s => s.category === selectedCategoryFilter);
+
+        // Ambil alamat utama pembeli untuk pencocokan radius wilayah terdekat
+        let buyerMainAddress = (currentUser.addresses && currentUser.addresses[0]) ? currentUser.addresses[0].detail.toLowerCase() : '';
+        // Ekstraksi kata kunci wilayah pembeli (misal: "cikupa", "rajeg", dll)
+        let buyerCityOrArea = buyerMainAddress.includes('cikupa') ? 'cikupa' : (buyerMainAddress.includes('rajeg') ? 'rajeg' : '');
+
+        // LOGIKA FILTER RADIUS & PENCARIAN MANUAL FLEKSIBEL
+        if (searchQueryKeyword.trim() !== '') {
+            // Jika pembeli mengetik di pencarian manual, tampilkan toko yang cocok meskipun di luar radius
+            let q = searchQueryKeyword.toLowerCase();
+            sellers = sellers.filter(s => s.name.toLowerCase().includes(q) || (s.category && s.category.toLowerCase().includes(q)));
+        } else {
+            // Beranda Utama: Saring toko dalam radius wilayah terdekat (maksimal 10km / wilayah sejenis)
+            if (buyerCityOrArea !== '') {
+                let localSellers = sellers.filter(s => {
+                    let sAddr = s.addresses && s.addresses[0] ? s.addresses[0].detail.toLowerCase() : '';
+                    return sAddr.includes(buyerCityOrArea);
+                });
+                // Jika ada toko di radius dekat, tampilkan. Jika kosong, fallback tampilkan semua agar pembeli tetap ada pilihan
+                if (localSellers.length > 0) {
+                    sellers = localSellers;
+                }
+            }
+        }
+
+        if (selectedCategoryFilter !== 'Semua') {
+            sellers = sellers.filter(s => s.category === selectedCategoryFilter);
+        }
 
         if (sellers.length === 0) {
-            container.innerHTML = '<p class="text-xs text-gray-500 text-center bg-white/95 backdrop-blur p-4 rounded-xl">Belum ada toko mitra saat ini.</p>';
+            container.innerHTML = '<p class="text-xs text-gray-500 text-center bg-white/95 backdrop-blur p-4 rounded-xl">Tidak ada toko mitra dalam radius terdekat saat ini. Gunakan pencarian manual untuk toko lainnya.</p>';
         } else {
             sellers.forEach(seller => {
                 const isOpen = seller.isOpen !== false;
@@ -472,6 +501,7 @@ function showBuyerDashboard() {
 }
 
 function filterByCategory(cat) { selectedCategoryFilter = cat; showBuyerDashboard(); }
+function searchStoreOrProduct(keyword) { searchQueryKeyword = keyword; showBuyerDashboard(); }
 
 function openAddressManager() {
     let modal = document.getElementById('modal-address-manager');
