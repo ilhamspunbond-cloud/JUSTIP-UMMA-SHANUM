@@ -14,7 +14,7 @@
 </head>
 <body id="app-body" class="bg-gray-100 font-sans text-gray-800 bg-cover bg-center bg-fixed" style="background-image: none;">
 
-    <!-- HEADER / NAVBAR DENGAN LOGO GAMBAR BANNER -->
+    <!-- HEADER / NAVBAR -->
     <header id="app-header" class="bg-emerald-600 text-white p-3 shadow-md flex justify-between items-center sticky top-0 z-50 transition-all">
         <div class="flex items-center space-x-2">
             <div id="brand-logo-container" class="flex items-center">
@@ -23,7 +23,7 @@
         </div>
         <div class="flex items-center space-x-3">
             <span id="user-info-display" class="text-xs bg-black/20 px-3 py-1 rounded-full">Belum Login</span>
-            <button onclick="openAdminLogin()" class="bg-black/20 p-2 rounded-full hover:bg-black/30 transition" title="Pengaturan Admin">
+            <button onclick="openAdminOrSalesLogin()" class="bg-black/20 p-2 rounded-full hover:bg-black/30 transition" title="Pengaturan Admin & Cek Komisi Sales">
                 ⚙️
             </button>
         </div>
@@ -32,7 +32,7 @@
     <!-- KONTEN UTAMA -->
     <main class="max-w-md mx-auto p-4 min-h-screen pb-20">
 
-        <!-- 1. HALAMAN AUTH -->
+        <!-- 1. HALAMAN AUTH (Hanya untuk Pembeli & Penjual) -->
         <section id="view-auth" class="space-y-4 mt-10">
             <div class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md text-center">
                 <h2 id="login-brand-title" class="text-2xl font-bold text-emerald-600 mb-2">Jastip Umah Sanum</h2>
@@ -41,7 +41,6 @@
                 <div class="space-y-3">
                     <button onclick="showLoginForm('buyer')" class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700">Masuk sebagai Pembeli</button>
                     <button onclick="showLoginForm('seller')" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Masuk sebagai Penjual (Mitra)</button>
-                    <button onclick="showLoginForm('sales')" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700">Masuk sebagai Sales / Pemasar</button>
                 </div>
             </div>
 
@@ -155,21 +154,21 @@
             </div>
         </section>
 
-        <!-- 5. HALAMAN DASHBOARD SALES -->
+        <!-- 5. HALAMAN DASHBOARD SALES (PRIVAT VIA RODA GIGI) -->
         <section id="view-sales-dashboard" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md flex justify-between items-center">
                 <div>
-                    <h3 id="sales-dashboard-name" class="font-bold text-lg text-purple-700">Dashboard Sales</h3>
-                    <p class="text-xs text-gray-500">Pencapaian & Komisi Pemasar</p>
+                    <h3 id="sales-dashboard-name" class="font-bold text-lg text-purple-700">Dashboard Komisi Sales</h3>
+                    <p class="text-xs text-gray-500">Riwayat Komisi & Pencairan Dana</p>
                 </div>
-                <button onclick="logout()" class="text-xs text-gray-500">Keluar</button>
+                <button onclick="backFromSalesPanel()" class="text-xs text-gray-500 font-semibold">Tutup</button>
             </div>
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
-                <h4 class="font-bold text-sm text-gray-700">📊 Rekap Komisi Ganda (Pembeli & Penjual)</h4>
+                <h4 class="font-bold text-sm text-gray-700">📊 Rekap Komisi Jaringan Anda</h4>
                 <div id="sales-personal-recap" class="space-y-2 text-xs bg-purple-50 p-3 rounded border"></div>
             </div>
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
-                <h4 class="font-bold text-sm text-emerald-700">📄 Invoice Resmi Komisi Sales</h4>
+                <h4 class="font-bold text-sm text-emerald-700">📄 Riwayat & Invoice Pencairan Komisi</h4>
                 <div id="sales-invoice-container" class="space-y-3 text-xs"></div>
             </div>
         </section>
@@ -178,7 +177,7 @@
         <section id="view-admin-panel" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
                 <div class="flex justify-between items-center">
-                    <h3 class="font-bold text-md text-emerald-600">⚙️ Panel Admin & Pengaturan Brand</h3>
+                    <h3 class="font-bold text-md text-emerald-600">⚙️ Panel Admin & Keamanan</h3>
                     <button onclick="backFromAdmin()" class="text-xs text-gray-500">Tutup</button>
                 </div>
                 <hr>
@@ -191,11 +190,23 @@
                     <textarea id="admin-setting-address" class="w-full p-2 border rounded-lg text-sm mt-1"></textarea>
                 </div>
 
+                <!-- PENGATURAN KATA SANDI ADMIN -->
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">🔐 Ganti Kata Sandi Admin</label>
+                    <input type="text" id="admin-setting-pass" placeholder="Kata Sandi Baru Admin" class="w-full p-2 border rounded-lg text-sm">
+                </div>
+
+                <!-- PENGATURAN RAJAONGKIR API -->
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">🌐 Pengaturan RajaOngkir (API Key)</label>
+                    <input type="text" id="admin-setting-rajaongkir" placeholder="Masukkan API Key RajaOngkir..." class="w-full p-2 border rounded-lg text-sm">
+                    <p class="text-[10px] text-gray-500">Digunakan untuk integrasi cek ongkir otomatis antar kecamatan/kota.</p>
+                </div>
+
                 <!-- PENGATURAN LOGO BANNER & WALLPAPER -->
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🎨 Ganti Logo Gambar Banner & Wallpaper</label>
                     <input type="text" id="admin-setting-logo-banner" placeholder="URL Gambar Logo Banner (Cth: https://...)" class="w-full p-2 border rounded-lg text-sm">
-                    <p class="text-[10px] text-gray-500">Begitu URL dimasukkan dan disimpan, teks header otomatis berubah menjadi gambar logo!</p>
                     <input type="text" id="admin-setting-wallpaper" placeholder="URL Link Gambar Wallpaper (Cth: https://...)" class="w-full p-2 border rounded-lg text-sm mt-1">
                     <select id="admin-setting-theme" class="w-full p-2 border rounded-lg text-sm mt-1">
                         <option value="bg-emerald-600">Hijau Emerald (Default)</option>
@@ -230,7 +241,7 @@
                     </div>
                 </div>
 
-                <!-- KELOLA AKUN SALES -->
+                <!-- KELOLA AKUN SALES (SANDI DISAMARKAN) -->
                 <div class="pt-2 border-t space-y-3">
                     <label class="text-xs font-bold text-emerald-700">Kelola Akun Sales / Pemasar</label>
                     <div class="space-y-2 bg-gray-50 p-3 rounded border">
@@ -266,6 +277,8 @@
         let appConfig = JSON.parse(localStorage.getItem('umah_config')) || {
             brandName: "Jastip Umah Sanum",
             brandAddress: "Kantor Pusat Rajeg, Tangerang",
+            adminPass: "Rojak123",
+            rajaOngkirKey: "",
             logoBannerUrl: "",
             themeColor: "bg-emerald-600",
             wallpaperUrl: "",
@@ -313,12 +326,10 @@
 
         function applyConfig() {
             document.getElementById('app-title').innerText = appConfig.brandName;
-            document.getElementById('login-brand-title').innerText = appConfig.brandName;
             
-            // Mengubah Teks Header Menjadi Gambar Logo Banner secara Otomatis
             const logoContainer = document.getElementById('brand-logo-container');
             if (appConfig.logoBannerUrl) {
-                logoContainer.innerHTML = `<img src="${appConfig.logoBannerUrl}" alt="${appConfig.brandName}" class="h-9 max-w-[190px] object-contain filter drop-shadow">`;
+                logoContainer.innerHTML = `<img src="${appConfig.logoBannerUrl}" alt="${appConfig.brandName}" class="h-8 max-w-[170px] object-contain filter drop-shadow">`;
             } else {
                 logoContainer.innerHTML = `<span class="text-xl font-bold">🛒 ${appConfig.brandName}</span>`;
             }
@@ -335,6 +346,8 @@
 
             document.getElementById('admin-setting-brand').value = appConfig.brandName;
             document.getElementById('admin-setting-address').value = appConfig.brandAddress;
+            document.getElementById('admin-setting-pass').value = appConfig.adminPass || 'Rojak123';
+            document.getElementById('admin-setting-rajaongkir').value = appConfig.rajaOngkirKey || '';
             document.getElementById('admin-setting-logo-banner').value = appConfig.logoBannerUrl || '';
             document.getElementById('admin-setting-wallpaper').value = appConfig.wallpaperUrl || '';
             document.getElementById('admin-setting-theme').value = appConfig.themeColor || 'bg-emerald-600';
@@ -351,7 +364,6 @@
                 hideAllViews();
                 if (currentUser.role === 'buyer') showBuyerDashboard();
                 else if (currentUser.role === 'seller') showSellerDashboard();
-                else if (currentUser.role === 'sales') showSalesDashboard();
             }
         }
 
@@ -369,7 +381,7 @@
             activeRole = role;
             document.getElementById('auth-role').value = role;
             document.getElementById('dynamic-auth-form').classList.remove('hidden');
-            document.getElementById('auth-form-title').innerText = role === 'buyer' ? 'Masuk Pembeli' : role === 'seller' ? 'Masuk Penjual (Mitra)' : 'Masuk Sales / Pemasar';
+            document.getElementById('auth-form-title').innerText = role === 'buyer' ? 'Masuk Pembeli' : 'Masuk Penjual (Mitra)';
             
             const salesRefDiv = document.getElementById('field-sales-ref');
             const salesSelect = document.getElementById('auth-sales-ref');
@@ -394,11 +406,6 @@
                 const catSelect = document.getElementById('auth-category');
                 catSelect.innerHTML = '';
                 appConfig.categories.forEach(cat => catSelect.innerHTML += `<option value="${cat}">${cat}</option>`);
-            } else if (role === 'sales') {
-                salesRefDiv.classList.add('hidden');
-                document.getElementById('field-category').classList.add('hidden');
-                document.getElementById('field-address').classList.add('hidden');
-                document.getElementById('field-bank').classList.add('hidden');
             }
         }
 
@@ -414,30 +421,24 @@
             const bank = document.getElementById('auth-bank-info').value;
             const referredBy = document.getElementById('auth-sales-ref').value;
 
-            if (activeRole === 'sales') {
-                let foundSales = appConfig.salesAccounts.find(s => s.name.toLowerCase() === name.toLowerCase() && s.pass === pass);
-                if (!foundSales) { alert("Nama sales atau kata sandi salah!"); return; }
-                currentUser = { id: foundSales.id, name: foundSales.name, wa: foundSales.wa, role: 'sales' };
-            } else {
-                let user = users.find(u => u.wa === wa && u.role === activeRole);
-                if (!user) {
-                    user = {
-                        id: 'usr_' + Date.now(),
-                        name: name,
-                        wa: wa,
-                        pass: pass,
-                        role: activeRole,
-                        category: category,
-                        address: address,
-                        bank: bank,
-                        referredBy: referredBy,
-                        isOpen: true
-                    };
-                    users.push(user);
-                    localStorage.setItem('umah_users', JSON.stringify(users));
-                } else if (user.pass !== pass) { alert("Kata sandi salah!"); return; }
-                currentUser = user;
-            }
+            let user = users.find(u => u.wa === wa && u.role === activeRole);
+            if (!user) {
+                user = {
+                    id: 'usr_' + Date.now(),
+                    name: name,
+                    wa: wa,
+                    pass: pass,
+                    role: activeRole,
+                    category: category,
+                    address: address,
+                    bank: bank,
+                    referredBy: referredBy,
+                    isOpen: true
+                };
+                users.push(user);
+                localStorage.setItem('umah_users', JSON.stringify(users));
+            } else if (user.pass !== pass) { alert("Kata sandi salah!"); return; }
+            currentUser = user;
 
             localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
             checkSession();
@@ -690,16 +691,16 @@
             });
         }
 
-        // --- DASHBOARD SALES ---
-        function showSalesDashboard() {
+        // --- DASHBOARD SALES (VIA RODA GIGI) ---
+        function showSalesDashboard(salesObj) {
             hideAllViews();
             document.getElementById('view-sales-dashboard').classList.remove('hidden');
-            document.getElementById('sales-dashboard-name').innerText = "Dashboard Sales: " + currentUser.name;
+            document.getElementById('sales-dashboard-name').innerText = "Dashboard Komisi: " + salesObj.name;
             
             const recap = document.getElementById('sales-personal-recap');
             let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
             
-            let myReferredOrders = allOrders.filter(o => o.buyerReferredBy === currentUser.name || o.sellerReferredBy === currentUser.name);
+            let myReferredOrders = allOrders.filter(o => o.buyerReferredBy === salesObj.name || o.sellerReferredBy === salesObj.name);
             let totalCount = myReferredOrders.length;
             
             let percentage = appConfig.commPercentage || 30;
@@ -707,9 +708,11 @@
             let totalCommission = (totalProfit * percentage) / 100;
             
             recap.innerHTML = `
-                <p><b>Nama Pemasar:</b> ${currentUser.name}</p>
-                <p><b>Total Order Terhubung (Pembeli/Penjual):</b> ${totalCount} Pesanan</p>
-                <p><b>Akumulasi Keuntungan Bersih:</b> Rp${totalProfit.toLocaleString()}</p>
+                <p><b>Nama Pemasar:</b> ${salesObj.name}</p>
+                <p><b>WhatsApp:</b> ${salesObj.wa}</p>
+                <p><b>Info Rekening:</b> ${salesObj.bank || 'Belum diisi'}</p>
+                <p><b>Total Order Terhubung:</b> ${totalCount} Pesanan</p>
+                <p><b>Akumulasi Keuntungan Bersih Jaringan:</b> Rp${totalProfit.toLocaleString()}</p>
                 <p class="text-emerald-700 font-bold"><b>Total Komisi Anda (${percentage}%):</b> Rp${totalCommission.toLocaleString()}</p>
             `;
 
@@ -717,14 +720,14 @@
             invContainer.innerHTML = '';
             
             let salesPayouts = JSON.parse(localStorage.getItem('umah_sales_payouts')) || {};
-            let isPaid = salesPayouts[currentUser.name]?.isPaid || false;
-            let proof = salesPayouts[currentUser.name]?.proof || '';
+            let isPaid = salesPayouts[salesObj.name]?.isPaid || false;
+            let proof = salesPayouts[salesObj.name]?.proof || '';
 
             let badge = isPaid ? '<span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded font-bold">SUDAH LUNAS / DIBAYARKAN</span>' : '<span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-bold">Belum Dibayar Admin</span>';
             let tableRows = myReferredOrders.map(o => {
                 let ordProfit = o.netProfit || 0;
                 let ordComm = (ordProfit * percentage) / 100;
-                let typeLabel = (o.buyerReferredBy === currentUser.name && o.sellerReferredBy === currentUser.name) ? 'Double Komisi (Buyer & Seller)' : o.buyerReferredBy === currentUser.name ? 'Rujukan Buyer' : 'Rujukan Seller';
+                let typeLabel = (o.buyerReferredBy === salesObj.name && o.sellerReferredBy === salesObj.name) ? 'Double Komisi (Buyer & Seller)' : o.buyerReferredBy === salesObj.name ? 'Rujukan Buyer' : 'Rujukan Seller';
                 return `<div class="border p-2 rounded mb-1 bg-white text-[11px]"><div class="flex justify-between font-bold"><span>PO: ${o.id}</span><span>Komisi: Rp${ordComm.toLocaleString()}</span></div><span class="text-purple-600">Kategori: ${typeLabel}</span></div>`;
             }).join('');
             if(!tableRows) tableRows = '<p class="text-gray-400">Belum ada transaksi dari jaringan Anda.</p>';
@@ -735,26 +738,40 @@
                         <span>BRAND: ${appConfig.brandName}</span>
                         <span>${badge}</span>
                     </div>
-                    <p class="font-bold text-purple-800">INVOICE RESMI KOMISI PROFIT SHARING</p>
-                    <p class="text-gray-600">Terima kasih Kak <b>${currentUser.name}</b>, kerja keras dan dedikasi Anda sangat luar biasa dalam mengembangkan jaringan bisnis <b>${appConfig.brandName}</b>! Terus semangat ya! 🙏✨</p>
-                    <div class="mt-2"><p class="font-semibold mb-1">Rincian Komisi Jaringan:</p>${tableRows}</div>
-                    <p class="font-bold text-emerald-700 mt-2">Total Komisi Diterima: Rp${totalCommission.toLocaleString()}</p>
+                    <p class="font-bold text-purple-800">RIWAYAT & INVOICE KOMISI</p>
+                    <p class="text-gray-600">Terima kasih Kak <b>${salesObj.name}</b>, kerja keras Anda sangat luar biasa! 🙏✨</p>
+                    <div class="mt-2"><p class="font-semibold mb-1">Rincian Komisi:</p>${tableRows}</div>
+                    <p class="font-bold text-emerald-700 mt-2">Total Komisi: Rp${totalCommission.toLocaleString()}</p>
                     ${proof ? `<div class="mt-2"><p class="font-semibold">Bukti Transfer Admin:</p><img src="${proof}" class="w-full h-32 object-cover rounded mt-1 border"></div>` : ''}
                 </div>
             `;
         }
 
-        // --- ADMIN PANEL ---
-        function openAdminLogin() {
-            const pin = prompt("Masukkan PIN Admin (Default: 123):");
-            if (pin === "123") {
+        function backFromSalesPanel() { checkSession(); }
+
+        // --- PANEL ADMIN & LOGIN GANDA (RODA GIGI) ---
+        function openAdminOrSalesLogin() {
+            const inputKey = prompt("Masukkan Kata Sandi (Admin / Sales):");
+            if (inputKey === null) return;
+
+            let currentAdminPass = appConfig.adminPass || "Rojak123";
+            if (inputKey === currentAdminPass) {
                 hideAllViews();
                 document.getElementById('view-admin-panel').classList.remove('hidden');
                 renderAdminCategoryList();
                 renderAdminSalesListDetailed();
                 renderAdminSalesPayouts();
                 renderAdminSellerPayouts();
-            } else if (pin !== null) { alert("PIN Salah!"); }
+                return;
+            }
+
+            let matchedSales = appConfig.salesAccounts.find(s => s.pass === inputKey);
+            if (matchedSales) {
+                showSalesDashboard(matchedSales);
+                return;
+            }
+
+            alert("Kata sandi salah!");
         }
 
         function backFromAdmin() { checkSession(); }
@@ -807,7 +824,7 @@
             appConfig.salesAccounts.forEach((s, idx) => {
                 container.innerHTML += `
                     <div class="bg-gray-50 p-2 rounded border flex justify-between items-center">
-                        <div><p class="font-bold"><b>${s.name}</b> (WA: ${s.wa})</p><p class="text-[10px]">Rek: ${s.bank || '-'} | Pass: ${s.pass}</p></div>
+                        <div><p class="font-bold"><b>${s.name}</b> (WA: ${s.wa})</p><p class="text-[10px]">Rek: ${s.bank || '-'} | Pass: ••••••</p></div>
                         <button onclick="removeSalesAccount(${idx})" class="text-red-500 font-bold text-sm px-2">× Hapus</button>
                     </div>
                 `;
@@ -893,6 +910,9 @@
         function saveAdminSettings() {
             appConfig.brandName = document.getElementById('admin-setting-brand').value;
             appConfig.brandAddress = document.getElementById('admin-setting-address').value;
+            let newPass = document.getElementById('admin-setting-pass').value.trim();
+            if (newPass) appConfig.adminPass = newPass;
+            appConfig.rajaOngkirKey = document.getElementById('admin-setting-rajaongkir').value.trim();
             appConfig.logoBannerUrl = document.getElementById('admin-setting-logo-banner').value;
             appConfig.wallpaperUrl = document.getElementById('admin-setting-wallpaper').value;
             appConfig.themeColor = document.getElementById('admin-setting-theme').value;
@@ -901,9 +921,8 @@
             
             localStorage.setItem('umah_config', JSON.stringify(appConfig));
             applyConfig();
-            alert("Pengaturan logo panjang banner, wallpaper, dan komisi berhasil disimpan secara real-time!");
+            alert("Pengaturan, API RajaOngkir, dan keamanan sandi berhasil disimpan secara real-time!");
         }
     </script>
 </body>
 </html>
-
