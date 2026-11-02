@@ -86,40 +86,42 @@
                 </div>
             </div>
 
-            <!-- HALAMAN 1.1: PROPOSAL DIGITAL & KETENTUAN COD -->
-            <div id="view-seller-proposal" class="bg-white/95 backdrop-blur p-5 rounded-xl shadow-md hidden space-y-4 text-xs">
-                <div class="text-center border-b pb-3">
-                    <h3 class="text-sm font-bold text-emerald-700 uppercase">📄 Proposal & Perjanjian Kerja Sama Mitra</h3>
-                    <p class="text-[11px] text-gray-500">Jastip Umma Shanum & Ilham Spunbond</p>
-                </div>
-                
-                <div class="max-h-56 overflow-y-auto space-y-2 text-gray-700 pr-1 border p-2 rounded bg-gray-50">
-                    <p class="font-bold text-emerald-800">Ketentuan Kerja Sama & Keuangan:</p>
-                    <p><b>1. Harga Jual Toko Utuh (100%):</b> Pemilik usaha menerima pembayaran bersih sesuai harga dasar tanpa potongan sepeser pun.</p>
-                    <p><b>2. Keuntungan Platform:</b> Diperoleh melalui penyesuaian markup harga di sisi pembeli akhir.</p>
-                    <p><b>3. Ketentuan Transaksi COD & Batas Waktu Setoran (7 Hari):</b>
-                        <br>- Pembayaran tunai diterima kurir/pengantar saat barang tiba di pembeli.
-                        <br>- Mitra Toko atau pemegang uang tunai COD wajib menyetorkan dana modal produk kepada Admin Platform <b>selambat-lambatnya 7 hari (1 minggu)</b> sejak pesanan selesai.
-                        <br>- Wajib mengunggah bukti transfer setoran beresolusi HD melalui Panel Mitra untuk divalidasi.
-                    </p>
-                </div>
+         <!-- VIEW PROPOSAL KEMITRAAN & PERJANJIAN DIGITAL (SELLER PROPOSAL) -->
+<section id="view-seller-proposal" class="hidden max-w-xl mx-auto p-4 bg-white shadow-lg rounded-2xl my-6 space-y-4">
+    <div class="text-center border-b pb-3">
+        <h2 class="text-xl font-bold text-emerald-800">SURAT PERJANJIAN KERJASAMA KEMITRAAN</h2>
+        <p class="text-xs text-gray-500">Platform Jastip Umma Shanum & Mitra Toko UMKM</p>
+    </div>
 
-                <div class="space-y-2 border-t pt-2">
-                    <p class="font-bold text-gray-800 text-center">✍️ Tanda Tangan Digital Calon Mitra</p>
-                    <div class="flex justify-center">
-                        <canvas id="seller-sig-canvas" width="280" height="110" class="sig-canvas"></canvas>
-                    </div>
-                    <div class="flex justify-between">
-                        <button onclick="clearSellerSignature()" class="text-[10px] text-red-500 underline font-semibold">Ulangi Tanda Tangan</button>
-                        <span id="sig-status-text" class="text-[10px] text-gray-400">Belum ditandatangani</span>
-                    </div>
-                </div>
+    <!-- ISI KLAUSUL PERJANJIAN -->
+    <div class="text-xs text-gray-700 space-y-2 max-h-60 overflow-y-auto p-3 bg-gray-50 rounded-lg border">
+        <p class="font-bold text-emerald-700">KETENTUAN UMUM & OPERASIONAL:</p>
+        <p>1. <b>Sistem Harga & Keuntungan:</b> Mitra Toko berhak menetapkan harga modal bersih produk. Keuntungan platform diperoleh melalui sistem penyesuaian harga (markup) yang transparan tanpa memotong modal dasar penjual.</p>
+        <p>2. <b>Ketentuan Pembayaran & Setoran COD (7 Hari):</b> Setiap transaksi dengan metode pembayaran COD wajib disetorkan kepada pihak platform paling lambat <b>7 (tujuh) hari kalender</b> setelah dana diterima oleh Mitra Toko.</p>
+        <p>3. <b>Integritas Data & Perangkat:</b> Mitra Toko wajib menjaga kelangsungan akun. Apabila terjadi pembersihan data perangkat (*clear cache/data*), Pemilik Toko wajib melakukan login ulang dan <b>tidak dapat menggunakan alasan kehilangan data perangkat untuk menghindari kewajiban setoran dana COD</b>.</p>
+        <p>4. <b>Sanksi Kepatuhan & SLA:</b> Apabila dalam batas waktu 7 hari dana modal COD belum disetorkan dan divalidasi oleh Admin, maka Platform berhak memberikan peringatan keras, menonaktifkan status toko sementara, hingga pemutusan kerja sama secara sepihak.</p>
+        <p class="font-bold text-emerald-700 mt-2">PENGESAHAN PIHAK-PIHAK (TRIPARTIT):</p>
+        <p>Perjanjian ini diikat secara sah melalui persetujuan elektronik dan tanda tangan digital antara <b>Pemilik Toko</b>, <b>Mitra Sales Pendamping (Upline)</b>, dan <b>Manajemen Platform (Admin)</b>.</p>
+    </div>
 
-                <div class="space-y-2 pt-2 border-t">
-                    <button onclick="agreeProposalAndProceed()" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-xs hover:bg-emerald-700">Setuju & Lanjut ke Form Pendaftaran →</button>
-                    <button onclick="cancelProposal()" class="w-full bg-gray-200 text-gray-600 py-1.5 rounded-lg text-xs">Kembali</button>
-                </div>
+    <!-- AREA TANDA TANGAN DIGITAL -->
+    <div class="space-y-2">
+        <label class="text-xs font-bold text-gray-700 block text-center">✍️ Tanda Tangan Digital Mitra Toko (Pemilik)</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-2 bg-gray-50 flex flex-col items-center">
+            <canvas id="seller-sig-canvas" width="320" height="130" class="bg-white border rounded cursor-crosshair touch-none"></canvas>
+            <div class="flex justify-between w-full mt-2 px-2">
+                <span id="sig-status-text" class="text-[10px] text-gray-500 font-semibold">Belum ditandatangani</span>
+                <button type="button" onclick="clearSellerSignature()" class="text-red-500 text-xs font-bold px-2 py-0.5 bg-red-50 rounded border border-red-200">Hapus / Ulang</button>
             </div>
+        </div>
+    </div>
+
+    <!-- TOMBOL AKSI PROPOSAL -->
+    <div class="flex space-x-2 pt-2">
+        <button type="button" onclick="cancelProposal()" class="w-1/2 bg-gray-300 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Batal</button>
+        <button type="button" onclick="agreeProposalAndProceed()" class="w-1/2 bg-emerald-600 text-white py-2.5 rounded-xl text-xs font-bold shadow-md hover:bg-emerald-700">Setuju & Lanjutkan Pendaftaran</button>
+    </div>
+</section>
 
             <!-- HALAMAN 1.2: FORM PENDAFTARAN / LOGIN -->
             <div id="dynamic-auth-form" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md hidden space-y-4">
