@@ -1,3 +1,5 @@
+Betul banget, Bro! Kalau lu masukin link gambar logonya (misalnya link gambar logo banner Juma Sanum yang baru aja dibikin) ke kolom pengaturan logo di Panel Admin, lalu klik simpan, tampilan di bagian atas (header) itu bakal langsung berubah total menjadi gambar logo, bukan lagi tulisan teks biasa.
+Supaya lu bisa langsung coba pasang logo keren berkonsep pink dengan ikon keranjang dan motor matic/skuter di atas, ini full kodingan lengkap terbaru yang sudah dipastikan fitur ganti logonya langsung merender gambar logo di header secara real-time:
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -14,11 +16,10 @@
 </head>
 <body id="app-body" class="bg-gray-100 font-sans text-gray-800 bg-cover bg-center bg-fixed" style="background-image: none;">
 
-    <!-- HEADER / NAVBAR DENGAN LOGO PANJANG HORIZONTAL -->
+    <!-- HEADER / NAVBAR DENGAN LOGO GAMBAR BANNER -->
     <header id="app-header" class="bg-emerald-600 text-white p-3 shadow-md flex justify-between items-center sticky top-0 z-50 transition-all">
         <div class="flex items-center space-x-2">
             <div id="brand-logo-container" class="flex items-center">
-                <!-- Jika admin upload logo panjang transparan, akan tampil di sini -->
                 <span id="brand-logo-fallback" class="text-xl font-bold">🛒 Jastip Umah Sanum</span>
             </div>
         </div>
@@ -192,11 +193,11 @@
                     <textarea id="admin-setting-address" class="w-full p-2 border rounded-lg text-sm mt-1"></textarea>
                 </div>
 
-                <!-- PENGATURAN LOGO PANJANG HORIZONTAL & WALLPAPER -->
+                <!-- PENGATURAN LOGO BANNER & WALLPAPER -->
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🎨 Ganti Logo Panjang Banner & Wallpaper</label>
-                    <input type="text" id="admin-setting-logo-banner" placeholder="URL Logo Panjang Transparan (Cth: https://...)" class="w-full p-2 border rounded-lg text-sm">
-                    <p class="text-[10px] text-gray-500">Gunakan gambar format PNG transparan / satu warna dengan bentuk melebar ke samping.</p>
+                    <label class="text-xs font-bold text-emerald-700">🎨 Ganti Logo Gambar Banner & Wallpaper</label>
+                    <input type="text" id="admin-setting-logo-banner" placeholder="URL Gambar Logo Banner (Cth: https://...)" class="w-full p-2 border rounded-lg text-sm">
+                    <p class="text-[10px] text-gray-500">Begitu URL dimasukkan dan disimpan, teks header otomatis berubah menjadi gambar logo!</p>
                     <input type="text" id="admin-setting-wallpaper" placeholder="URL Link Gambar Wallpaper (Cth: https://...)" class="w-full p-2 border rounded-lg text-sm mt-1">
                     <select id="admin-setting-theme" class="w-full p-2 border rounded-lg text-sm mt-1">
                         <option value="bg-emerald-600">Hijau Emerald (Default)</option>
@@ -316,10 +317,10 @@
             document.getElementById('app-title').innerText = appConfig.brandName;
             document.getElementById('login-brand-title').innerText = appConfig.brandName;
             
-            // Render Logo Panjang Banner atau Fallback Teks
+            // Mengubah Teks Header Menjadi Gambar Logo Banner secara Otomatis
             const logoContainer = document.getElementById('brand-logo-container');
             if (appConfig.logoBannerUrl) {
-                logoContainer.innerHTML = `<img src="${appConfig.logoBannerUrl}" alt="${appConfig.brandName}" class="h-8 max-w-[180px] object-contain filter drop-shadow">`;
+                logoContainer.innerHTML = `<img src="${appConfig.logoBannerUrl}" alt="${appConfig.brandName}" class="h-9 max-w-[190px] object-contain filter drop-shadow">`;
             } else {
                 logoContainer.innerHTML = `<span class="text-xl font-bold">🛒 ${appConfig.brandName}</span>`;
             }
@@ -907,3 +908,4 @@
     </script>
 </body>
 </html>
+
