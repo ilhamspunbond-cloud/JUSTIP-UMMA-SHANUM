@@ -13,6 +13,13 @@
         img {
             background-color: transparent !important;
         }
+        .sig-canvas {
+            border: 2px dashed #cbd5e1;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            cursor: crosshair;
+            touch-action: none;
+        }
     </style>
 </head>
 <body id="app-body" class="bg-gray-100 font-sans text-gray-800 bg-cover bg-center bg-fixed" style="background-image: none;">
@@ -43,10 +50,46 @@
                 <p class="text-sm text-gray-500">Silakan masuk sesuai peran kamu</p>
                 <div class="space-y-3">
                     <button onclick="showAuthMode('buyer')" class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700">Masuk / Daftar sebagai Pembeli</button>
-                    <button onclick="showAuthMode('seller')" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Masuk / Daftar sebagai Penjual (Mitra)</button>
+                    <button onclick="startSellerRegistrationFlow()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Daftar sebagai Mitra Penjual (Baca Proposal)</button>
+                    <button onclick="showAuthMode('seller-login')" class="w-full bg-gray-600 text-white py-2 rounded-lg font-medium text-xs hover:bg-gray-700">Sudah punya akun Mitra? Masuk di sini</button>
                 </div>
             </div>
 
+            <!-- HALAMAN 1.1: PROPOSAL DIGITAL & TANDA TANGAN MITRA -->
+            <div id="view-seller-proposal" class="bg-white/95 backdrop-blur p-5 rounded-xl shadow-md hidden space-y-4 text-xs">
+                <div class="text-center border-b pb-3">
+                    <h3 class="text-sm font-bold text-emerald-700 uppercase">📄 Proposal Kerja Sama Mitra</h3>
+                    <p class="text-[11px] text-gray-500">Jastip Umah Sanum & Ilham Spunbond</p>
+                </div>
+                
+                <div class="max-h-56 overflow-y-auto space-y-2 text-gray-700 pr-1 border p-2 rounded bg-gray-50">
+                    <p class="font-bold text-emerald-800">Selamat Bergabung, Calon Mitra!</p>
+                    <p>Kami menawarkan kolaborasi pemasaran digital modern yang sangat transparan dan adil bagi usaha Bapak/Ibu:</p>
+                    <p><b>1. Harga Jual Toko Utuh (100%):</b> Pemilik usaha menerima pembayaran bersih sesuai harga dasar/modal produk yang ditetapkan tanpa potongan sepeser pun dari pihak kami.</p>
+                    <p><b>2. Keuntungan Platform:</b> Keuntungan operasional platform diperoleh melalui penyesuaian harga di sisi pembeli akhir (markup layanan).</p>
+                    <p><b>3. Peningkatan Omzet:</b> Toko mendapatkan tambahan pelanggan baru dari jaringan jastip digital tanpa risiko biaya sewa atau komisi penjualan.</p>
+                    <p><b>4. Komitmen Bersama:</b> Menjaga ketersediaan stok, kualitas produk, dan pelayanan prima kepada pelanggan.</p>
+                </div>
+
+                <div class="space-y-2 border-t pt-2">
+                    <p class="font-bold text-gray-800 text-center">✍️ Tanda Tangan Digital Calon Mitra</p>
+                    <p class="text-[10px] text-gray-500 text-center">Silakan tanda tangani di dalam kotak di bawah ini:</p>
+                    <div class="flex justify-center">
+                        <canvas id="seller-sig-canvas" width="280" height="110" class="sig-canvas"></canvas>
+                    </div>
+                    <div class="flex justify-between">
+                        <button onclick="clearSellerSignature()" class="text-[10px] text-red-500 underline font-semibold">Ulangi Tanda Tangan</button>
+                        <span id="sig-status-text" class="text-[10px] text-gray-400">Belum ditandatangani</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-2 border-t">
+                    <button onclick="agreeProposalAndProceed()" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-xs hover:bg-emerald-700">Setuju & Lanjut ke Form Pendaftaran →</button>
+                    <button onclick="cancelProposal()" class="w-full bg-gray-200 text-gray-600 py-1.5 rounded-lg text-xs">Kembali</button>
+                </div>
+            </div>
+
+            <!-- HALAMAN 1.2: FORM PENDAFTARAN / LOGIN (DENGAN PILIHAN SALES) -->
             <div id="dynamic-auth-form" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md hidden space-y-4">
                 <div id="auth-form-brand-logo" class="flex justify-center"></div>
                 <h3 id="auth-form-title" class="text-lg font-bold text-center mb-2">Form</h3>
@@ -68,6 +111,15 @@
                         <label class="text-xs font-semibold text-gray-600">Alamat Lengkap / Wilayah</label>
                         <textarea id="auth-address" placeholder="Cth: Jl. Raya Rajeg No.10, Tangerang" class="w-full p-2 border rounded-lg text-sm"></textarea>
                     </div>
+                    <!-- PILIHAN SALES YANG MEREKOMENDASIKAN -->
+                    <div id="field-sales-select" class="hidden">
+                        <label class="text-xs font-semibold text-gray-600">Rekomendasi / Sales Penghubung</label>
+                        <select id="auth-sales-name" class="w-full p-2 border rounded-lg text-sm font-semibold text-purple-700">
+                            <option value="Abdul Rojak (Pimpinan)">Abdul Rojak (Pimpinan)</option>
+                            <option value="Sales Lapangan 1">Sales Lapangan 1</option>
+                            <option value="Sales Lapangan 2">Sales Lapangan 2</option>
+                        </select>
+                    </div>
                     <div id="field-store-logo" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Upload Logo Toko (PNG Transparan / JPG)</label>
                         <input type="file" id="auth-store-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
@@ -75,12 +127,6 @@
                     <div id="field-bank" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Info Rekening / E-Wallet (Pencairan Dana)</label>
                         <input type="text" id="auth-bank-info" placeholder="Cth: SeaBank 123456789 a.n Nama" class="w-full p-2 border rounded-lg text-sm">
-                    </div>
-                    <div id="field-sales-ref" class="hidden">
-                        <label class="text-xs font-semibold text-gray-600">Direkomendasikan oleh (Sales)</label>
-                        <select id="auth-sales-ref" class="w-full p-2 border rounded-lg text-sm">
-                            <option value="-">-- Tidak Ada --</option>
-                        </select>
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">Kata Sandi</label>
@@ -192,6 +238,27 @@
                     <button onclick="logout()" class="text-[11px] text-gray-500 font-semibold">Keluar</button>
                 </div>
             </div>
+            
+            <!-- DOKUMEN KESEPAKATAN DENGAN 3 PIHAK -->
+            <div id="seller-signed-proposal-box" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-2 text-xs">
+                <h4 class="font-bold text-emerald-700">📜 Dokumen Kesepakatan Mitra (Sah - 3 Pihak)</h4>
+                <p class="text-gray-500">Kesepakatan sistem 100% utuh tanpa potongan harga dasar.</p>
+                <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t text-center">
+                    <div class="border p-2 rounded bg-gray-50">
+                        <p class="font-bold text-[10px] text-gray-600">Pihak Admin (Abdul Rojak)</p>
+                        <p class="text-emerald-700 font-semibold text-[10px] mt-1">✓ Disetujui / Terverifikasi</p>
+                    </div>
+                    <div class="border p-2 rounded bg-gray-50">
+                        <p class="font-bold text-[10px] text-gray-600">Sales Pendamping</p>
+                        <p id="display-assigned-sales" class="text-purple-700 font-semibold text-[10px] mt-1">-</p>
+                    </div>
+                </div>
+                <div class="mt-2 text-center border p-2 rounded bg-gray-50">
+                    <p class="font-bold text-[10px] text-gray-600 mb-1">Tanda Tangan Pemilik Toko:</p>
+                    <div id="display-saved-signature"></div>
+                </div>
+            </div>
+
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
                 <h4 class="font-bold text-sm text-gray-700">Tambah Produk / Menu Baru</h4>
                 <form onsubmit="addSellerProduct(event)" class="space-y-2">
@@ -214,26 +281,7 @@
             </div>
         </section>
 
-        <!-- 5. DASHBOARD SALES -->
-        <section id="view-sales-dashboard" class="space-y-4 hidden mt-4">
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md flex justify-between items-center">
-                <div>
-                    <h3 id="sales-dashboard-name" class="font-bold text-lg text-purple-700">Dashboard Komisi Sales</h3>
-                    <p class="text-xs text-gray-500">Riwayat Komisi & Pencairan Dana</p>
-                </div>
-                <button onclick="backFromSalesPanel()" class="text-xs text-gray-500 font-semibold">Tutup</button>
-            </div>
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
-                <h4 class="font-bold text-sm text-gray-700">📊 Rekap Komisi Jaringan Anda</h4>
-                <div id="sales-personal-recap" class="space-y-2 text-xs bg-purple-50 p-3 rounded border"></div>
-            </div>
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
-                <h4 class="font-bold text-sm text-emerald-700">📄 Riwayat & Invoice Pencairan Komisi</h4>
-                <div id="sales-invoice-container" class="space-y-3 text-xs"></div>
-            </div>
-        </section>
-
-        <!-- 6. PANEL ADMIN -->
+        <!-- 5. PANEL ADMIN -->
         <section id="view-admin-panel" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
                 <div class="flex justify-between items-center">
@@ -327,6 +375,72 @@
         let selectedStoreId = null;
         let selectedCategoryFilter = 'Semua';
         let cart = [];
+        let signatureDataUrl = "";
+        let sigCanvas, sigCtx, isDrawing = false;
+
+        function initSignaturePad() {
+            sigCanvas = document.getElementById('seller-sig-canvas');
+            if (!sigCanvas) return;
+            sigCtx = sigCanvas.getContext('2d');
+            sigCtx.strokeStyle = '#000';
+            sigCtx.lineWidth = 2;
+
+            sigCanvas.addEventListener('mousedown', startDraw);
+            sigCanvas.addEventListener('mousemove', drawing);
+            sigCanvas.addEventListener('mouseup', stopDraw);
+            sigCanvas.addEventListener('mouseleave', stopDraw);
+
+            sigCanvas.addEventListener('touchstart', (e) => {
+                let touch = e.touches[0];
+                let mouseEvent = new MouseEvent('mousedown', { clientX: touch.clientX, clientY: touch.clientY });
+                sigCanvas.dispatchEvent(mouseEvent);
+            }, { passive: true });
+
+            sigCanvas.addEventListener('touchmove', (e) => {
+                let touch = e.touches[0];
+                let mouseEvent = new MouseEvent('mousemove', { clientX: touch.clientX, clientY: touch.clientY });
+                sigCanvas.dispatchEvent(mouseEvent);
+            }, { passive: true });
+
+            sigCanvas.addEventListener('touchend', () => {
+                let mouseEvent = new MouseEvent('mouseup', {});
+                sigCanvas.dispatchEvent(mouseEvent);
+            }, { passive: true });
+        }
+
+        function getMousePos(canvas, evt) {
+            let rect = canvas.getBoundingClientRect();
+            return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+        }
+
+        function startDraw(e) {
+            isDrawing = true;
+            let pos = getMousePos(sigCanvas, e);
+            sigCtx.beginPath();
+            sigCtx.moveTo(pos.x, pos.y);
+            document.getElementById('sig-status-text').innerText = "Sedang tanda tangan...";
+        }
+
+        function drawing(e) {
+            if (!isDrawing) return;
+            let pos = getMousePos(sigCanvas, e);
+            sigCtx.lineTo(pos.x, pos.y);
+            sigCtx.stroke();
+        }
+
+        function stopDraw() {
+            if (!isDrawing) return;
+            isDrawing = false;
+            signatureDataUrl = sigCanvas.toDataURL();
+            document.getElementById('sig-status-text').innerText = "✓ Tanda tangan tersimpan";
+        }
+
+        function clearSellerSignature() {
+            if (!sigCtx) return;
+            sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+            signatureDataUrl = "";
+            document.getElementById('sig-status-text').innerText = "Belum ditandatangani";
+        }
 
         function playNotificationSound() {
             const audio = new Audio(appConfig.notifAudioUrl || "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3");
@@ -342,7 +456,7 @@
                 img.onload = function() {
                     let width = img.width, height = img.height;
                     if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; }
-                    if (height > maxHeight) { width = Math.round((width * maxHeight) / height); height = maxHeight; }
+                    if (height > maxHeight) { width = Math.round((height * maxHeight) / height); height = maxHeight; }
                     const canvas = document.createElement('canvas');
                     canvas.width = width; canvas.height = height;
                     const ctx = canvas.getContext('2d');
@@ -406,14 +520,50 @@
             document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
             document.getElementById('dynamic-auth-form').classList.add('hidden');
             document.getElementById('auth-selection-card').classList.add('hidden');
+            document.getElementById('view-seller-proposal').classList.add('hidden');
+        }
+
+        function startSellerRegistrationFlow() {
+            document.getElementById('auth-selection-card').classList.add('hidden');
+            document.getElementById('view-seller-proposal').classList.remove('hidden');
+            setTimeout(initSignaturePad, 100);
+        }
+
+        function agreeProposalAndProceed() {
+            if (!signatureDataUrl) {
+                alert("Mohon lakukan tanda tangan digital terlebih dahulu di dalam kotak yang disediakan!");
+                return;
+            }
+            document.getElementById('view-seller-proposal').classList.add('hidden');
+            showAuthMode('seller');
+        }
+
+        function cancelProposal() {
+            document.getElementById('view-seller-proposal').classList.add('hidden');
+            document.getElementById('auth-selection-card').classList.remove('hidden');
         }
 
         function showAuthMode(role) {
+            if (role === 'seller-login') {
+                activeRole = 'seller';
+                document.getElementById('auth-selection-card').classList.add('hidden');
+                document.getElementById('dynamic-auth-form').classList.remove('hidden');
+                document.getElementById('auth-form-title').innerText = "Login Mitra Penjual";
+                document.getElementById('field-name').classList.add('hidden');
+                document.getElementById('field-address').classList.add('hidden');
+                document.getElementById('field-category').classList.add('hidden');
+                document.getElementById('field-bank').classList.add('hidden');
+                document.getElementById('field-store-logo').classList.add('hidden');
+                document.getElementById('field-sales-select').classList.add('hidden');
+                document.getElementById('auth-submit-btn').innerText = "Masuk Akun Mitra";
+                return;
+            }
+
             activeRole = role;
             document.getElementById('auth-role').value = role;
             document.getElementById('auth-selection-card').classList.add('hidden');
             document.getElementById('dynamic-auth-form').classList.remove('hidden');
-            document.getElementById('auth-form-title').innerText = role === 'buyer' ? 'Masuk / Daftar Pembeli' : 'Masuk / Daftar Mitra Penjual';
+            document.getElementById('auth-form-title').innerText = role === 'buyer' ? 'Masuk / Daftar Pembeli' : 'Form Pendaftaran Mitra Penjual';
             
             document.getElementById('field-name').classList.remove('hidden');
             document.getElementById('field-address').classList.remove('hidden');
@@ -421,6 +571,7 @@
                 document.getElementById('field-category').classList.remove('hidden');
                 document.getElementById('field-bank').classList.remove('hidden');
                 document.getElementById('field-store-logo').classList.remove('hidden');
+                document.getElementById('field-sales-select').classList.remove('hidden');
                 const catSelect = document.getElementById('auth-category');
                 catSelect.innerHTML = '';
                 appConfig.categories.forEach(cat => {
@@ -431,6 +582,7 @@
                 document.getElementById('field-category').classList.add('hidden');
                 document.getElementById('field-bank').classList.add('hidden');
                 document.getElementById('field-store-logo').classList.add('hidden');
+                document.getElementById('field-sales-select').classList.add('hidden');
             }
         }
 
@@ -444,6 +596,7 @@
                 document.getElementById('field-category').classList.add('hidden');
                 document.getElementById('field-bank').classList.add('hidden');
                 document.getElementById('field-store-logo').classList.add('hidden');
+                document.getElementById('field-sales-select').classList.add('hidden');
                 document.getElementById('auth-submit-btn').innerText = "Masuk (Akun Terdaftar)";
             } else {
                 document.getElementById('field-name').classList.remove('hidden');
@@ -452,6 +605,7 @@
                     document.getElementById('field-category').classList.remove('hidden');
                     document.getElementById('field-bank').classList.remove('hidden');
                     document.getElementById('field-store-logo').classList.remove('hidden');
+                    document.getElementById('field-sales-select').classList.remove('hidden');
                 }
                 document.getElementById('auth-submit-btn').innerText = "Daftar & Masuk";
             }
@@ -474,22 +628,23 @@
             } else {
                 const name = document.getElementById('auth-name').value.trim();
                 const address = document.getElementById('auth-address').value.trim();
+                const assignedSales = activeRole === 'seller' ? document.getElementById('auth-sales-name').value : '-';
                 if (!name || !address) { alert("Nama dan alamat wajib diisi untuk pendaftaran baru!"); return; }
                 
                 if (activeRole === 'seller') {
                     const storeLogoFile = document.getElementById('auth-store-logo-file');
                     if (storeLogoFile.files && storeLogoFile.files[0]) {
                         compressImage(storeLogoFile.files[0], 200, 200, 0.9, function(base64Logo) {
-                            saveNewUser(name, wa, pass, address, base64Logo);
+                            saveNewUser(name, wa, pass, address, base64Logo, signatureDataUrl, assignedSales);
                         });
                         return;
                     }
                 }
-                saveNewUser(name, wa, pass, address, "");
+                saveNewUser(name, wa, pass, address, "", signatureDataUrl, assignedSales);
             }
         }
 
-        function saveNewUser(name, wa, pass, address, storeLogo) {
+        function saveNewUser(name, wa, pass, address, storeLogo, signature, assignedSales) {
             let user = {
                 id: 'usr_' + Date.now(),
                 name: name,
@@ -499,6 +654,8 @@
                 category: activeRole === 'seller' ? document.getElementById('auth-category').value : '',
                 addresses: [{ label: "Utama", detail: address }],
                 storeLogo: storeLogo,
+                signature: signature || "",
+                salesRef: assignedSales || "Abdul Rojak (Pimpinan)",
                 bank: activeRole === 'seller' ? document.getElementById('auth-bank-info').value : '',
                 isOpen: true
             };
@@ -841,6 +998,15 @@
                 sellerLogoContainer.innerHTML = `<div class="w-full h-full flex items-center justify-center font-bold text-emerald-700 bg-emerald-100">🛒</div>`;
             }
 
+            document.getElementById('display-assigned-sales').innerText = currentUser.salesRef || "Abdul Rojak (Pimpinan)";
+
+            const sigBox = document.getElementById('display-saved-signature');
+            if (currentUser.signature) {
+                sigBox.innerHTML = `<img src="${currentUser.signature}" class="h-14 mx-auto object-contain bg-white border p-1 rounded">`;
+            } else {
+                sigBox.innerHTML = `<p class="text-[10px] text-gray-400">Tidak ada tanda tangan.</p>`;
+            }
+
             const isOpen = currentUser.isOpen !== false;
             document.getElementById('seller-status-text').innerText = isOpen ? "Status: BUKA" : "Status: TUTUP";
             document.getElementById('btn-toggle-shop').innerText = isOpen ? "Tutup" : "Buka";
@@ -929,29 +1095,18 @@
             });
         }
 
-        function showSalesDashboard(salesObj) {
-            hideAllViews();
-            document.getElementById('view-sales-dashboard').classList.remove('hidden');
-            document.getElementById('sales-dashboard-name').innerText = "Dashboard Komisi: " + salesObj.name;
-        }
-        function backFromSalesPanel() { checkSession(); }
-
         function openAdminOrSalesLogin() {
-            const inputKey = prompt("Masukkan Kata Sandi (Admin / Sales):");
+            const inputKey = prompt("Masukkan Kata Sandi (Admin):");
             if (inputKey === null) return;
             if (inputKey === (appConfig.adminPass || "Rojak123")) {
                 hideAllViews();
                 document.getElementById('view-admin-panel').classList.remove('hidden');
                 return;
             }
-            let matchedSales = appConfig.salesAccounts.find(s => s.pass === inputKey);
-            if (matchedSales) { showSalesDashboard(matchedSales); return; }
             alert("Kata sandi salah!");
         }
 
-        function backFromAdmin() {
-            checkSession();
-        }
+        function backFromAdmin() { checkSession(); }
 
         function addNewCategoryWithIcon() {
             const name = document.getElementById('new-category-name').value.trim();
@@ -1008,7 +1163,7 @@
             if(pending === 0) {
                 localStorage.setItem('umah_config', JSON.stringify(appConfig));
                 applyConfig();
-                alert("Pengaturan admin & Payment/QRISLY berhasil disimpan!");
+                alert("Pengaturan admin berhasil disimpan!");
             } else {
                 if(marketLogoFile.files[0]) {
                     compressImage(marketLogoFile.files[0], 500, 200, 0.9, function(base64) {
@@ -1035,7 +1190,7 @@
                 if(pending <= 0) {
                     localStorage.setItem('umah_config', JSON.stringify(appConfig));
                     applyConfig();
-                    alert("Pengaturan, API Key & Banner Promo berhasil disimpan secara real-time!");
+                    alert("Pengaturan & Banner Promo berhasil disimpan!");
                 }
             }
         }
