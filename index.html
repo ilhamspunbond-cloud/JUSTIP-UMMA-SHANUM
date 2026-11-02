@@ -71,9 +71,9 @@
                 </div>
                 <p class="text-sm text-gray-500">Silakan masuk sesuai peran kamu</p>
                 <div class="space-y-3">
-                    <button onclick="showAuthMode('buyer')" class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700">Masuk / Daftar sebagai Pembeli</button>
-                    <button onclick="startSellerRegistrationFlow()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Daftar sebagai Mitra Penjual (Baca Proposal)</button>
-                    <button onclick="showAuthMode('seller-login')" class="w-full bg-gray-600 text-white py-2 rounded-lg font-medium text-xs hover:bg-gray-700">Sudah punya akun Mitra? Masuk di sini</button>
+                    <button onclick="unlockAudioAndProceed('buyer')" class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700">Masuk / Daftar sebagai Pembeli</button>
+                    <button onclick="unlockAudioAndProceed('seller-prop')" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Daftar sebagai Mitra Penjual (Baca Proposal)</button>
+                    <button onclick="unlockAudioAndProceed('seller-login')" class="w-full bg-gray-600 text-white py-2 rounded-lg font-medium text-xs hover:bg-gray-700">Sudah punya akun Mitra? Masuk di sini</button>
                 </div>
             </div>
 
@@ -261,7 +261,6 @@
                 </div>
             </div>
             
-            <!-- KOTAK PERINGATAN KERAS SETORAN COD (OTOMATIS 7 HARI) -->
             <div id="seller-deadline-warning-box"></div>
 
             <div id="seller-signed-proposal-box" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-2 text-xs">
@@ -309,7 +308,7 @@
         <section id="view-admin-panel" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
                 <div class="flex justify-between items-center">
-                    <h3 class="font-bold text-md text-emerald-600">⚙️ Panel Admin & Validasi Setoran COD</h3>
+                    <h3 class="font-bold text-md text-emerald-600">⚙️ Panel Admin & Validasi</h3>
                     <button onclick="backFromAdmin()" class="text-xs text-gray-500 font-semibold bg-gray-200 px-3 py-1 rounded">Tutup</button>
                 </div>
                 <hr>
@@ -326,25 +325,36 @@
                     <input type="text" id="admin-setting-pass" placeholder="Kata Sandi Baru Admin" class="w-full p-2 border rounded-lg text-sm">
                 </div>
                 <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">🎵 Pengaturan URL Ringtone / Suara Notifikasi</label>
+                    <div class="space-y-1">
+                        <span class="text-[11px] text-gray-600 font-semibold">Ringtone Penjual (Order Masuk):</span>
+                        <input type="text" id="admin-setting-seller-audio" class="w-full p-2 border rounded-lg text-xs" placeholder="URL Audio MP3...">
+                    </div>
+                    <div class="space-y-1 mt-1">
+                        <span class="text-[11px] text-gray-600 font-semibold">Ringtone Pembeli (Sukses Checkout):</span>
+                        <input type="text" id="admin-setting-buyer-audio" class="w-full p-2 border rounded-lg text-xs" placeholder="URL Audio MP3...">
+                    </div>
+                </div>
+                <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">💰 Pengaturan Markup & Diskon Platform</label>
                     <div class="space-y-1">
                         <span class="text-[11px] text-gray-600 font-semibold">Markup Profit Per Produk (Rp):</span>
-                        <input type="number" id="admin-setting-markup" class="w-full p-2 border rounded-lg text-sm" placeholder="Cth: 5000">
+                        <input type="number" id="admin-setting-markup" class="w-full p-2 border rounded-lg text-sm">
                     </div>
-                    <div class="space-y-1 mt-2">
-                        <span class="text-[11px] text-gray-600 font-semibold">Subsidi Diskon Platform (%) untuk Pembeli:</span>
-                        <input type="number" id="admin-setting-discount" class="w-full p-2 border rounded-lg text-sm" placeholder="Cth: 50">
+                    <div class="space-y-1 mt-1">
+                        <span class="text-[11px] text-gray-600 font-semibold">Subsidi Diskon Platform (%):</span>
+                        <input type="number" id="admin-setting-discount" class="w-full p-2 border rounded-lg text-sm">
                     </div>
                 </div>
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">📥 Validasi Bukti Transfer Setoran COD dari Mitra</label>
+                    <label class="text-xs font-bold text-emerald-700">📥 Validasi Bukti Transfer Setoran COD</label>
                     <div id="admin-cod-proof-list" class="space-y-2 text-xs max-h-60 overflow-y-auto bg-gray-50 p-2 border rounded"></div>
                 </div>
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek / Marketplace</label>
+                    <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek</label>
                     <input type="file" id="admin-marketplace-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
                 </div>
-                <button onclick="saveAdminSettings()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-xs font-semibold mt-2">Simpan Semua Pengaturan</button>
+                <button onclick="saveAdminSettings()" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-sm mt-2">Simpan Semua Pengaturan</button>
             </div>
         </section>
 
@@ -358,12 +368,11 @@
             adminPass: "Rojak123",
             markupAmount: 5000,
             platformDiscountPercent: 0,
+            sellerAudioUrl: "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3",
+            buyerAudioUrl: "https://www.myinstants.com/media/sounds/success-1-6283.mp3",
             marketLogoBase64: "",
-            logoBannerBase64: "",
-            wallpaperBase64: "",
             promoTopBase64: "",
             promoBottomBase64: "",
-            notifAudioUrl: "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3",
             categories: [
                 { name: "Makanan", icon: "" },
                 { name: "Minuman", icon: "" },
@@ -394,6 +403,33 @@
                 utterance.pitch = 1.0;
                 window.speechSynthesis.speak(utterance);
             }
+        }
+
+        // FUNGSI UNLOCK AUDIO DI BROWSER HP SAAT KLIK PERTAMA
+        function unlockAudioAndProceed(roleAction) {
+            // Memutar audio kosong untuk membuka izin pemutaran otomatis di browser HP
+            let dummyAudio = new Audio(appConfig.sellerAudioUrl || "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3");
+            dummyAudio.volume = 0.01;
+            dummyAudio.play().catch(e => console.log("Audio unlock triggered"));
+
+            if(roleAction === 'buyer') {
+                showAuthMode('buyer');
+            } else if(roleAction === 'seller-prop') {
+                startSellerRegistrationFlow();
+            } else if(roleAction === 'seller-login') {
+                showAuthMode('seller-login');
+            }
+        }
+
+        // PEMUTAR RINGTONE KHUSUS PENJUAL / PEMBELI
+        function playSellerRingtone() {
+            const audio = new Audio(appConfig.sellerAudioUrl || "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3");
+            audio.play().catch(e => console.log("Seller audio blocked"));
+        }
+
+        function playBuyerRingtone() {
+            const audio = new Audio(appConfig.buyerAudioUrl || "https://www.myinstants.com/media/sounds/success-1-6283.mp3");
+            audio.play().catch(e => console.log("Buyer audio blocked"));
         }
 
         function initSignaturePad() {
@@ -460,12 +496,6 @@
             document.getElementById('sig-status-text').innerText = "Belum ditandatangani";
         }
 
-        function playNotificationSound() {
-            const audio = new Audio(appConfig.notifAudioUrl || "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3");
-            audio.play().catch(e => console.log("Audio blocked"));
-        }
-
-        // KOMPRESI GAMBAR HD (HIGH DEFINITION)
         function compressImageHD(file, callback) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -546,6 +576,8 @@
             document.getElementById('admin-setting-pass').value = appConfig.adminPass || 'Rojak123';
             document.getElementById('admin-setting-markup').value = appConfig.markupAmount || 5000;
             document.getElementById('admin-setting-discount').value = appConfig.platformDiscountPercent || 0;
+            document.getElementById('admin-setting-seller-audio').value = appConfig.sellerAudioUrl || '';
+            document.getElementById('admin-setting-buyer-audio').value = appConfig.buyerAudioUrl || '';
             renderAdminCodProofs();
         }
 
@@ -1007,7 +1039,7 @@
             let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
             const newOrder = {
                 id: 'ord_' + Date.now(),
-                timestamp: Date.now(), // Untuk hitung batas waktu 7 hari
+                timestamp: Date.now(),
                 buyerName: currentUser.name,
                 buyerWa: currentUser.wa,
                 buyerAddress: chosenAddress,
@@ -1024,7 +1056,9 @@
             };
             allOrders.push(newOrder);
             localStorage.setItem('umah_orders', JSON.stringify(allOrders));
-            playNotificationSound();
+            
+            // PUTAR RINGTONE KHUSUS PEMBELI SAAT SUKSES CHECKOUT
+            playBuyerRingtone();
 
             alert(`Pesanan berhasil dibuat (${paymentMethod})!`);
             cart = [];
@@ -1063,7 +1097,6 @@
             renderSellerInvoice();
         }
 
-        // CEK APAKAH ADA SETORAN COD LEWAT 7 HARI (PERINGATAN KERAS)
         function checkSellerOverdueCod(sellerId) {
             const warningBox = document.getElementById('seller-deadline-warning-box');
             let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
@@ -1074,7 +1107,7 @@
 
             if(hasOverdue) {
                 warningBox.innerHTML = `
-                    <div class="bg-red-50 border-l-4 border-red-600 p-4 rounded-xl shadow-md space-y-2 text-xs text-red-900">
+                    <div class="bg-red-50 border-l-4 border-red-600 p-4 rounded-xl shadow-md space-y-2 text-xs text-red-900 mb-4">
                         <div class="flex items-center space-x-2">
                             <span class="text-lg">⚠️</span>
                             <h4 class="font-bold text-sm uppercase tracking-wide">PERINGATAN KERAS: BATAS WAKTU SETORAN COD</h4>
@@ -1186,6 +1219,13 @@
         function updateStatus(id) {
             const val = document.getElementById('status_' + id).value;
             let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
+            
+            // Deteksi jika ada PO baru masuk, bunyikan ringtone penjual
+            let targetOrder = allOrders.find(o => o.id === id);
+            if(targetOrder && targetOrder.deliveryStatus === 'Menunggu Konfirmasi Toko' && val === 'Kurir Menuju Toko') {
+                playSellerRingtone();
+            }
+
             allOrders = allOrders.map(o => o.id === id ? {...o, deliveryStatus: val} : o);
             localStorage.setItem('umah_orders', JSON.stringify(allOrders));
             alert("Status diperbarui!");
@@ -1272,6 +1312,8 @@
 
             appConfig.markupAmount = parseInt(document.getElementById('admin-setting-markup').value) || 5000;
             appConfig.platformDiscountPercent = parseInt(document.getElementById('admin-setting-discount').value) || 0;
+            appConfig.sellerAudioUrl = document.getElementById('admin-setting-seller-audio').value.trim();
+            appConfig.buyerAudioUrl = document.getElementById('admin-setting-buyer-audio').value.trim();
 
             const marketLogoFile = document.getElementById('admin-marketplace-logo-file');
             if(marketLogoFile.files && marketLogoFile.files[0]) {
@@ -1279,12 +1321,12 @@
                     appConfig.marketLogoBase64 = base64;
                     localStorage.setItem('umah_config', JSON.stringify(appConfig));
                     applyConfig();
-                    alert("Pengaturan admin & Logo Berhasil Disimpan!");
+                    alert("Pengaturan admin & Ringtone Berhasil Disimpan!");
                 });
             } else {
                 localStorage.setItem('umah_config', JSON.stringify(appConfig));
                 applyConfig();
-                alert("Pengaturan admin berhasil disimpan!");
+                alert("Pengaturan admin & Ringtone berhasil disimpan!");
             }
         }
     </script>
