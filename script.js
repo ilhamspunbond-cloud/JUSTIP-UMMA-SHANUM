@@ -230,6 +230,7 @@ function applyConfig() {
     if(document.getElementById('admin-setting-qrisly-key')) document.getElementById('admin-setting-qrisly-key').value = appConfig.qrislyApiKey || '';
 
     renderAdminCodProofs();
+    renderAdminCategories();
 }
 
 function checkSession() {
@@ -237,13 +238,13 @@ function checkSession() {
         hideAllViews();
         if (currentUser.role === 'buyer') {
             showBuyerDashboard();
-            speakVoice("Selamat datang kembali, Kak! Silakan pilih produk terbaik dari toko mitra lokal terdekat.");
+            speakVoice("Terima kasih banyak, Kak! Kehadiran dan belanjaan Kakak hari ini adalah bentuk dukungan nyata yang sangat berarti untuk memajukan UMKM lokal kita. Selamat berbelanja!");
         } else if (currentUser.role === 'seller') {
             showSellerDashboard();
-            speakVoice("Halo, Mitra UMKM hebat! Selamat datang di dashboard toko Anda.");
+            speakVoice("Halo, Mitra UMKM hebat! Tetap semangat ya, produk lokal berkualitas dari tangan dingin Kakak hari ini pasti membawa berkah dan rezeki yang melimpah.");
         } else if (currentUser.role === 'sales') {
             showSalesDashboard();
-            speakVoice("Halo, Mitra Sales! Selamat datang di dashboard jaringan afiliasi Anda.");
+            speakVoice("Halo, Mitra Sales luar biasa! Terima kasih atas kerja kerasmu hari ini dalam memperluas jaringan kebaikan dan memajukan ekonomi kerakyatan.");
         }
     } else {
         hideAllViews();
@@ -416,6 +417,24 @@ function showBuyerDashboard() {
     let greeting = document.getElementById('buyer-greeting');
     if(greeting) greeting.innerText = "Halo, " + currentUser.name;
     
+    // RENDER KATEGORI GESER MENYAMPING (HORIZONTAL SCROLL)
+    const filterContainer = document.getElementById('category-filters-container');
+    if (filterContainer) {
+        filterContainer.innerHTML = `<button onclick="filterByCategory('Semua')" class="flex flex-col items-center justify-center p-2 rounded-xl text-xs font-semibold min-w-[70px] flex-shrink-0 ${selectedCategoryFilter === 'Semua' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}"><span class="text-lg">🌐</span><span>Semua</span></button>`;
+        
+        appConfig.categories.forEach(cat => {
+            let cName = typeof cat === 'string' ? cat : cat.name;
+            let cIcon = (typeof cat === 'object' && cat.icon) ? `<img src="${cat.icon}" class="w-8 h-8 object-cover rounded-full mb-1 border bg-white">` : `<span class="text-lg">🏷️</span>`;
+            const isActive = selectedCategoryFilter === cName;
+            filterContainer.innerHTML += `
+                <button onclick="filterByCategory('${cName}')" class="flex flex-col items-center justify-center p-2 rounded-xl text-xs font-semibold min-w-[70px] flex-shrink-0 ${isActive ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}">
+                    ${cIcon}
+                    <span class="truncate max-w-[70px]">${cName}</span>
+                </button>
+            `;
+        });
+    }
+
     const container = document.getElementById('buyer-shops-container');
     if (container) {
         container.innerHTML = '';
@@ -656,6 +675,68 @@ function renderSellerPOs() {
 function updateStatus(id) {}
 function renderSellerInvoice() {}
 
+// ⭐ PENGELOLAAN KATEGORI ETALASE DI PANEL ADMIN
+function renderAdminCategories() {
+    const container = document.getElementById('admin-category-list');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    appConfig.categories.forEach((cat, index) => {
+        let cName = typeof cat === 'string' ? cat : cat.name;
+        let cIcon = (typeof cat === 'object' && cat.icon) ? `<img src="${cat.icon}" class="w-6 h-6 object-cover rounded-full border">` : `<span class="text-xs">🏷️</span>`;
+        
+        container.innerHTML += `
+            <div class="flex justify-between items-center bg-gray-50 p-2 rounded border">
+                <div class="flex items-center space-x-2">
+                    ${cIcon}
+                    <span class="font-bold text-gray-700">${cName}</span>
+                </div>
+                <button type="button" onclick="removeCategory(${index})" class="text-red-500 font-bold px-2 py-0.5 text-xs bg-red-50 rounded hover:bg-red-100">Hapus</button>
+            </div>
+        `;
+    });
+}
+
+function addNewCategory() {
+    let inputEl = document.getElementById('new-category-name');
+    let fileInput = document.getElementById('new-category-icon-file');
+    if(!inputEl) return;
+    let catName = inputEl.value.trim();
+    if(!catName) { alert("Nama kategori tidak boleh kosong!"); return; }
+    
+    let exists = appConfig.categories.some(c => (typeof c === 'string' ? c : c.name).toLowerCase() === catName.toLowerCase());
+    if(exists) { alert("Kategori tersebut sudah ada!"); return; }
+
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+        compressImage(fileInput.files[0], 100, 100, 0.8, function(base64Icon) {
+            appConfig.categories.push({ name: catName, icon: base64Icon });
+            finalizeAddCategory(inputEl, fileInput);
+        });
+    } else {
+        appConfig.categories.push({ name: catName, icon: "" });
+        finalizeAddCategory(inputEl, fileInput);
+    }
+}
+
+function finalizeAddCategory(inputEl, fileInput) {
+    inputEl.value = '';
+    if(fileInput) fileInput.value = '';
+    localStorage.setItem('umah_config', JSON.stringify(appConfig));
+    renderAdminCategories();
+    alert("Kategori etalase dan ikon berhasil ditambahkan!");
+}
+
+function removeCategory(index) {
+    if(appConfig.categories.length <= 1) {
+        alert("Minimal harus ada 1 kategori etalase!");
+        return;
+    }
+    appConfig.categories.splice(index, 1);
+    localStorage.setItem('umah_config', JSON.stringify(appConfig));
+    renderAdminCategories();
+    alert("Kategori berhasil dihapus!");
+}
+
 // ⭐ GERBANG CERDAS RODA GIGI (Akses Admin atau Login Otomatis Mitra via Kode Unik)
 function openAdminOrSalesLogin() {
     const inputKey = prompt("Masukkan Kata Sandi Admin / Kode Unik Mitra:");
@@ -670,6 +751,7 @@ function openAdminOrSalesLogin() {
         if(adminPanel) adminPanel.classList.remove('hidden');
         renderAdminCodProofs();
         renderAdminGlobalRecap();
+        renderAdminCategories();
         return;
     }
 
