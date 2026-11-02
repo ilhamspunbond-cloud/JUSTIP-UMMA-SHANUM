@@ -65,16 +65,24 @@
                 </div>
             </div>
 
+            <!-- KARTU UTAMA HALAMAN DEPAN (Dibersihkan: Hanya Pembeli & Pendaftaran Mitra Terkurasi) -->
             <div id="auth-selection-card" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md text-center space-y-4">
                 <div id="auth-brand-logo-display" class="flex justify-center mb-2">
                     <h2 id="login-brand-title" class="text-2xl font-bold text-emerald-600">Jastip Umma Shanum</h2>
                 </div>
-                <p class="text-sm text-gray-500">Silakan masuk sesuai peran kamu</p>
-                <div class="space-y-3">
-                    <button onclick="unlockAudioAndProceed('buyer')" class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700">Masuk / Daftar sebagai Pembeli</button>
-                    <button onclick="unlockAudioAndProceed('seller-prop')" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Daftar sebagai Mitra Penjual (Baca Proposal)</button>
-                    <button onclick="unlockAudioAndProceed('sales-prop')" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700">Daftar sebagai Mitra Sales / Afiliasi</button>
-                    <button onclick="unlockAudioAndProceed('seller-login')" class="w-full bg-gray-600 text-white py-2 rounded-lg font-medium text-xs hover:bg-gray-700">Sudah punya akun Mitra? Masuk di sini</button>
+                <p class="text-xs text-gray-500">Platform belanja & bermitra lokal terpercaya tanpa potongan.</p>
+                
+                <div class="space-y-3 pt-2">
+                    <button onclick="unlockAudioAndProceed('buyer')" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow hover:bg-emerald-700 transition">
+                        🛍️ Masuk / Daftar sebagai Pembeli
+                    </button>
+                    <button onclick="unlockAudioAndProceed('seller-prop')" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold text-sm shadow hover:bg-purple-700 transition">
+                        🤝 Daftar sebagai Mitra Penjual (Proposal & Syarat)
+                    </button>
+                </div>
+                
+                <div class="pt-4 border-t text-[11px] text-gray-400">
+                    Punya kode mitra atau akses khusus? Silakan klik ikon roda gigi (⚙️) di pojok atas.
                 </div>
             </div>
 
@@ -90,9 +98,9 @@
                     <p><b>1. Harga Jual Toko Utuh (100%):</b> Pemilik usaha menerima pembayaran bersih sesuai harga dasar tanpa potongan sepeser pun.</p>
                     <p><b>2. Keuntungan Platform:</b> Diperoleh melalui penyesuaian markup harga di sisi pembeli akhir.</p>
                     <p><b>3. Ketentuan Transaksi COD & Batas Waktu Setoran (7 Hari):</b>
-                       <br>- Pembayaran tunai diterima kurir/pengantar saat barang tiba di pembeli.
-                       <br>- Mitra Toko atau pemegang uang tunai COD wajib menyetorkan dana modal produk kepada Admin Platform <b>selambat-lambatnya 7 hari (1 minggu)</b> sejak pesanan selesai.
-                       <br>- Wajib mengunggah bukti transfer setoran beresolusi HD melalui Panel Mitra untuk divalidasi.
+                        <br>- Pembayaran tunai diterima kurir/pengantar saat barang tiba di pembeli.
+                        <br>- Mitra Toko atau pemegang uang tunai COD wajib menyetorkan dana modal produk kepada Admin Platform <b>selambat-lambatnya 7 hari (1 minggu)</b> sejak pesanan selesai.
+                        <br>- Wajib mengunggah bukti transfer setoran beresolusi HD melalui Panel Mitra untuk divalidasi.
                     </p>
                 </div>
 
@@ -318,88 +326,84 @@
             </div>
         </section>
 
-      <!-- 5. PANEL ADMIN -->
-<section id="view-admin-panel" class="space-y-4 hidden mt-4">
-    <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
-        <div class="flex justify-between items-center">
-            <h3 class="font-bold text-md text-emerald-600">⚙️ Panel Admin & Validasi</h3>
-            <button onclick="backFromAdmin()" class="text-xs text-gray-500 font-semibold bg-gray-200 px-3 py-1 rounded">Tutup</button>
-        </div>
-        <hr>
-        <div>
-            <label class="text-xs font-semibold">Nama Brand / Jastip</label>
-            <input type="text" id="admin-setting-brand" class="w-full p-2 border rounded-lg text-sm mt-1">
-        </div>
-        <div>
-            <label class="text-xs font-semibold">Alamat Kantor Pusat</label>
-            <textarea id="admin-setting-address" class="w-full p-2 border rounded-lg text-sm mt-1"></textarea>
-        </div>
-        <div class="pt-2 border-t space-y-2">
-            <label class="text-xs font-bold text-emerald-700">🔐 Ganti Kata Sandi Admin</label>
-            <input type="text" id="admin-setting-pass" placeholder="Kata Sandi Baru Admin" class="w-full p-2 border rounded-lg text-sm">
-        </div>
+        <!-- 5. PANEL ADMIN -->
+        <section id="view-admin-panel" class="space-y-4 hidden mt-4">
+            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-md text-emerald-600">⚙️ Panel Admin & Validasi</h3>
+                    <button onclick="backFromAdmin()" class="text-xs text-gray-500 font-semibold bg-gray-200 px-3 py-1 rounded">Tutup</button>
+                </div>
+                <hr>
+                <div>
+                    <label class="text-xs font-semibold">Nama Brand / Jastip</label>
+                    <input type="text" id="admin-setting-brand" class="w-full p-2 border rounded-lg text-sm mt-1">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold">Alamat Kantor Pusat</label>
+                    <textarea id="admin-setting-address" class="w-full p-2 border rounded-lg text-sm mt-1"></textarea>
+                </div>
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">🔐 Ganti Kata Sandi Admin</label>
+                    <input type="text" id="admin-setting-pass" placeholder="Kata Sandi Baru Admin" class="w-full p-2 border rounded-lg text-sm">
+                </div>
 
-       <!-- TAMBAHKAN KELOMPOK PENGATURAN API DI DALAM VIEW ADMIN PANEL -->
-<div class="pt-2 border-t space-y-2">
-    <label class="text-xs font-bold text-emerald-700">🔌 Konfigurasi API Eksternal & Pembayaran</label>
-    
-    <!-- 1. Shipping Cost API -->
-    <div class="space-y-1">
-        <span class="text-[11px] text-gray-600 font-semibold">API Key Shipping Cost (RajaOngkir):</span>
-        <input type="text" id="admin-setting-rajaongkir-key" class="w-full p-2 border rounded-lg text-xs font-mono" placeholder="Tempel API Key RajaOngkir...">
-    </div>
+                <!-- KELOMPOK PENGATURAN API EKSTERNAL -->
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">🔌 Konfigurasi API Eksternal & Pembayaran</label>
+                    
+                    <div class="space-y-1">
+                        <span class="text-[11px] text-gray-600 font-semibold">API Key Shipping Cost (RajaOngkir):</span>
+                        <input type="text" id="admin-setting-rajaongkir-key" class="w-full p-2 border rounded-lg text-xs font-mono" placeholder="Tempel API Key RajaOngkir...">
+                    </div>
 
-    <!-- 2. Payment Gateway API -->
-    <div class="space-y-1 mt-2">
-        <span class="text-[11px] text-gray-600 font-semibold">Payment Gateway API Key (Cth: Xendit / Midtrans):</span>
-        <input type="text" id="admin-setting-payment-key" class="w-full p-2 border rounded-lg text-xs font-mono" placeholder="Tempel API Key Payment Gateway...">
-    </div>
+                    <div class="space-y-1 mt-2">
+                        <span class="text-[11px] text-gray-600 font-semibold">Payment Gateway API Key (Cth: Xendit / Midtrans):</span>
+                        <input type="text" id="admin-setting-payment-key" class="w-full p-2 border rounded-lg text-xs font-mono" placeholder="Tempel API Key Payment Gateway...">
+                    </div>
 
-    <!-- 3. QRISly API -->
-    <div class="space-y-1 mt-2">
-        <span class="text-[11px] text-gray-600 font-semibold">QRISly API Key (Generate QRIS Otomatis):</span>
-        <input type="text" id="admin-setting-qrisly-key" class="w-full p-2 border rounded-lg text-xs font-mono" placeholder="Tempel API Key QRISly...">
-    </div>
-</div>
-        <!-- 👆 SAMPAI SINI -->
+                    <div class="space-y-1 mt-2">
+                        <span class="text-[11px] text-gray-600 font-semibold">QRISly API Key (Generate QRIS Otomatis):</span>
+                        <input type="text" id="admin-setting-qrisly-key" class="w-full p-2 border rounded-lg text-xs font-mono" placeholder="Tempel API Key QRISly...">
+                    </div>
+                </div>
 
-        <div class="pt-2 border-t space-y-2">
-            <label class="text-xs font-bold text-purple-700">💰 Rekap Global Komisi Masing-Masing Sales & Kirim WA</label>
-            <div id="admin-global-sales-recap" class="space-y-2 text-xs max-h-60 overflow-y-auto bg-gray-50 p-2 border rounded mt-1"></div>
-        </div>
-        <div class="pt-2 border-t space-y-2">
-            <label class="text-xs font-bold text-emerald-700">🎵 Pengaturan URL Ringtone / Suara Notifikasi</label>
-            <div class="space-y-1">
-                <span class="text-[11px] text-gray-600 font-semibold">Ringtone Penjual (Order Masuk):</span>
-                <input type="text" id="admin-setting-seller-audio" class="w-full p-2 border rounded-lg text-xs" placeholder="URL Audio MP3...">
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-purple-700">💰 Rekap Global Komisi Masing-Masing Sales & Kirim WA</label>
+                    <div id="admin-global-sales-recap" class="space-y-2 text-xs max-h-60 overflow-y-auto bg-gray-50 p-2 border rounded mt-1"></div>
+                </div>
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">🎵 Pengaturan URL Ringtone / Suara Notifikasi</label>
+                    <div class="space-y-1">
+                        <span class="text-[11px] text-gray-600 font-semibold">Ringtone Penjual (Order Masuk):</span>
+                        <input type="text" id="admin-setting-seller-audio" class="w-full p-2 border rounded-lg text-xs" placeholder="URL Audio MP3...">
+                    </div>
+                    <div class="space-y-1 mt-1">
+                        <span class="text-[11px] text-gray-600 font-semibold">Ringtone Pembeli (Sukses Checkout):</span>
+                        <input type="text" id="admin-setting-buyer-audio" class="w-full p-2 border rounded-lg text-xs" placeholder="URL Audio MP3...">
+                    </div>
+                </div>
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">💰 Pengaturan Markup & Diskon Platform</label>
+                    <div class="space-y-1">
+                        <span class="text-[11px] text-gray-600 font-semibold">Markup Profit Per Produk (Rp):</span>
+                        <input type="number" id="admin-setting-markup" class="w-full p-2 border rounded-lg text-sm">
+                    </div>
+                    <div class="space-y-1 mt-1">
+                        <span class="text-[11px] text-gray-600 font-semibold">Subsidi Diskon Platform (%):</span>
+                        <input type="number" id="admin-setting-discount" class="w-full p-2 border rounded-lg text-sm">
+                    </div>
+                </div>
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">📥 Validasi Bukti Transfer Setoran COD</label>
+                    <div id="admin-cod-proof-list" class="space-y-2 text-xs max-h-60 overflow-y-auto bg-gray-50 p-2 border rounded"></div>
+                </div>
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek</label>
+                    <input type="file" id="admin-marketplace-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
+                </div>
+                <button onclick="saveAdminSettings()" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-sm mt-2">Simpan Semua Pengaturan</button>
             </div>
-            <div class="space-y-1 mt-1">
-                <span class="text-[11px] text-gray-600 font-semibold">Ringtone Pembeli (Sukses Checkout):</span>
-                <input type="text" id="admin-setting-buyer-audio" class="w-full p-2 border rounded-lg text-xs" placeholder="URL Audio MP3...">
-            </div>
-        </div>
-        <div class="pt-2 border-t space-y-2">
-            <label class="text-xs font-bold text-emerald-700">💰 Pengaturan Markup & Diskon Platform</label>
-            <div class="space-y-1">
-                <span class="text-[11px] text-gray-600 font-semibold">Markup Profit Per Produk (Rp):</span>
-                <input type="number" id="admin-setting-markup" class="w-full p-2 border rounded-lg text-sm">
-            </div>
-            <div class="space-y-1 mt-1">
-                <span class="text-[11px] text-gray-600 font-semibold">Subsidi Diskon Platform (%):</span>
-                <input type="number" id="admin-setting-discount" class="w-full p-2 border rounded-lg text-sm">
-            </div>
-        </div>
-        <div class="pt-2 border-t space-y-2">
-            <label class="text-xs font-bold text-emerald-700">📥 Validasi Bukti Transfer Setoran COD</label>
-            <div id="admin-cod-proof-list" class="space-y-2 text-xs max-h-60 overflow-y-auto bg-gray-50 p-2 border rounded"></div>
-        </div>
-        <div class="pt-2 border-t space-y-2">
-            <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek</label>
-            <input type="file" id="admin-marketplace-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
-        </div>
-        <button onclick="saveAdminSettings()" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-sm mt-2">Simpan Semua Pengaturan</button>
-    </div>
-</section>
+        </section>
 
     </main>
 
