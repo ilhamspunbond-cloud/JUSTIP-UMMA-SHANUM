@@ -32,7 +32,7 @@
     <!-- KONTEN UTAMA -->
     <main class="max-w-md mx-auto p-4 min-h-screen pb-20">
 
-        <!-- 1. HALAMAN AUTH (Hanya untuk Pembeli & Penjual) -->
+        <!-- 1. HALAMAN AUTH -->
         <section id="view-auth" class="space-y-4 mt-10">
             <div class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md text-center">
                 <h2 id="login-brand-title" class="text-2xl font-bold text-emerald-600 mb-2">Jastip Umah Sanum</h2>
@@ -90,7 +90,8 @@
                 <h3 class="text-lg font-bold text-gray-800">Daftar Toko / Mitra</h3>
                 <button onclick="logout()" class="text-xs text-red-500 font-semibold">Keluar</button>
             </div>
-            <div id="category-filters-container" class="flex space-x-2 overflow-x-auto py-1"></div>
+            <!-- KATEGORI ETALASE DENGAN IKON GAMBAR -->
+            <div id="category-filters-container" class="flex space-x-3 overflow-x-auto py-2"></div>
             <div id="buyer-shops-container" class="space-y-4"></div>
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3 mt-6">
                 <h4 class="font-bold text-sm text-gray-700">📦 Status & Pelacakan Pesanan Saya</h4>
@@ -123,7 +124,7 @@
             </div>
         </section>
 
-        <!-- 4. HALAMAN DASHBOARD PENJUAL -->
+        <!-- 4. HALAMAN DASHBOARD PENJUAL (DENGAN UPLOAD FOTO PRODUK) -->
         <section id="view-seller-dashboard" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md flex justify-between items-center">
                 <div>
@@ -137,10 +138,14 @@
                 </div>
             </div>
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
-                <h4 class="font-bold text-sm text-gray-700">Tambah Produk / Menu Baru</h4>
+                <h4 class="font-bold text-sm text-gray-700">Tambah Produk / Menu Baru (Upload Foto)</h4>
                 <form onsubmit="addSellerProduct(event)" class="space-y-2">
                     <input type="text" id="prod-name" placeholder="Nama Menu/Produk" required class="w-full p-2 border rounded-lg text-sm">
                     <input type="number" id="prod-price" placeholder="Harga Dasar / Modal (Rp)" required class="w-full p-2 border rounded-lg text-sm">
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600">Upload Foto Produk (Otomatis Kompres HD)</label>
+                        <input type="file" id="prod-image-file" accept="image/*" required class="w-full p-1.5 border rounded-lg text-xs mt-1 bg-white">
+                    </div>
                     <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg text-xs font-semibold">Simpan Produk</button>
                 </form>
             </div>
@@ -173,7 +178,7 @@
             </div>
         </section>
 
-        <!-- 6. PANEL ADMIN UTAMA -->
+        <!-- 6. PANEL ADMIN UTAMA (UPLOAD LOGO & IKON KATEGORI) -->
         <section id="view-admin-panel" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
                 <div class="flex justify-between items-center">
@@ -200,15 +205,20 @@
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🌐 Pengaturan RajaOngkir (API Key)</label>
                     <input type="text" id="admin-setting-rajaongkir" placeholder="Masukkan API Key RajaOngkir..." class="w-full p-2 border rounded-lg text-sm">
-                    <p class="text-[10px] text-gray-500">Digunakan untuk integrasi cek ongkir otomatis antar kecamatan/kota.</p>
                 </div>
 
-                <!-- PENGATURAN LOGO BANNER & WALLPAPER -->
+                <!-- UPLOAD LOGO UTAMA & WALLPAPER (LANGSUNG FILE) -->
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🎨 Ganti Logo Gambar Banner & Wallpaper</label>
-                    <input type="text" id="admin-setting-logo-banner" placeholder="URL Gambar Logo Banner (Cth: https://...)" class="w-full p-2 border rounded-lg text-sm">
-                    <input type="text" id="admin-setting-wallpaper" placeholder="URL Link Gambar Wallpaper (Cth: https://...)" class="w-full p-2 border rounded-lg text-sm mt-1">
-                    <select id="admin-setting-theme" class="w-full p-2 border rounded-lg text-sm mt-1">
+                    <label class="text-xs font-bold text-emerald-700">🎨 Upload Logo Utama (Banner) & Wallpaper</label>
+                    <div>
+                        <span class="text-[11px] text-gray-600 font-semibold">Pilih File Logo Banner Utama:</span>
+                        <input type="file" id="admin-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
+                    </div>
+                    <div class="mt-2">
+                        <span class="text-[11px] text-gray-600 font-semibold">Pilih File Wallpaper Background:</span>
+                        <input type="file" id="admin-wallpaper-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
+                    </div>
+                    <select id="admin-setting-theme" class="w-full p-2 border rounded-lg text-sm mt-2">
                         <option value="bg-emerald-600">Hijau Emerald (Default)</option>
                         <option value="bg-blue-600">Biru Elegan</option>
                         <option value="bg-purple-600">Ungu Mewah</option>
@@ -216,14 +226,18 @@
                     </select>
                 </div>
 
-                <!-- KELOLA ETALASE -->
+                <!-- KELOLA KATEGORI & UPLOAD IKON GAMBARNYA -->
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">📂 Kelola Kategori Etalase Toko</label>
-                    <div class="flex space-x-2">
-                        <input type="text" id="new-category-input" placeholder="Cth: Fashion, Sembako, dll" class="w-full p-2 border rounded-lg text-sm">
-                        <button onclick="addNewCategory()" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-semibold">Tambah</button>
+                    <label class="text-xs font-bold text-emerald-700">📂 Kelola Kategori Etalase & Upload Ikon Gambar</label>
+                    <div class="space-y-2 bg-gray-50 p-3 rounded border">
+                        <input type="text" id="new-category-name" placeholder="Nama Kategori (Cth: Makanan, Minuman)" class="w-full p-1.5 border rounded text-xs">
+                        <div>
+                            <span class="text-[10px] text-gray-500">Upload Ikon Gambar Kategori:</span>
+                            <input type="file" id="new-category-icon-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
+                        </div>
+                        <button onclick="addNewCategoryWithIcon()" class="w-full bg-blue-600 text-white py-1.5 rounded text-xs font-semibold">Tambah Kategori + Ikon</button>
                     </div>
-                    <div id="admin-category-list" class="flex flex-wrap gap-1 mt-2 text-xs"></div>
+                    <div id="admin-category-list" class="space-y-2 mt-2 text-xs"></div>
                 </div>
 
                 <!-- AUDIO NOTIFIKASI -->
@@ -241,7 +255,7 @@
                     </div>
                 </div>
 
-                <!-- KELOLA AKUN SALES (SANDI DISAMARKAN) -->
+                <!-- KELOLA AKUN SALES -->
                 <div class="pt-2 border-t space-y-3">
                     <label class="text-xs font-bold text-emerald-700">Kelola Akun Sales / Pemasar</label>
                     <div class="space-y-2 bg-gray-50 p-3 rounded border">
@@ -279,16 +293,21 @@
             brandAddress: "Kantor Pusat Rajeg, Tangerang",
             adminPass: "Rojak123",
             rajaOngkirKey: "",
-            logoBannerUrl: "",
+            logoBannerBase64: "",
+            wallpaperBase64: "",
             themeColor: "bg-emerald-600",
-            wallpaperUrl: "",
             notifAudioUrl: "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3",
             markupAmount: 10000,
             commPercentage: 30,
             salesAccounts: [
                 { id: "sls_1", name: "Asep Sales", wa: "08123456789", bank: "BCA 987654 a.n Asep", pass: "sales123" }
             ],
-            categories: ["Makanan", "Minuman", "Sembako", "Elektronik"]
+            categories: [
+                { name: "Makanan", icon: "" },
+                { name: "Minuman", icon: "" },
+                { name: "Sembako", icon: "" },
+                { name: "Elektronik", icon: "" }
+            ]
         };
 
         let users = JSON.parse(localStorage.getItem('umah_users')) || [];
@@ -319,6 +338,35 @@
             audio.onended = function() { isPlayingAudio = false; processAudioQueue(); };
         }
 
+        // FUNGSI KOMPRESSI GAMBAR OTOMATIS (HD & RINGAN)
+        function compressImage(file, maxWidth, maxHeight, quality, callback) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                    if (height > maxHeight) {
+                        width = Math.round((width * maxHeight) / height);
+                        height = maxHeight;
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                    callback(compressedDataUrl);
+                }
+            }
+        }
+
         window.onload = function() {
             applyConfig();
             checkSession();
@@ -328,8 +376,8 @@
             document.getElementById('app-title').innerText = appConfig.brandName;
             
             const logoContainer = document.getElementById('brand-logo-container');
-            if (appConfig.logoBannerUrl) {
-                logoContainer.innerHTML = `<img src="${appConfig.logoBannerUrl}" alt="${appConfig.brandName}" class="h-8 max-w-[170px] object-contain filter drop-shadow">`;
+            if (appConfig.logoBannerBase64) {
+                logoContainer.innerHTML = `<img src="${appConfig.logoBannerBase64}" alt="${appConfig.brandName}" class="h-9 max-w-[190px] object-contain filter drop-shadow">`;
             } else {
                 logoContainer.innerHTML = `<span class="text-xl font-bold">🛒 ${appConfig.brandName}</span>`;
             }
@@ -338,8 +386,8 @@
             headerEl.className = `${appConfig.themeColor || 'bg-emerald-600'} text-white p-3 shadow-md flex justify-between items-center sticky top-0 z-50 transition-all`;
 
             const bodyEl = document.getElementById('app-body');
-            if (appConfig.wallpaperUrl) {
-                bodyEl.style.backgroundImage = `linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url('${appConfig.wallpaperUrl}')`;
+            if (appConfig.wallpaperBase64) {
+                bodyEl.style.backgroundImage = `linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url('${appConfig.wallpaperBase64}')`;
             } else {
                 bodyEl.style.backgroundImage = 'none';
             }
@@ -348,8 +396,6 @@
             document.getElementById('admin-setting-address').value = appConfig.brandAddress;
             document.getElementById('admin-setting-pass').value = appConfig.adminPass || 'Rojak123';
             document.getElementById('admin-setting-rajaongkir').value = appConfig.rajaOngkirKey || '';
-            document.getElementById('admin-setting-logo-banner').value = appConfig.logoBannerUrl || '';
-            document.getElementById('admin-setting-wallpaper').value = appConfig.wallpaperUrl || '';
             document.getElementById('admin-setting-theme').value = appConfig.themeColor || 'bg-emerald-600';
             document.getElementById('admin-notif-audio').value = appConfig.notifAudioUrl || '';
             document.getElementById('admin-comm-percentage').value = appConfig.commPercentage || 30;
@@ -405,7 +451,10 @@
                 
                 const catSelect = document.getElementById('auth-category');
                 catSelect.innerHTML = '';
-                appConfig.categories.forEach(cat => catSelect.innerHTML += `<option value="${cat}">${cat}</option>`);
+                appConfig.categories.forEach(cat => {
+                    let catName = typeof cat === 'string' ? cat : cat.name;
+                    catSelect.innerHTML += `<option value="${catName}">${catName}</option>`;
+                });
             }
         }
 
@@ -458,11 +507,18 @@
             document.getElementById('view-buyer-dashboard').classList.remove('hidden');
             
             const filterContainer = document.getElementById('category-filters-container');
-            filterContainer.innerHTML = `<button onclick="filterByCategory('Semua')" class="px-3 py-1 rounded-full text-xs font-semibold ${selectedCategoryFilter === 'Semua' ? 'bg-emerald-600 text-white' : 'bg-white/95 text-gray-700 shadow-sm'}">Semua</button>`;
+            filterContainer.innerHTML = `<button onclick="filterByCategory('Semua')" class="flex flex-col items-center p-2 rounded-xl text-xs font-semibold ${selectedCategoryFilter === 'Semua' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}"><span class="text-lg">🌐</span><span>Semua</span></button>`;
             
             appConfig.categories.forEach(cat => {
-                const isActive = selectedCategoryFilter === cat;
-                filterContainer.innerHTML += `<button onclick="filterByCategory('${cat}')" class="px-3 py-1 rounded-full text-xs font-semibold ${isActive ? 'bg-emerald-600 text-white' : 'bg-white/95 text-gray-700 shadow-sm'}">${cat}</button>`;
+                let catName = typeof cat === 'string' ? cat : cat.name;
+                let catIcon = (typeof cat === 'object' && cat.icon) ? `<img src="${cat.icon}" class="w-8 h-8 object-cover rounded-full mb-1">` : `<span class="text-lg">🏷️</span>`;
+                const isActive = selectedCategoryFilter === catName;
+                filterContainer.innerHTML += `
+                    <button onclick="filterByCategory('${catName}')" class="flex flex-col items-center p-2 rounded-xl text-xs font-semibold min-w-[70px] ${isActive ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}">
+                        ${catIcon}
+                        <span>${catName}</span>
+                    </button>
+                `;
             });
 
             const container = document.getElementById('buyer-shops-container');
@@ -532,9 +588,13 @@
             storeProds.forEach(prod => {
                 const markupPrice = prod.basePrice + (appConfig.markupAmount || 10000);
                 const buyBtn = isOpen ? `<button onclick="addToCart('${prod.id}', '${prod.name}', ${prod.basePrice}, ${markupPrice})" class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg font-semibold">Tambah</button>` : `<span class="text-xs text-red-500">Tutup</span>`;
+                let imgTag = prod.image ? `<img src="${prod.image}" class="w-16 h-16 object-cover rounded-lg mr-3 shadow-sm">` : `<div class="w-16 h-16 bg-gray-200 rounded-lg mr-3 flex items-center justify-center text-xs text-gray-400">No Img</div>`;
                 prodContainer.innerHTML += `
-                    <div class="bg-white/95 backdrop-blur p-3 rounded-xl shadow-sm flex justify-between items-center">
-                        <div><h5 class="font-bold text-sm">${prod.name}</h5><p class="text-xs text-emerald-600 font-semibold">Rp${markupPrice.toLocaleString()}</p></div>
+                    <div class="bg-white/95 backdrop-blur p-3 rounded-xl shadow-sm flex items-center justify-between">
+                        <div class="flex items-center">
+                            ${imgTag}
+                            <div><h5 class="font-bold text-sm">${prod.name}</h5><p class="text-xs text-emerald-600 font-semibold">Rp${markupPrice.toLocaleString()}</p></div>
+                        </div>
                         ${buyBtn}
                     </div>
                 `;
@@ -617,16 +677,32 @@
             showSellerDashboard();
         }
 
+        // TAMBAH PRODUK DENGAN UPLOAD FILE FOTO & KOMPRESI OTOMATIS
         function addSellerProduct(event) {
             event.preventDefault();
             const name = document.getElementById('prod-name').value;
             const basePrice = parseInt(document.getElementById('prod-price').value);
-            let allProducts = JSON.parse(localStorage.getItem('umah_products')) || [];
-            allProducts.push({ id: 'prd_' + Date.now(), sellerId: currentUser.id, name, basePrice });
-            localStorage.setItem('umah_products', JSON.stringify(allProducts));
-            document.getElementById('prod-name').value = '';
-            document.getElementById('prod-price').value = '';
-            alert("Produk disimpan!");
+            const fileInput = document.getElementById('prod-image-file');
+
+            if (fileInput.files && fileInput.files[0]) {
+                compressImage(fileInput.files[0], 500, 500, 0.7, function(base64Img) {
+                    let allProducts = JSON.parse(localStorage.getItem('umah_products')) || [];
+                    allProducts.push({ 
+                        id: 'prd_' + Date.now(), 
+                        sellerId: currentUser.id, 
+                        name, 
+                        basePrice, 
+                        image: base64Img 
+                    });
+                    localStorage.setItem('umah_products', JSON.stringify(allProducts));
+                    document.getElementById('prod-name').value = '';
+                    document.getElementById('prod-price').value = '';
+                    fileInput.value = '';
+                    alert("Produk & Foto berhasil disimpan secara real-time!");
+                });
+            } else {
+                alert("Wajib upload foto produk!");
+            }
         }
 
         function renderSellerPOs() {
@@ -776,27 +852,50 @@
 
         function backFromAdmin() { checkSession(); }
 
-        function addNewCategory() {
-            const catName = document.getElementById('new-category-input').value.trim();
-            if (catName && !appConfig.categories.includes(catName)) {
-                appConfig.categories.push(catName);
-                document.getElementById('new-category-input').value = '';
+        // TAMBAH KATEGORI DENGAN UPLOAD IKON GAMBAR
+        function addNewCategoryWithIcon() {
+            const name = document.getElementById('new-category-name').value.trim();
+            const iconFile = document.getElementById('new-category-icon-file');
+
+            if (!name) { alert("Nama kategori wajib diisi!"); return; }
+
+            if (iconFile.files && iconFile.files[0]) {
+                compressImage(iconFile.files[0], 150, 150, 0.7, function(base64Icon) {
+                    appConfig.categories.push({ name: name, icon: base64Icon });
+                    document.getElementById('new-category-name').value = '';
+                    iconFile.value = '';
+                    localStorage.setItem('umah_config', JSON.stringify(appConfig));
+                    renderAdminCategoryList();
+                    alert("Kategori dan ikon berhasil ditambahkan!");
+                });
+            } else {
+                appConfig.categories.push({ name: name, icon: "" });
+                document.getElementById('new-category-name').value = '';
+                localStorage.setItem('umah_config', JSON.stringify(appConfig));
                 renderAdminCategoryList();
-                alert("Kategori etalase '" + catName + "' ditambahkan!");
-            } else { alert("Nama kategori kosong atau sudah ada!"); }
+                alert("Kategori berhasil ditambahkan (tanpa ikon)!");
+            }
         }
 
         function renderAdminCategoryList() {
             const container = document.getElementById('admin-category-list');
             container.innerHTML = '';
             appConfig.categories.forEach((cat, index) => {
-                container.innerHTML += `<span class="bg-gray-200 px-2 py-1 rounded font-medium">${cat} <button onclick="removeCategory(${index})" class="text-red-500 font-bold ml-1">×</button></span>`;
+                let catName = typeof cat === 'string' ? cat : cat.name;
+                let catIcon = (typeof cat === 'object' && cat.icon) ? `<img src="${cat.icon}" class="w-6 h-6 object-cover rounded-full inline-block mr-1">` : '';
+                container.innerHTML += `
+                    <div class="bg-gray-50 p-2 rounded border flex justify-between items-center">
+                        <div class="flex items-center">${catIcon}<span>${catName}</span></div>
+                        <button onclick="removeCategory(${index})" class="text-red-500 font-bold px-2">×</button>
+                    </div>
+                `;
             });
         }
 
         function removeCategory(index) {
             if(appConfig.categories.length <= 1) { alert("Minimal 1 kategori!"); return; }
             appConfig.categories.splice(index, 1);
+            localStorage.setItem('umah_config', JSON.stringify(appConfig));
             renderAdminCategoryList();
         }
 
@@ -913,15 +1012,43 @@
             let newPass = document.getElementById('admin-setting-pass').value.trim();
             if (newPass) appConfig.adminPass = newPass;
             appConfig.rajaOngkirKey = document.getElementById('admin-setting-rajaongkir').value.trim();
-            appConfig.logoBannerUrl = document.getElementById('admin-setting-logo-banner').value;
-            appConfig.wallpaperUrl = document.getElementById('admin-setting-wallpaper').value;
             appConfig.themeColor = document.getElementById('admin-setting-theme').value;
-            appConfig.notifAudioUrl = document.getElementById('admin-notif-audio').value;
             appConfig.commPercentage = parseFloat(document.getElementById('admin-comm-percentage').value) || 30;
-            
-            localStorage.setItem('umah_config', JSON.stringify(appConfig));
-            applyConfig();
-            alert("Pengaturan, API RajaOngkir, dan keamanan sandi berhasil disimpan secara real-time!");
+
+            const logoFile = document.getElementById('admin-logo-file');
+            const wallFile = document.getElementById('admin-wallpaper-file');
+
+            let pendingSaves = 0;
+            if (logoFile.files && logoFile.files[0]) pendingSaves++;
+            if (wallFile.files && wallFile.files[0]) pendingSaves++;
+
+            if (pendingSaves === 0) {
+                localStorage.setItem('umah_config', JSON.stringify(appConfig));
+                applyConfig();
+                alert("Pengaturan admin berhasil disimpan secara real-time!");
+            } else {
+                if (logoFile.files && logoFile.files[0]) {
+                    compressImage(logoFile.files[0], 600, 150, 0.75, function(base64Logo) {
+                        appConfig.logoBannerBase64 = base64Logo;
+                        checkFinish();
+                    });
+                }
+                if (wallFile.files && wallFile.files[0]) {
+                    compressImage(wallFile.files[0], 800, 800, 0.7, function(base64Wall) {
+                        appConfig.wallpaperBase64 = base64Wall;
+                        checkFinish();
+                    });
+                }
+            }
+
+            function checkFinish() {
+                pendingSaves--;
+                if (pendingSaves <= 0) {
+                    localStorage.setItem('umah_config', JSON.stringify(appConfig));
+                    applyConfig();
+                    alert("Pengaturan, logo, wallpaper & kompresi berhasil disimpan secara real-time!");
+                }
+            }
         }
     </script>
 </body>
