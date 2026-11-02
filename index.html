@@ -54,7 +54,7 @@
                 </p>
                 <div class="border-t border-emerald-200/60 pt-2 space-y-1">
                     <p>🏪 <b>Mitra Toko:</b> Ekspansi pasar digital dengan sistem <b>100% keuntungan bersih utuh tanpa potongan</b> harga dasar.</p>
-                    <p>🛍️ <b>Pembeli:</b> Belanja produk lokal berkualitas dengan cepat, aman, dan nyaman.</p>
+                    <p>🛍️ <b>Pembeli:</b> Belanja produk lokal terdekat dengan cepat, aman, dan nyaman.</p>
                 </div>
             </div>
 
@@ -104,7 +104,7 @@
                 </div>
             </div>
 
-            <!-- HALAMAN 1.2: FORM PENDAFTARAN / LOGIN (DENGAN PILIHAN SALES) -->
+            <!-- HALAMAN 1.2: FORM PENDAFTARAN / LOGIN -->
             <div id="dynamic-auth-form" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md hidden space-y-4">
                 <div id="auth-form-brand-logo" class="flex justify-center"></div>
                 <h3 id="auth-form-title" class="text-lg font-bold text-center mb-2">Form</h3>
@@ -123,10 +123,9 @@
                         <select id="auth-category" class="w-full p-2 border rounded-lg text-sm"></select>
                     </div>
                     <div id="field-address" class="hidden">
-                        <label class="text-xs font-semibold text-gray-600">Alamat Lengkap / Wilayah</label>
+                        <label class="text-xs font-semibold text-gray-600">Alamat Lengkap / Wilayah (Cth: Rajeg, Tangerang)</label>
                         <textarea id="auth-address" placeholder="Cth: Jl. Raya Rajeg No.10, Tangerang" class="w-full p-2 border rounded-lg text-sm"></textarea>
                     </div>
-                    <!-- PILIHAN SALES YANG MEREKOMENDASIKAN -->
                     <div id="field-sales-select" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Rekomendasi / Sales Penghubung</label>
                         <select id="auth-sales-name" class="w-full p-2 border rounded-lg text-sm font-semibold text-purple-700">
@@ -159,7 +158,7 @@
             <div class="flex justify-between items-center bg-white/95 backdrop-blur p-3 rounded-lg shadow-sm">
                 <div>
                     <h3 id="buyer-greeting" class="font-bold text-md text-gray-800">Halo, Pembeli</h3>
-                    <button onclick="openAddressManager()" class="text-[11px] text-emerald-600 font-semibold underline">📍 Kelola Daftar Alamat Kirim</button>
+                    <button onclick="openAddressManager()" class="text-[11px] text-emerald-600 font-semibold underline">📍 Kelola Alamat & Filter Wilayah</button>
                 </div>
                 <button onclick="logout()" class="text-xs text-red-500 font-semibold">Keluar</button>
             </div>
@@ -167,7 +166,7 @@
             <div id="category-filters-container" class="flex space-x-3 overflow-x-auto py-2"></div>
             
             <div class="flex justify-between items-center px-1">
-                <h4 class="font-bold text-sm text-gray-700">🏪 Daftar Toko / Mitra (Urut Terdekat)</h4>
+                <h4 class="font-bold text-sm text-gray-700">🏪 Toko / Mitra Terdekat (Sesuai Wilayah)</h4>
             </div>
             
             <div id="buyer-shops-container" class="space-y-4"></div>
@@ -182,11 +181,11 @@
         <!-- MODAL KELOLA ALAMAT -->
         <div id="modal-address-manager" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white p-5 rounded-xl max-w-sm w-full space-y-3">
-                <h3 class="font-bold text-md text-gray-800">📍 Daftar Alamat Pengiriman Saya</h3>
+                <h3 class="font-bold text-md text-gray-800">📍 Daftar Alamat & Wilayah Pengiriman</h3>
                 <div id="buyer-address-list" class="space-y-2 text-xs max-h-40 overflow-y-auto"></div>
                 <div class="border-t pt-2 space-y-2">
-                    <input type="text" id="new-addr-label" placeholder="Label Alamat (Cth: Rumah, Kantor)" class="w-full p-2 border rounded text-xs">
-                    <textarea id="new-addr-detail" placeholder="Detail Alamat Lengkap & Patokan" class="w-full p-2 border rounded text-xs"></textarea>
+                    <input type="text" id="new-addr-label" placeholder="Label Alamat (Cth: Rumah)" class="w-full p-2 border rounded text-xs">
+                    <textarea id="new-addr-detail" placeholder="Detail Alamat & Kecamatan/Kota (Cth: Rajeg, Tangerang)" class="w-full p-2 border rounded text-xs"></textarea>
                     <button onclick="addNewBuyerAddress()" class="w-full bg-blue-600 text-white py-1.5 rounded text-xs font-semibold">Tambah Alamat Baru</button>
                 </div>
                 <button onclick="closeAddressManager()" class="w-full bg-gray-300 text-gray-700 py-1.5 rounded text-xs font-semibold">Tutup</button>
@@ -254,14 +253,13 @@
                 </div>
             </div>
             
-            <!-- DOKUMEN KESEPAKATAN DENGAN 3 PIHAK -->
             <div id="seller-signed-proposal-box" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-2 text-xs">
                 <h4 class="font-bold text-emerald-700">📜 Dokumen Kesepakatan Mitra (Sah - 3 Pihak)</h4>
                 <p class="text-gray-500">Kesepakatan sistem 100% utuh tanpa potongan harga dasar.</p>
                 <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t text-center">
                     <div class="border p-2 rounded bg-gray-50">
                         <p class="font-bold text-[10px] text-gray-600">Pihak Admin (Abdul Rojak)</p>
-                        <p class="text-emerald-700 font-semibold text-[10px] mt-1">✓ Disetujui / Terverifikasi</p>
+                        <p class="text-emerald-700 font-semibold text-[10px] mt-1">✓ Terverifikasi</p>
                     </div>
                     <div class="border p-2 rounded bg-gray-50">
                         <p class="font-bold text-[10px] text-gray-600">Sales Pendamping</p>
@@ -317,33 +315,20 @@
                     <input type="text" id="admin-setting-pass" placeholder="Kata Sandi Baru Admin" class="w-full p-2 border rounded-lg text-sm">
                 </div>
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🌐 Pengaturan RajaOngkir (API Key)</label>
-                    <input type="text" id="admin-setting-rajaongkir" placeholder="Masukkan Shipping Cost API Key..." class="w-full p-2 border rounded-lg text-sm">
-                </div>
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">💳 Pengaturan Payment API Key</label>
-                    <input type="text" id="admin-setting-payment" placeholder="Masukkan Payment API Key..." class="w-full p-2 border rounded-lg text-sm">
-                </div>
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">📲 Pengaturan QRISLY API Key</label>
-                    <input type="text" id="admin-setting-qrisly" placeholder="Masukkan QRISLY API Key..." class="w-full p-2 border rounded-lg text-sm">
-                </div>
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek / Marketplace (PNG Transparan / GIF)</label>
+                    <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek / Marketplace</label>
                     <input type="file" id="admin-marketplace-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
                 </div>
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🎨 Upload Logo Banner & Wallpaper</label>
-                    <div><span class="text-[11px] text-gray-600 font-semibold">Logo Header Navbar (PNG Transparan):</span><input type="file" id="admin-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
-                    <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Wallpaper Background:</span><input type="file" id="admin-wallpaper-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
+                    <div><span class="text-[11px] text-gray-600 font-semibold">Logo Header Navbar:</span><input type="file" id="admin-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
                 </div>
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🎁 Pengaturan Iklan Banner / GIF Promo</label>
-                    <div><span class="text-[11px] text-gray-600 font-semibold">Banner Promo ATAS (JPG/PNG/GIF):</span><input type="file" id="admin-promo-top-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
-                    <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Banner Promo BAWAH (JPG/PNG/GIF):</span><input type="file" id="admin-promo-bottom-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
+                    <div><span class="text-[11px] text-gray-600 font-semibold">Banner Promo ATAS:</span><input type="file" id="admin-promo-top-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
+                    <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Banner Promo BAWAH:</span><input type="file" id="admin-promo-bottom-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
                 </div>
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">📂 Kelola Kategori Etalase & Ikon (PNG Transparan)</label>
+                    <label class="text-xs font-bold text-emerald-700">📂 Kelola Kategori Etalase & Ikon</label>
                     <div class="space-y-2 bg-gray-50 p-3 rounded border">
                         <input type="text" id="new-category-name" placeholder="Nama Kategori" class="w-full p-1.5 border rounded text-xs">
                         <input type="file" id="new-category-icon-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
@@ -363,9 +348,6 @@
             brandName: "Jastip Umah Sanum",
             brandAddress: "Kantor Pusat Rajeg, Tangerang",
             adminPass: "Rojak123",
-            rajaOngkirKey: "",
-            paymentApiKey: "",
-            qrislyApiKey: "",
             marketLogoBase64: "",
             logoBannerBase64: "",
             wallpaperBase64: "",
@@ -393,10 +375,9 @@
         let signatureDataUrl = "";
         let sigCanvas, sigCtx, isDrawing = false;
 
-        // FUNGSI AI SUARA (SPEECH SYNTHESIS)
         function speakVoice(text) {
             if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // Hentikan suara sebelumnya jika ada
+                window.speechSynthesis.cancel();
                 let utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'id-ID';
                 utterance.rate = 1.0;
@@ -525,9 +506,6 @@
             document.getElementById('admin-setting-brand').value = appConfig.brandName;
             document.getElementById('admin-setting-address').value = appConfig.brandAddress;
             document.getElementById('admin-setting-pass').value = appConfig.adminPass || 'Rojak123';
-            document.getElementById('admin-setting-rajaongkir').value = appConfig.rajaOngkirKey || '';
-            document.getElementById('admin-setting-payment').value = appConfig.paymentApiKey || '';
-            document.getElementById('admin-setting-qrisly').value = appConfig.qrislyApiKey || '';
             renderAdminCategoryList();
         }
 
@@ -536,17 +514,16 @@
                 hideAllViews();
                 if (currentUser.role === 'buyer') {
                     showBuyerDashboard();
-                    speakVoice("Selamat datang kembali, Kak! Senang bisa melayani Anda hari ini. Silakan pilih produk dan kebutuhan terbaik dari toko mitra lokal.");
+                    speakVoice("Selamat datang kembali, Kak! Silakan pilih produk terbaik dari toko mitra lokal terdekat.");
                 } else if (currentUser.role === 'seller') {
                     showSellerDashboard();
-                    speakVoice("Halo, Mitra UMKM hebat! Selamat datang di dashboard toko Anda. Nikmati kemudahan jualan online dengan sistem 100% keuntungan bersih tanpa potongan.");
+                    speakVoice("Halo, Mitra UMKM hebat! Selamat datang di dashboard toko Anda dengan sistem utuh tanpa potongan.");
                 }
             } else {
                 hideAllViews();
                 document.getElementById('view-auth').classList.remove('hidden');
                 document.getElementById('auth-selection-card').classList.remove('hidden');
-                // Suara Sambutan Awal
-                speakVoice("Halo, selamat datang di Jastip Umah Sanum! Platform digital terpercaya untuk memajukan UMKM lokal dan memudahkan kebutuhan harian Anda.");
+                speakVoice("Halo, selamat datang di Jastip Umah Sanum! Platform digital terpercaya untuk UMKM lokal.");
             }
         }
 
@@ -565,7 +542,7 @@
 
         function agreeProposalAndProceed() {
             if (!signatureDataUrl) {
-                alert("Mohon lakukan tanda tangan digital terlebih dahulu di dalam kotak yang disediakan!");
+                alert("Mohon lakukan tanda tangan digital terlebih dahulu!");
                 return;
             }
             document.getElementById('view-seller-proposal').classList.add('hidden');
@@ -663,7 +640,7 @@
                 const name = document.getElementById('auth-name').value.trim();
                 const address = document.getElementById('auth-address').value.trim();
                 const assignedSales = activeRole === 'seller' ? document.getElementById('auth-sales-name').value : '-';
-                if (!name || !address) { alert("Nama dan alamat wajib diisi untuk pendaftaran baru!"); return; }
+                if (!name || !address) { alert("Nama dan alamat wajib diisi!"); return; }
                 
                 if (activeRole === 'seller') {
                     const storeLogoFile = document.getElementById('auth-store-logo-file');
@@ -742,17 +719,19 @@
             let sellers = users.filter(u => u.role === 'seller');
             if (selectedCategoryFilter !== 'Semua') sellers = sellers.filter(s => s.category === selectedCategoryFilter);
 
+            // FILTER JARAK / WILAYAH TERDEKAT (MENYEMBUNYIKAN TOKO YANG JAUH)
             let userDefaultCity = currentUser.addresses && currentUser.addresses[0] ? currentUser.addresses[0].detail.toLowerCase() : '';
-            sellers.sort((a, b) => {
-                let aAddr = a.addresses && a.addresses[0] ? a.addresses[0].detail.toLowerCase() : '';
-                let bAddr = b.addresses && b.addresses[0] ? b.addresses[0].detail.toLowerCase() : '';
-                let aMatch = userDefaultCity && aAddr.includes(userDefaultCity) ? 0 : 1;
-                let bMatch = userDefaultCity && bAddr.includes(userDefaultCity) ? 0 : 1;
-                return aMatch - bMatch;
-            });
+            if (userDefaultCity) {
+                // Ambil kata kunci kota/kecamatan pertama dari alamat pembeli
+                let mainLocationKey = userDefaultCity.split(',')[0].trim();
+                sellers = sellers.filter(seller => {
+                    let sAddr = seller.addresses && seller.addresses[0] ? seller.addresses[0].detail.toLowerCase() : '';
+                    return sAddr.includes(mainLocationKey);
+                });
+            }
 
             if (sellers.length === 0) {
-                container.innerHTML = '<p class="text-xs text-gray-500 text-center bg-white/95 backdrop-blur p-4 rounded-xl">Belum ada toko di kategori ini.</p>';
+                container.innerHTML = '<p class="text-xs text-gray-500 text-center bg-white/95 backdrop-blur p-4 rounded-xl">Belum ada toko di wilayah terdekat Anda saat ini.</p>';
             } else {
                 sellers.forEach(seller => {
                     const isOpen = seller.isOpen !== false;
@@ -812,7 +791,8 @@
             document.getElementById('new-addr-label').value = '';
             document.getElementById('new-addr-detail').value = '';
             renderBuyerAddressList();
-            alert("Alamat baru ditambahkan!");
+            showBuyerDashboard();
+            alert("Alamat & wilayah diperbarui!");
         }
 
         function removeBuyerAddress(idx) {
@@ -821,6 +801,7 @@
             localStorage.setItem('umah_users', JSON.stringify(users));
             localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
             renderBuyerAddressList();
+            showBuyerDashboard();
         }
 
         function renderBuyerTracking() {
@@ -836,20 +817,14 @@
                 if (isCompleted && !hasReviewed) {
                     reviewFormHtml = `
                         <div class="mt-2 pt-2 border-t space-y-2">
-                            <p class="font-bold text-purple-700">⭐ Pesanan Tiba! Wajib Beri Ulasan & Rating:</p>
+                            <p class="font-bold text-purple-700">⭐ Pesanan Tiba! Beri Ulasan & Rating:</p>
                             <select id="rev_star_${ord.id}" class="w-full p-1 border rounded text-xs">
-                                <option value="5">⭐⭐⭐⭐⭐ Sangat Bagus (Puas)</option>
+                                <option value="5">⭐⭐⭐⭐⭐ Sangat Bagus</option>
                                 <option value="4">⭐⭐⭐⭐ Bagus</option>
                                 <option value="3">⭐⭐⭐ Cukup</option>
-                                <option value="2">⭐⭐ Kurang</option>
-                                <option value="1">⭐ Buruk (Kecewa)</option>
                             </select>
                             <input type="text" id="rev_text_${ord.id}" placeholder="Tulis komentar ulasan..." class="w-full p-1 border rounded text-xs">
-                            <div>
-                                <label class="text-[10px] font-semibold text-gray-600">Upload Foto Fisik Produk (Transparan):</label>
-                                <input type="file" id="rev_file_${ord.id}" accept="image/*" class="w-full p-1 border rounded text-xs bg-transparent">
-                            </div>
-                            <button onclick="submitReviewWithPhoto('${ord.id}', '${ord.storeId}')" class="w-full bg-purple-600 text-white py-1 rounded text-xs font-semibold">Kirim Ulasan & Foto</button>
+                            <button onclick="submitReviewWithPhoto('${ord.id}', '${ord.storeId}')" class="w-full bg-purple-600 text-white py-1 rounded text-xs font-semibold">Kirim Ulasan</button>
                         </div>
                     `;
                 } else if (hasReviewed) {
@@ -870,32 +845,13 @@
         function submitReviewWithPhoto(orderId, storeId) {
             const rating = parseInt(document.getElementById('rev_star_' + orderId).value);
             const comment = document.getElementById('rev_text_' + orderId).value.trim();
-            const fileInput = document.getElementById('rev_file_' + orderId);
-
-            if (!comment) { alert("Tuliskan komentar ulasan Anda!"); return; }
-
-            if (fileInput.files && fileInput.files[0]) {
-                compressImage(fileInput.files[0], 400, 400, 0.9, function(base64Photo) {
-                    saveReviewData(orderId, storeId, rating, comment, base64Photo);
-                });
-            } else {
-                saveReviewData(orderId, storeId, rating, comment, "");
-            }
-        }
-
-        function saveReviewData(orderId, storeId, rating, comment, photoBase64) {
+            if (!comment) { alert("Tuliskan komentar ulasan!"); return; }
             reviews.push({
-                orderId,
-                storeId,
-                buyerName: currentUser.name,
-                buyerWa: currentUser.wa,
-                rating,
-                comment,
-                photo: photoBase64,
-                date: new Date().toLocaleDateString()
+                orderId, storeId, buyerName: currentUser.name, buyerWa: currentUser.wa,
+                rating, comment, photo: "", date: new Date().toLocaleDateString()
             });
             localStorage.setItem('umah_reviews', JSON.stringify(reviews));
-            alert("Terima kasih! Ulasan dan foto berhasil dikirim.");
+            alert("Ulasan berhasil dikirim!");
             showBuyerDashboard();
         }
 
@@ -925,16 +881,14 @@
             const revContainer = document.getElementById('store-reviews-container');
             revContainer.innerHTML = '';
             if (storeReviews.length === 0) {
-                revContainer.innerHTML = '<p class="text-gray-400">Belum ada ulasan untuk toko ini.</p>';
+                revContainer.innerHTML = '<p class="text-gray-400">Belum ada ulasan.</p>';
             } else {
                 storeReviews.slice().reverse().forEach(rev => {
                     let stars = '⭐'.repeat(rev.rating);
-                    let photoHtml = rev.photo ? `<div class="mt-1"><img src="${rev.photo}" class="w-20 h-20 object-cover rounded border bg-transparent"></div>` : '';
                     revContainer.innerHTML += `
                         <div class="border p-2 rounded bg-white space-y-1">
                             <div class="flex justify-between font-bold text-gray-700"><span>${rev.buyerName}</span><span>${stars}</span></div>
                             <p class="text-gray-600">"${rev.comment}"</p>
-                            ${photoHtml}
                             <p class="text-[10px] text-gray-400">${rev.date}</p>
                         </div>
                     `;
@@ -994,7 +948,6 @@
             let netProfit = subtotal - totalModal;
 
             let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
-            
             const newOrder = {
                 id: 'ord_' + Date.now(),
                 buyerName: currentUser.name,
@@ -1014,7 +967,7 @@
             localStorage.setItem('umah_orders', JSON.stringify(allOrders));
             playNotificationSound();
 
-            alert(`Pesanan berhasil dibuat dengan metode (${paymentMethod})! Dikirim ke alamat: ` + chosenAddress);
+            alert(`Pesanan berhasil dibuat (${paymentMethod})!`);
             cart = [];
             showBuyerDashboard();
         }
@@ -1087,16 +1040,13 @@
                 container.innerHTML += `
                     <div class="border p-3 rounded-lg space-y-2 bg-white/95">
                         <p class="font-bold">ID PO: ${ord.id}</p>
-                        <p>Pemesan: ${ord.buyerName} (${ord.buyerWa}) - <b>[${ord.paymentMethod || 'COD'}]</b></p>
-                        <p class="text-[11px] text-gray-600">Alamat Kirim: <b>${ord.buyerAddress || '-'}</b></p>
+                        <p>Pemesan: ${ord.buyerName} (${ord.buyerWa})</p>
                         <ul class="pl-2">${items}</ul>
                         <p class="font-semibold text-emerald-700">Total: Rp${ord.total.toLocaleString()}</p>
                         <select id="status_${ord.id}" onchange="updateStatus('${ord.id}')" class="w-full p-1 border rounded text-xs">
                             <option value="Menunggu Konfirmasi Toko" ${ord.deliveryStatus === 'Menunggu Konfirmasi Toko' ? 'selected' : ''}>1. Menunggu Konfirmasi</option>
                             <option value="Kurir Menuju Toko" ${ord.deliveryStatus === 'Kurir Menuju Toko' ? 'selected' : ''}>2. Kurir Menuju Toko</option>
-                            <option value="Barang Diambil Kurir" ${ord.deliveryStatus === 'Barang Diambil Kurir' ? 'selected' : ''}>3. Barang Diambil Kurir</option>
-                            <option value="Dalam Perjalanan ke Pembeli" ${ord.deliveryStatus === 'Dalam Perjalanan ke Pembeli' ? 'selected' : ''}>4. Menuju Pembeli</option>
-                            <option value="Pesanan Selesai / Diterima" ${ord.deliveryStatus === 'Pesanan Selesai / Diterima' ? 'selected' : ''}>5. Selesai</option>
+                            <option value="Pesanan Selesai / Diterima" ${ord.deliveryStatus === 'Pesanan Selesai / Diterima' ? 'selected' : ''}>3. Selesai</option>
                         </select>
                     </div>
                 `;
@@ -1108,7 +1058,7 @@
             let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
             allOrders = allOrders.map(o => o.id === id ? {...o, deliveryStatus: val} : o);
             localStorage.setItem('umah_orders', JSON.stringify(allOrders));
-            alert("Status kurir diperbarui!");
+            alert("Status diperbarui!");
             renderSellerPOs();
         }
 
@@ -1119,10 +1069,8 @@
             const myOrders = allOrders.filter(o => o.storeId === currentUser.id);
             if (myOrders.length === 0) { container.innerHTML = '<p class="text-gray-400">Belum ada data transaksi.</p>'; return; }
             myOrders.forEach(ord => {
-                let badge = ord.isPaidToSeller ? '<span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded font-bold">LUNAS</span>' : '<span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-bold">Menunggu Pencairan</span>';
                 container.innerHTML += `
                     <div class="border p-3 rounded-lg bg-white/95 space-y-2">
-                        <div class="flex justify-between items-center text-[11px] font-bold text-gray-500"><span>PO: ${ord.id}</span><span>${badge}</span></div>
                         <p class="font-bold text-emerald-700">Total Cair: Rp${ord.total.toLocaleString()}</p>
                     </div>
                 `;
@@ -1151,7 +1099,7 @@
                     appConfig.categories.push({ name: name, icon: base64Icon });
                     localStorage.setItem('umah_config', JSON.stringify(appConfig));
                     renderAdminCategoryList();
-                    alert("Kategori & ikon ditambahkan!");
+                    alert("Kategori ditambahkan!");
                 });
             } else {
                 appConfig.categories.push({ name: name, icon: "" });
@@ -1181,9 +1129,6 @@
             appConfig.brandAddress = document.getElementById('admin-setting-address').value;
             let newPass = document.getElementById('admin-setting-pass').value.trim();
             if (newPass) appConfig.adminPass = newPass;
-            appConfig.rajaOngkirKey = document.getElementById('admin-setting-rajaongkir').value.trim();
-            appConfig.paymentApiKey = document.getElementById('admin-setting-payment').value.trim();
-            appConfig.qrislyApiKey = document.getElementById('admin-setting-qrisly').value.trim();
 
             const marketLogoFile = document.getElementById('admin-marketplace-logo-file');
             const topPromoFile = document.getElementById('admin-promo-top-file');
