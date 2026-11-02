@@ -6,6 +6,12 @@ let appConfig = JSON.parse(localStorage.getItem('umah_config')) || {
     platformDiscountPercent: 0,
     sellerAudioUrl: "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3",
     buyerAudioUrl: "https://www.myinstants.com/media/sounds/success-1-6283.mp3",
+
+    // Konfigurasi API Eksternal & Pembayaran
+    rajaOngkirApiKey: "",
+    paymentApiKey: "",
+    qrislyApiKey: "",
+
     marketLogoBase64: "",
     promoTopBase64: "",
     promoBottomBase64: "",
@@ -222,6 +228,12 @@ function applyConfig() {
     if(document.getElementById('admin-setting-discount')) document.getElementById('admin-setting-discount').value = appConfig.platformDiscountPercent || 0;
     if(document.getElementById('admin-setting-seller-audio')) document.getElementById('admin-setting-seller-audio').value = appConfig.sellerAudioUrl || '';
     if(document.getElementById('admin-setting-buyer-audio')) document.getElementById('admin-setting-buyer-audio').value = appConfig.buyerAudioUrl || '';
+    
+    // Sinkronisasi input API Keys di Panel Admin
+    if(document.getElementById('admin-setting-rajaongkir-key')) document.getElementById('admin-setting-rajaongkir-key').value = appConfig.rajaOngkirApiKey || '';
+    if(document.getElementById('admin-setting-payment-key')) document.getElementById('admin-setting-payment-key').value = appConfig.paymentApiKey || '';
+    if(document.getElementById('admin-setting-qrisly-key')) document.getElementById('admin-setting-qrisly-key').value = appConfig.qrislyApiKey || '';
+
     renderAdminCodProofs();
 }
 
@@ -311,7 +323,6 @@ function showAuthMode(role) {
         document.getElementById('field-ref-code').classList.remove('hidden');
         document.getElementById('field-store-logo').classList.remove('hidden');
         
-        // Populate select kategori dinamis jika ada
         let catSelect = document.getElementById('auth-category');
         if(catSelect) {
             catSelect.innerHTML = '';
@@ -1107,6 +1118,11 @@ function saveAdminSettings() {
     let discInput = document.getElementById('admin-setting-discount');
     let sellerAudioInput = document.getElementById('admin-setting-seller-audio');
     let buyerAudioInput = document.getElementById('admin-setting-buyer-audio');
+    
+    // Input API Keys
+    let rajaKeyInput = document.getElementById('admin-setting-rajaongkir-key');
+    let paymentKeyInput = document.getElementById('admin-setting-payment-key');
+    let qrislyKeyInput = document.getElementById('admin-setting-qrisly-key');
 
     if(brandInput) appConfig.brandName = brandInput.value;
     if(addressInput) appConfig.brandAddress = addressInput.value;
@@ -1117,17 +1133,22 @@ function saveAdminSettings() {
     if(sellerAudioInput) appConfig.sellerAudioUrl = sellerAudioInput.value.trim();
     if(buyerAudioInput) appConfig.buyerAudioUrl = buyerAudioInput.value.trim();
 
+    // Simpan API Keys ke objek config
+    if(rajaKeyInput) appConfig.rajaOngkirApiKey = rajaKeyInput.value.trim();
+    if(paymentKeyInput) appConfig.paymentApiKey = paymentKeyInput.value.trim();
+    if(qrislyKeyInput) appConfig.qrislyApiKey = qrislyKeyInput.value.trim();
+
     const marketLogoFile = document.getElementById('admin-marketplace-logo-file');
     if(marketLogoFile && marketLogoFile.files && marketLogoFile.files[0]) {
         compressImage(marketLogoFile.files[0], 500, 200, 0.9, function(base64) {
             appConfig.marketLogoBase64 = base64;
             localStorage.setItem('umah_config', JSON.stringify(appConfig));
             applyConfig();
-            alert("Pengaturan admin & Logo Berhasil Disimpan!");
+            alert("Pengaturan admin, API Keys & Logo Berhasil Disimpan!");
         });
     } else {
         localStorage.setItem('umah_config', JSON.stringify(appConfig));
         applyConfig();
-        alert("Pengaturan admin berhasil disimpan!");
+        alert("Pengaturan admin & API Keys berhasil disimpan!");
     }
 }
