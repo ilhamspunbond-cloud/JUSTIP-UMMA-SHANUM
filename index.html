@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="app-title">Jastip Umah Sanum</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- PWA MANIFEST & ICON DINAMIS -->
+    <link rel="manifest" id="pwa-manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Jastip%20Umah%20Sanum%22%2C%22short_name%22%3A%22UmahSanum%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23ffffff%22%2C%22theme_color%22%3A%22%23059669%22%2C%22icons%22%3A%5B%5D%7D">
+    <meta name="theme-color" content="#059669">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Umah Sanum">
+
     <style>
         .shop-closed {
             filter: grayscale(100%) blur(1px);
@@ -43,7 +51,6 @@
 
         <!-- 1. HALAMAN AUTH & SAMBUTAN VISI UMKM -->
         <section id="view-auth" class="space-y-4 mt-6">
-            <!-- KARTU INFORMASI VISI & MISI UMKM -->
             <div class="bg-gradient-to-br from-emerald-50 to-blue-50 border border-emerald-200 p-4 rounded-xl shadow-sm space-y-2 text-xs text-gray-700">
                 <div class="flex items-center space-x-2">
                     <span class="text-xl">🌟</span>
@@ -53,7 +60,7 @@
                     Platform digital cerdas yang didedikasikan khusus untuk <b>memajukan & mendigitalkan UMKM lokal</b> serta memudahkan kebutuhan harian Anda.
                 </p>
                 <div class="border-t border-emerald-200/60 pt-2 space-y-1">
-                    <p>🏪 <b>Mitra Toko:</b> Ekspansi pasar digital dengan sistem <b>100% keuntungan bersih utuh tanpa potongan</b> harga dasar.</p>
+                    <p>🏪 <b>Mitra Toko:</b> Sistem <b>100% keuntungan bersih utuh tanpa potongan</b> harga dasar.</p>
                     <p>🛍️ <b>Pembeli:</b> Belanja produk lokal terdekat dengan cepat, aman, dan nyaman.</p>
                 </div>
             </div>
@@ -79,16 +86,13 @@
                 
                 <div class="max-h-56 overflow-y-auto space-y-2 text-gray-700 pr-1 border p-2 rounded bg-gray-50">
                     <p class="font-bold text-emerald-800">Selamat Bergabung, Calon Mitra!</p>
-                    <p>Kami menawarkan kolaborasi pemasaran digital modern yang sangat transparan dan adil bagi usaha Bapak/Ibu:</p>
-                    <p><b>1. Harga Jual Toko Utuh (100%):</b> Pemilik usaha menerima pembayaran bersih sesuai harga dasar/modal produk yang ditetapkan tanpa potongan sepeser pun dari pihak kami.</p>
-                    <p><b>2. Keuntungan Platform:</b> Keuntungan operasional platform diperoleh melalui penyesuaian harga di sisi pembeli akhir (markup layanan).</p>
-                    <p><b>3. Peningkatan Omzet:</b> Toko mendapatkan tambahan pelanggan baru dari jaringan jastip digital tanpa risiko biaya sewa atau komisi penjualan.</p>
-                    <p><b>4. Komitmen Bersama:</b> Menjaga ketersediaan stok, kualitas produk, dan pelayanan prima kepada pelanggan.</p>
+                    <p><b>1. Harga Jual Toko Utuh (100%):</b> Menerima pembayaran bersih sesuai harga dasar tanpa potongan sepeser pun.</p>
+                    <p><b>2. Keuntungan Platform:</b> Diperoleh melalui penyesuaian harga di sisi pembeli akhir (markup layanan).</p>
+                    <p><b>3. Peningkatan Omzet:</b> Tambahan pelanggan baru dari jaringan jastip digital.</p>
                 </div>
 
                 <div class="space-y-2 border-t pt-2">
                     <p class="font-bold text-gray-800 text-center">✍️ Tanda Tangan Digital Calon Mitra</p>
-                    <p class="text-[10px] text-gray-500 text-center">Silakan tanda tangani di dalam kotak di bawah ini:</p>
                     <div class="flex justify-center">
                         <canvas id="seller-sig-canvas" width="280" height="110" class="sig-canvas"></canvas>
                     </div>
@@ -135,12 +139,12 @@
                         </select>
                     </div>
                     <div id="field-store-logo" class="hidden">
-                        <label class="text-xs font-semibold text-gray-600">Upload Logo Toko (PNG Transparan / JPG)</label>
+                        <label class="text-xs font-semibold text-gray-600">Upload Logo Toko</label>
                         <input type="file" id="auth-store-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
                     </div>
                     <div id="field-bank" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Info Rekening / E-Wallet (Pencairan Dana)</label>
-                        <input type="text" id="auth-bank-info" placeholder="Cth: SeaBank 123456789 a.n Nama" class="w-full p-2 border rounded-lg text-sm">
+                        <input type="text" id="auth-bank-info" placeholder="Cth: SeaBank 123456789" class="w-full p-2 border rounded-lg text-sm">
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">Kata Sandi</label>
@@ -222,7 +226,7 @@
                 <div class="text-xs space-y-1 text-gray-600 pt-2 border-t">
                     <div class="flex justify-between"><span>Subtotal Produk:</span> <span id="cart-subtotal" class="font-semibold">Rp0</span></div>
                     <div class="flex justify-between"><span>Ongkos Kirim:</span> <span id="shipping-cost" class="font-semibold">Rp15.000</span></div>
-                    <div class="flex justify-between text-emerald-600 font-bold"><span>Subsidi / Potongan:</span> <span id="promo-discount-text">-Rp15.000</span></div>
+                    <div class="flex justify-between text-emerald-600 font-bold"><span>Subsidi / Diskon Platform:</span> <span id="promo-discount-text">-Rp15.000</span></div>
                     <hr>
                     <div class="flex justify-between text-sm font-bold text-gray-900"><span>Total Tagihan:</span> <span id="cart-total-final" class="text-emerald-600">Rp0</span></div>
                 </div>
@@ -315,12 +319,19 @@
                     <input type="text" id="admin-setting-pass" placeholder="Kata Sandi Baru Admin" class="w-full p-2 border rounded-lg text-sm">
                 </div>
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek / Marketplace</label>
-                    <input type="file" id="admin-marketplace-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
+                    <label class="text-xs font-bold text-emerald-700">💰 Pengaturan Markup Profit & Diskon Platform</label>
+                    <div class="space-y-1">
+                        <span class="text-[11px] text-gray-600 font-semibold">Markup Profit Per Produk (Rp):</span>
+                        <input type="number" id="admin-setting-markup" class="w-full p-2 border rounded-lg text-sm" placeholder="Cth: 5000">
+                    </div>
+                    <div class="space-y-1 mt-2">
+                        <span class="text-[11px] text-gray-600 font-semibold">Subsidi Diskon Platform (%) untuk Pembeli:</span>
+                        <input type="number" id="admin-setting-discount" class="w-full p-2 border rounded-lg text-sm" placeholder="Cth: 50 (untuk diskon 50%)">
+                    </div>
                 </div>
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🎨 Upload Logo Banner & Wallpaper</label>
-                    <div><span class="text-[11px] text-gray-600 font-semibold">Logo Header Navbar:</span><input type="file" id="admin-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent"></div>
+                    <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek / Marketplace</label>
+                    <input type="file" id="admin-marketplace-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
                 </div>
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🎁 Pengaturan Iklan Banner / GIF Promo</label>
@@ -348,6 +359,8 @@
             brandName: "Jastip Umah Sanum",
             brandAddress: "Kantor Pusat Rajeg, Tangerang",
             adminPass: "Rojak123",
+            markupAmount: 5000,
+            platformDiscountPercent: 0,
             marketLogoBase64: "",
             logoBannerBase64: "",
             wallpaperBase64: "",
@@ -490,22 +503,30 @@
                 let logoHtml = `<img src="${appConfig.marketLogoBase64}" class="h-14 max-w-[240px] object-contain bg-transparent filter drop-shadow">`;
                 marketLogoDisplay.innerHTML = logoHtml;
                 authFormLogo.innerHTML = logoHtml;
+
+                // OTOMATIS JADIKAN LOGO UTAMA SEBAGAI ICON APLIKASI (PWA MANIFEST)
+                const manifestTag = document.getElementById('pwa-manifest');
+                const manifestData = {
+                    name: appConfig.brandName,
+                    short_name: "UmahSanum",
+                    start_url: ".",
+                    display: "standalone",
+                    background_color: "#ffffff",
+                    theme_color: "#059669",
+                    icons: [{ src: appConfig.marketLogoBase64, sizes: "192x192 512x512", type: "image/png" }]
+                };
+                manifestTag.href = "data:application/manifest+json;charset=utf-8," + encodeURIComponent(JSON.stringify(manifestData));
             } else {
                 let textHtml = `<h2 class="text-2xl font-bold text-emerald-600">${appConfig.brandName}</h2>`;
                 marketLogoDisplay.innerHTML = textHtml;
                 authFormLogo.innerHTML = textHtml;
             }
 
-            const logoContainer = document.getElementById('brand-logo-container');
-            if (appConfig.logoBannerBase64) {
-                logoContainer.innerHTML = `<img src="${appConfig.logoBannerBase64}" class="h-9 max-w-[190px] object-contain bg-transparent filter drop-shadow">`;
-            } else {
-                logoContainer.innerHTML = `<span class="text-xl font-bold">🛒 ${appConfig.brandName}</span>`;
-            }
-
             document.getElementById('admin-setting-brand').value = appConfig.brandName;
             document.getElementById('admin-setting-address').value = appConfig.brandAddress;
             document.getElementById('admin-setting-pass').value = appConfig.adminPass || 'Rojak123';
+            document.getElementById('admin-setting-markup').value = appConfig.markupAmount || 5000;
+            document.getElementById('admin-setting-discount').value = appConfig.platformDiscountPercent || 0;
             renderAdminCategoryList();
         }
 
@@ -719,10 +740,8 @@
             let sellers = users.filter(u => u.role === 'seller');
             if (selectedCategoryFilter !== 'Semua') sellers = sellers.filter(s => s.category === selectedCategoryFilter);
 
-            // FILTER JARAK / WILAYAH TERDEKAT (MENYEMBUNYIKAN TOKO YANG JAUH)
             let userDefaultCity = currentUser.addresses && currentUser.addresses[0] ? currentUser.addresses[0].detail.toLowerCase() : '';
             if (userDefaultCity) {
-                // Ambil kata kunci kota/kecamatan pertama dari alamat pembeli
                 let mainLocationKey = userDefaultCity.split(',')[0].trim();
                 sellers = sellers.filter(seller => {
                     let sAddr = seller.addresses && seller.addresses[0] ? seller.addresses[0].detail.toLowerCase() : '';
@@ -817,7 +836,7 @@
                 if (isCompleted && !hasReviewed) {
                     reviewFormHtml = `
                         <div class="mt-2 pt-2 border-t space-y-2">
-                            <p class="font-bold text-purple-700">⭐ Pesanan Tiba! Beri Ulasan & Rating:</p>
+                            <p class="font-bold text-purple-700">⭐ Beri Ulasan & Rating:</p>
                             <select id="rev_star_${ord.id}" class="w-full p-1 border rounded text-xs">
                                 <option value="5">⭐⭐⭐⭐⭐ Sangat Bagus</option>
                                 <option value="4">⭐⭐⭐⭐ Bagus</option>
@@ -911,7 +930,8 @@
             const storeProds = allProducts.filter(p => p.sellerId === sellerId);
             if (storeProds.length === 0) { prodContainer.innerHTML = '<p class="text-xs text-gray-500 text-center py-4">Belum ada produk.</p>'; return; }
             storeProds.forEach(prod => {
-                const markupPrice = prod.basePrice + 10000;
+                const markup = appConfig.markupAmount || 5000;
+                const markupPrice = prod.basePrice + markup;
                 const buyBtn = isOpen ? `<button onclick="addToCart('${prod.id}', '${prod.name}', ${prod.basePrice}, ${markupPrice})" class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg font-semibold">Tambah</button>` : `<span class="text-xs text-red-500">Tutup</span>`;
                 let imgTag = prod.image ? `<img src="${prod.image}" class="w-16 h-16 object-cover rounded-lg mr-3 bg-transparent shadow-sm">` : `<div class="w-16 h-16 bg-gray-200 rounded-lg mr-3 flex items-center justify-center text-xs text-gray-400">No Img</div>`;
                 prodContainer.innerHTML += `
@@ -929,12 +949,31 @@
 
         function backToBuyerDashboard() { selectedStoreId = null; cart = []; showBuyerDashboard(); }
         function addToCart(id, name, basePrice, price) { cart.push({ id, name, basePrice, price, storeId: selectedStoreId }); updateCartSummary(); alert(name + " ditambahkan!"); }
+        
         function updateCartSummary() {
             let subtotal = cart.reduce((sum, i) => sum + i.price, 0);
             let shipping = subtotal > 0 ? 15000 : 0;
-            let total = subtotal;
+            
+            // DISKON PLATFORM OTOMATIS DARI ADMIN
+            let discountPercent = appConfig.platformDiscountPercent || 0;
+            let discountAmount = Math.round((shipping * discountPercent) / 100);
+            let finalShipping = shipping - discountAmount;
+            if (finalShipping < 0) finalShipping = 0;
+
+            let total = subtotal + finalShipping;
+
             document.getElementById('cart-subtotal').innerText = "Rp" + subtotal.toLocaleString();
             document.getElementById('shipping-cost').innerText = "Rp" + shipping.toLocaleString();
+            
+            const discText = document.getElementById('promo-discount-text');
+            if(discountAmount > 0) {
+                discText.innerText = `-Rp${discountAmount.toLocaleString()} (${discountPercent}% Diskon Platform)`;
+                discText.className = "font-semibold text-emerald-600";
+            } else {
+                discText.innerText = `Rp0`;
+                discText.className = "font-semibold text-gray-500";
+            }
+
             document.getElementById('cart-total-final').innerText = "Rp" + total.toLocaleString();
             document.getElementById('footer-total-price').innerText = "Rp" + total.toLocaleString();
         }
@@ -956,7 +995,7 @@
                 paymentMethod: paymentMethod,
                 items: [...cart],
                 subtotal: subtotal,
-                total: subtotal,
+                total: subtotal + (15000 - Math.round((15000 * (appConfig.platformDiscountPercent || 0)) / 100)),
                 netProfit: netProfit,
                 storeId: selectedStoreId,
                 deliveryStatus: 'Menunggu Konfirmasi Toko',
@@ -1130,6 +1169,9 @@
             let newPass = document.getElementById('admin-setting-pass').value.trim();
             if (newPass) appConfig.adminPass = newPass;
 
+            appConfig.markupAmount = parseInt(document.getElementById('admin-setting-markup').value) || 5000;
+            appConfig.platformDiscountPercent = parseInt(document.getElementById('admin-setting-discount').value) || 0;
+
             const marketLogoFile = document.getElementById('admin-marketplace-logo-file');
             const topPromoFile = document.getElementById('admin-promo-top-file');
             const bottomPromoFile = document.getElementById('admin-promo-bottom-file');
@@ -1142,7 +1184,7 @@
             if(pending === 0) {
                 localStorage.setItem('umah_config', JSON.stringify(appConfig));
                 applyConfig();
-                alert("Pengaturan admin berhasil disimpan!");
+                alert("Pengaturan admin & markup berhasil disimpan!");
             } else {
                 if(marketLogoFile.files[0]) {
                     compressImage(marketLogoFile.files[0], 500, 200, 0.9, function(base64) {
@@ -1169,7 +1211,7 @@
                 if(pending <= 0) {
                     localStorage.setItem('umah_config', JSON.stringify(appConfig));
                     applyConfig();
-                    alert("Pengaturan & Banner Promo berhasil disimpan!");
+                    alert("Pengaturan admin & Logo Aplikasi berhasil disimpan!");
                 }
             }
         }
