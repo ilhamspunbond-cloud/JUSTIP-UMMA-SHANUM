@@ -34,17 +34,21 @@
 
         <!-- 1. HALAMAN AUTH -->
         <section id="view-auth" class="space-y-4 mt-10">
-            <div id="auth-selection-card" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md text-center">
-                <h2 id="login-brand-title" class="text-2xl font-bold text-emerald-600 mb-2">Jastip Umah Sanum</h2>
-                <p class="text-sm text-gray-500 mb-6">Silakan masuk sesuai peran kamu</p>
+            <div id="auth-selection-card" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md text-center space-y-4">
+                <!-- LOGO / JUDUL MEREK GAMBAR (PNG/GIF) DI HALAMAN UTAMA -->
+                <div id="auth-brand-logo-display" class="flex justify-center mb-2">
+                    <h2 id="login-brand-title" class="text-2xl font-bold text-emerald-600">Jastip Umah Sanum</h2>
+                </div>
+                <p class="text-sm text-gray-500">Silakan masuk sesuai peran kamu</p>
                 <div class="space-y-3">
                     <button onclick="showAuthMode('buyer')" class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700">Masuk / Daftar sebagai Pembeli</button>
                     <button onclick="showAuthMode('seller')" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Masuk / Daftar sebagai Penjual (Mitra)</button>
                 </div>
             </div>
 
-            <div id="dynamic-auth-form" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md hidden">
-                <h3 id="auth-form-title" class="text-lg font-bold mb-4">Form</h3>
+            <div id="dynamic-auth-form" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md hidden space-y-4">
+                <div id="auth-form-brand-logo" class="flex justify-center"></div>
+                <h3 id="auth-form-title" class="text-lg font-bold text-center mb-2">Form</h3>
                 <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-3">
                     <input type="hidden" id="auth-role" value="">
                     <div>
@@ -85,9 +89,7 @@
 
         <!-- 2. HALAMAN UTAMA PEMBELI -->
         <section id="view-buyer-dashboard" class="space-y-4 hidden mt-4 p-2 rounded-xl">
-            <!-- PROMO BANNER ATAS -->
             <div id="promo-banner-top-container"></div>
-
             <div class="flex justify-between items-center bg-white/95 backdrop-blur p-3 rounded-lg shadow-sm">
                 <div>
                     <h3 id="buyer-greeting" class="font-bold text-md text-gray-800">Halo, Pembeli</h3>
@@ -98,8 +100,6 @@
             
             <div id="category-filters-container" class="flex space-x-3 overflow-x-auto py-2"></div>
             <div id="buyer-shops-container" class="space-y-4"></div>
-            
-            <!-- PROMO BANNER BAWAH -->
             <div id="promo-banner-bottom-container"></div>
 
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3 mt-6">
@@ -108,13 +108,13 @@
             </div>
         </section>
 
-        <!-- MODAL KELOLA BEBERAPA ALAMAT PEMBELI -->
+        <!-- MODAL KELOLA ALAMAT -->
         <div id="modal-address-manager" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white p-5 rounded-xl max-w-sm w-full space-y-3">
                 <h3 class="font-bold text-md text-gray-800">📍 Daftar Alamat Pengiriman Saya</h3>
                 <div id="buyer-address-list" class="space-y-2 text-xs max-h-40 overflow-y-auto"></div>
                 <div class="border-t pt-2 space-y-2">
-                    <input type="text" id="new-addr-label" placeholder="Label Alamat (Cth: Rumah, Kantor, Kos)" class="w-full p-2 border rounded text-xs">
+                    <input type="text" id="new-addr-label" placeholder="Label Alamat (Cth: Rumah, Kantor)" class="w-full p-2 border rounded text-xs">
                     <textarea id="new-addr-detail" placeholder="Detail Alamat Lengkap & Patokan" class="w-full p-2 border rounded text-xs"></textarea>
                     <button onclick="addNewBuyerAddress()" class="w-full bg-blue-600 text-white py-1.5 rounded text-xs font-semibold">Tambah Alamat Baru</button>
                 </div>
@@ -122,12 +122,11 @@
             </div>
         </div>
 
-        <!-- 3. HALAMAN KATALOG PRODUK & REVIEW TOKO -->
+        <!-- 3. HALAMAN KATALOG PRODUK & REVIEW -->
         <section id="view-store-catalog" class="space-y-4 hidden mt-4">
             <button onclick="backToBuyerDashboard()" class="text-xs bg-gray-200 px-3 py-1 rounded-lg font-semibold">← Kembali ke Daftar Toko</button>
             <div id="store-catalog-header" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-2"></div>
             
-            <!-- REVIEW & KOMENTAR TOKO -->
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
                 <h4 class="font-bold text-sm text-gray-700">⭐ Rating & Komentar Pembeli</h4>
                 <div id="store-reviews-container" class="space-y-3 text-xs max-h-60 overflow-y-auto"></div>
@@ -159,7 +158,7 @@
             </div>
         </section>
 
-        <!-- 4. HALAMAN DASHBOARD PENJUAL -->
+        <!-- 4. DASHBOARD PENJUAL -->
         <section id="view-seller-dashboard" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md flex justify-between items-center">
                 <div>
@@ -194,7 +193,7 @@
             </div>
         </section>
 
-        <!-- 5. HALAMAN DASHBOARD SALES (VIA RODA GIGI) -->
+        <!-- 5. DASHBOARD SALES -->
         <section id="view-sales-dashboard" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md flex justify-between items-center">
                 <div>
@@ -213,7 +212,7 @@
             </div>
         </section>
 
-        <!-- 6. PANEL ADMIN UTAMA (PENGATURAN PROMO BANNER / GIF) -->
+        <!-- 6. PANEL ADMIN (UPLOAD LOGO TEKS MARKETPLACE / PNG / GIF) -->
         <section id="view-admin-panel" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
                 <div class="flex justify-between items-center">
@@ -237,23 +236,24 @@
                     <label class="text-xs font-bold text-emerald-700">🌐 Pengaturan RajaOngkir (API Key)</label>
                     <input type="text" id="admin-setting-rajaongkir" placeholder="Masukkan API Key RajaOngkir..." class="w-full p-2 border rounded-lg text-sm">
                 </div>
+                
+                <!-- UPLOAD GAMBAR LOGO MEREK / MARKETPLACE (PNG/GIF) -->
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🎨 Upload Logo Utama & Wallpaper</label>
-                    <div><span class="text-[11px] text-gray-600 font-semibold">Logo Banner:</span><input type="file" id="admin-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
-                    <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Wallpaper:</span><input type="file" id="admin-wallpaper-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
+                    <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek / Marketplace (PNG / GIF)</label>
+                    <input type="file" id="admin-marketplace-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
+                    <p class="text-[10px] text-gray-500">Akan tampil di halaman utama pembuka (login/daftar) menggantikan teks biasa.</p>
                 </div>
 
-                <!-- PENGATURAN BANNER PROMO / GIF ATAS & BAWAH -->
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">🎨 Upload Logo Banner & Wallpaper</label>
+                    <div><span class="text-[11px] text-gray-600 font-semibold">Logo Header Navbar:</span><input type="file" id="admin-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
+                    <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Wallpaper Background:</span><input type="file" id="admin-wallpaper-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
+                </div>
+
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🎁 Pengaturan Iklan Banner / GIF Promo</label>
-                    <div>
-                        <span class="text-[11px] text-gray-600 font-semibold">Upload Banner Promo ATAS (JPG/PNG/GIF):</span>
-                        <input type="file" id="admin-promo-top-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
-                    </div>
-                    <div class="mt-2">
-                        <span class="text-[11px] text-gray-600 font-semibold">Upload Banner Promo BAWAH (JPG/PNG/GIF):</span>
-                        <input type="file" id="admin-promo-bottom-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
-                    </div>
+                    <div><span class="text-[11px] text-gray-600 font-semibold">Banner Promo ATAS (JPG/PNG/GIF):</span><input type="file" id="admin-promo-top-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
+                    <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Banner Promo BAWAH (JPG/PNG/GIF):</span><input type="file" id="admin-promo-bottom-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
                 </div>
 
                 <div class="pt-2 border-t space-y-2">
@@ -278,16 +278,12 @@
             brandAddress: "Kantor Pusat Rajeg, Tangerang",
             adminPass: "Rojak123",
             rajaOngkirKey: "",
+            marketLogoBase64: "",
             logoBannerBase64: "",
             wallpaperBase64: "",
             promoTopBase64: "",
             promoBottomBase64: "",
-            themeColor: "bg-emerald-600",
             notifAudioUrl: "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3",
-            commPercentage: 30,
-            salesAccounts: [
-                { id: "sls_1", name: "Asep Sales", wa: "08123456789", bank: "BCA 987654 a.n Asep", pass: "sales123" }
-            ],
             categories: [
                 { name: "Makanan", icon: "" },
                 { name: "Minuman", icon: "" },
@@ -338,12 +334,27 @@
 
         function applyConfig() {
             document.getElementById('app-title').innerText = appConfig.brandName;
+            
+            // Tampilkan Logo Judul Merek / Marketplace (PNG/GIF) di Halaman Login
+            const marketLogoDisplay = document.getElementById('auth-brand-logo-display');
+            const authFormLogo = document.getElementById('auth-form-brand-logo');
+            if (appConfig.marketLogoBase64) {
+                let logoHtml = `<img src="${appConfig.marketLogoBase64}" class="h-14 max-w-[240px] object-contain filter drop-shadow">`;
+                marketLogoDisplay.innerHTML = logoHtml;
+                authFormLogo.innerHTML = logoHtml;
+            } else {
+                let textHtml = `<h2 class="text-2xl font-bold text-emerald-600">${appConfig.brandName}</h2>`;
+                marketLogoDisplay.innerHTML = textHtml;
+                authFormLogo.innerHTML = textHtml;
+            }
+
             const logoContainer = document.getElementById('brand-logo-container');
             if (appConfig.logoBannerBase64) {
                 logoContainer.innerHTML = `<img src="${appConfig.logoBannerBase64}" class="h-9 max-w-[190px] object-contain filter drop-shadow">`;
             } else {
                 logoContainer.innerHTML = `<span class="text-xl font-bold">🛒 ${appConfig.brandName}</span>`;
             }
+
             document.getElementById('admin-setting-brand').value = appConfig.brandName;
             document.getElementById('admin-setting-address').value = appConfig.brandAddress;
             document.getElementById('admin-setting-pass').value = appConfig.adminPass || 'Rojak123';
@@ -465,7 +476,6 @@
             document.getElementById('view-buyer-dashboard').classList.remove('hidden');
             document.getElementById('buyer-greeting').innerText = "Halo, " + currentUser.name;
             
-            // RENDER PROMO BANNER ATAS & BAWAH
             const topBannerContainer = document.getElementById('promo-banner-top-container');
             if (appConfig.promoTopBase64) {
                 topBannerContainer.innerHTML = `<div class="mb-3 rounded-xl overflow-hidden shadow-md"><img src="${appConfig.promoTopBase64}" class="w-full h-auto object-cover max-h-40"></div>`;
@@ -909,10 +919,12 @@
             if (newPass) appConfig.adminPass = newPass;
             appConfig.rajaOngkirKey = document.getElementById('admin-setting-rajaongkir').value.trim();
 
+            const marketLogoFile = document.getElementById('admin-marketplace-logo-file');
             const topPromoFile = document.getElementById('admin-promo-top-file');
             const bottomPromoFile = document.getElementById('admin-promo-bottom-file');
             
             let pending = 0;
+            if(marketLogoFile.files[0]) pending++;
             if(topPromoFile.files[0]) pending++;
             if(bottomPromoFile.files[0]) pending++;
 
@@ -921,6 +933,12 @@
                 applyConfig();
                 alert("Pengaturan admin berhasil disimpan!");
             } else {
+                if(marketLogoFile.files[0]) {
+                    compressImage(marketLogoFile.files[0], 500, 200, 0.8, function(base64) {
+                        appConfig.marketLogoBase64 = base64;
+                        checkDone();
+                    });
+                }
                 if(topPromoFile.files[0]) {
                     compressImage(topPromoFile.files[0], 600, 250, 0.75, function(base64) {
                         appConfig.promoTopBase64 = base64;
@@ -940,7 +958,7 @@
                 if(pending <= 0) {
                     localStorage.setItem('umah_config', JSON.stringify(appConfig));
                     applyConfig();
-                    alert("Pengaturan & Banner Promo berhasil disimpan secara real-time!");
+                    alert("Pengaturan, Logo Marketplace & Banner Promo berhasil disimpan secara real-time!");
                 }
             }
         }
