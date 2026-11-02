@@ -36,7 +36,7 @@
     <!-- KONTEN UTAMA -->
     <main class="max-w-md mx-auto p-4 min-h-screen pb-20">
 
-        <!-- 1. HALAMAN LOGIN / PILIH PERAN -->
+        <!-- 1. HALAMAN AUTH -->
         <section id="view-auth" class="space-y-4 mt-10">
             <div class="bg-white p-6 rounded-xl shadow-md text-center">
                 <h2 id="login-brand-title" class="text-2xl font-bold text-emerald-600 mb-2">Jastip Umah Sanum</h2>
@@ -48,7 +48,6 @@
                 </div>
             </div>
 
-            <!-- Form Dinamis Login/Register -->
             <div id="dynamic-auth-form" class="bg-white p-6 rounded-xl shadow-md hidden">
                 <h3 id="auth-form-title" class="text-lg font-bold mb-4">Form</h3>
                 <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-3">
@@ -59,13 +58,11 @@
                     </div>
                     <div id="field-category" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Kategori Toko / Dagangan</label>
-                        <select id="auth-category" class="w-full p-2 border rounded-lg text-sm">
-                            <!-- Dinamis diisi dari JS berdasarkan kategori sistem -->
-                        </select>
+                        <select id="auth-category" class="w-full p-2 border rounded-lg text-sm"></select>
                     </div>
                     <div id="field-address" class="hidden">
-                        <label class="text-xs font-semibold text-gray-600">Alamat Lengkap</label>
-                        <textarea id="auth-address" class="w-full p-2 border rounded-lg text-sm"></textarea>
+                        <label class="text-xs font-semibold text-gray-600">Alamat Lengkap / Kota Asal Pengiriman</label>
+                        <textarea id="auth-address" placeholder="Contoh: Tangerang / Rajeg" class="w-full p-2 border rounded-lg text-sm"></textarea>
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">No. WhatsApp</label>
@@ -85,42 +82,56 @@
             </div>
         </section>
 
-        <!-- 2. HALAMAN UTAMA PEMBELI (ETALASE TOKO & KATEGORI) -->
+        <!-- 2. HALAMAN UTAMA PEMBELI -->
         <section id="view-buyer-dashboard" class="space-y-4 hidden mt-4 p-2 rounded-xl">
             <div class="flex justify-between items-center bg-white/90 p-3 rounded-lg shadow-sm">
                 <h3 class="text-lg font-bold text-gray-800">Daftar Toko / Mitra</h3>
                 <button onclick="logout()" class="text-xs text-red-500 font-semibold">Keluar</button>
             </div>
             
-            <!-- Filter Kategori Dinamis -->
-            <div id="category-filters-container" class="flex space-x-2 overflow-x-auto py-1">
-                <!-- Tombol filter kategori akan muncul di sini -->
-            </div>
-
-            <div id="buyer-shops-container" class="space-y-4">
-                <!-- Render via JS -->
-            </div>
+            <div id="category-filters-container" class="flex space-x-2 overflow-x-auto py-1"></div>
+            <div id="buyer-shops-container" class="space-y-4"></div>
         </section>
 
-        <!-- 3. HALAMAN KATALOG PRODUK TOKO (UNTUK PEMBELI) -->
+        <!-- 3. HALAMAN KATALOG PRODUK & CEK ONGKIR RAJAONGKIR -->
         <section id="view-store-catalog" class="space-y-4 hidden mt-4">
             <button onclick="backToBuyerDashboard()" class="text-xs bg-gray-200 px-3 py-1 rounded-lg font-semibold">← Kembali ke Daftar Toko</button>
-            <div id="store-catalog-header" class="bg-white p-4 rounded-xl shadow-md">
-                <!-- Header Toko Terpilih -->
+            <div id="store-catalog-header" class="bg-white p-4 rounded-xl shadow-md"></div>
+            
+            <div id="store-products-container" class="grid grid-cols-1 gap-3"></div>
+
+            <!-- Panel Cek Ongkir via RajaOngkir & Keranjang -->
+            <div class="bg-white p-4 rounded-xl shadow-md space-y-3 mt-4">
+                <h4 class="font-bold text-sm text-gray-700">Pengiriman & Cek Ongkir (RajaOngkir)</h4>
+                <div>
+                    <label class="text-xs text-gray-500 font-semibold">Pilih Kota / Kabupaten Tujuan:</label>
+                    <select id="rajaongkir-destination" onchange="hitungOngkirRajaOngkir()" class="w-full p-2 border rounded-lg text-sm mt-1">
+                        <option value="151">Jakarta Pusat</option>
+                        <option value="152">Jakarta Selatan</option>
+                        <option value="419">Tangerang</option>
+                        <option value="455">Bekasi</option>
+                        <option value="23">Bandung</option>
+                    </select>
+                </div>
+                <div class="text-xs space-y-1 text-gray-600 pt-2 border-t">
+                    <div class="flex justify-between"><span>Subtotal Produk:</span> <span id="cart-subtotal" class="font-semibold">Rp0</span></div>
+                    <div class="flex justify-between"><span>Ongkos Kirim (RajaOngkir):</span> <span id="shipping-cost" class="font-semibold">Rp15.000</span></div>
+                    <div class="flex justify-between text-emerald-600 font-bold" id="promo-info-row"><span>Diskon Promo Platform:</span> <span id="promo-discount-text">Rp0</span></div>
+                    <hr>
+                    <div class="flex justify-between text-sm font-bold text-gray-900"><span>Total Tagihan (COD):</span> <span id="cart-total-final" class="text-emerald-600">Rp0</span></div>
+                </div>
             </div>
-            <div id="store-products-container" class="grid grid-cols-1 gap-3">
-                <!-- Produk per Toko -->
-            </div>
+
             <div class="fixed bottom-0 left-0 right-0 bg-white p-3 border-t shadow-lg max-w-md mx-auto flex justify-between items-center z-40">
                 <div>
-                    <p class="text-xs text-gray-500">Total Keranjang:</p>
-                    <p id="cart-total-price" class="font-bold text-emerald-600">Rp0</p>
+                    <p class="text-xs text-gray-500">Total Akhir:</p>
+                    <p id="footer-total-price" class="font-bold text-emerald-600 text-sm">Rp0</p>
                 </div>
                 <button onclick="checkoutOrder()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Checkout (COD)</button>
             </div>
         </section>
 
-        <!-- 4. HALAMAN DASHBOARD PENJUAL (MITRA) -->
+        <!-- 4. HALAMAN DASHBOARD PENJUAL -->
         <section id="view-seller-dashboard" class="space-y-4 hidden mt-4">
             <div class="bg-white p-4 rounded-xl shadow-md flex justify-between items-center">
                 <div>
@@ -134,7 +145,6 @@
                 </div>
             </div>
 
-            <!-- Input Produk Baru -->
             <div class="bg-white p-4 rounded-xl shadow-md space-y-3">
                 <h4 class="font-bold text-sm text-gray-700">Tambah Produk / Menu Baru</h4>
                 <form onsubmit="addSellerProduct(event)" class="space-y-2">
@@ -144,61 +154,60 @@
                 </form>
             </div>
 
-            <!-- Daftar PO Masuk & Invoice -->
             <div class="bg-white p-4 rounded-xl shadow-md space-y-3">
                 <h4 class="font-bold text-sm text-gray-700">Daftar PO Masuk & Invoice</h4>
-                <div id="seller-po-container" class="space-y-3 text-xs">
-                    <!-- PO & Invoice -->
-                </div>
+                <div id="seller-po-container" class="space-y-3 text-xs"></div>
             </div>
         </section>
 
-        <!-- 5. PANEL ADMIN (PENGATURAN / RODA GIGI) -->
+        <!-- 5. PANEL ADMIN (PENGATURAN RAJAONGKIR & PROMO) -->
         <section id="view-admin-panel" class="space-y-4 hidden mt-4">
             <div class="bg-white p-4 rounded-xl shadow-md space-y-3">
                 <div class="flex justify-between items-center">
-                    <h3 class="font-bold text-md text-emerald-600">⚙️ Panel Admin (Settings)</h3>
+                    <h3 class="font-bold text-md text-emerald-600">⚙️ Panel Admin & RajaOngkir</h3>
                     <button onclick="backFromAdmin()" class="text-xs text-gray-500">Tutup</button>
                 </div>
                 <hr>
                 <div>
-                    <label class="text-xs font-semibold">Ubah Nama Brand / Jastip</label>
+                    <label class="text-xs font-semibold">Nama Brand / Jastip</label>
                     <input type="text" id="admin-setting-brand" class="w-full p-2 border rounded-lg text-sm mt-1">
                 </div>
                 <div>
-                    <label class="text-xs font-semibold">Ubah Alamat Pusat Jastip</label>
-                    <textarea id="admin-setting-address" class="w-full p-2 border rounded-lg text-sm mt-1"></textarea>
-                </div>
-                <div>
-                    <label class="text-xs font-semibold">Link URL Logo (Transparan PNG)</label>
-                    <input type="text" id="admin-setting-logo" class="w-full p-2 border rounded-lg text-sm mt-1">
-                </div>
-                <div>
-                    <label class="text-xs font-semibold">Link URL Background Etalase</label>
-                    <input type="text" id="admin-setting-bg" class="w-full p-2 border rounded-lg text-sm mt-1">
+                    <label class="text-xs font-semibold">Alamat / Kota Asal Pengirim</label>
+                    <input type="text" id="admin-setting-address" class="w-full p-2 border rounded-lg text-sm mt-1">
                 </div>
                 
-                <!-- Tambah Kategori Fleksibel -->
-                <div class="pt-2 border-t">
-                    <label class="text-xs font-semibold text-emerald-700">Kelola / Tambah Kategori Baru</label>
-                    <div class="flex space-x-2 mt-1">
-                        <input type="text" id="new-category-input" placeholder="Cth: Fashion, Elektronik" class="w-full p-2 border rounded-lg text-sm">
-                        <button onclick="addNewCategory()" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-semibold">Tambah</button>
+                <!-- Pengaturan API Key RajaOngkir -->
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">Konfigurasi RajaOngkir API</label>
+                    <div>
+                        <label class="text-[10px] text-gray-500">RajaOngkir API Key</label>
+                        <input type="text" id="admin-rajaongkir-key" placeholder="Masukkan API Key RajaOngkir di sini..." class="w-full p-2 border rounded-lg text-sm">
                     </div>
-                    <div id="admin-category-list" class="flex flex-wrap gap-1 mt-2 text-xs">
-                        <!-- Daftar kategori aktif -->
+                </div>
+
+                <!-- Pengaturan Promo Ongkir dari Platform -->
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">Pengaturan Promo Diskon Ongkir Platform</label>
+                    <div>
+                        <label class="text-[10px] text-gray-500">Status Subsidi Ongkir?</label>
+                        <select id="admin-promo-status" class="w-full p-2 border rounded-lg text-sm">
+                            <option value="active">Aktif (Subsidi / Free Ongkir)</option>
+                            <option value="inactive">Tidak Aktif</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500">Besaran Subsidi Potongan Ongkir (Rp)</label>
+                        <input type="number" id="admin-subsidi-nominal" placeholder="Cth: 15000" class="w-full p-2 border rounded-lg text-sm" value="15000">
                     </div>
                 </div>
 
                 <button onclick="saveAdminSettings()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-xs font-semibold mt-2">Simpan Semua Pengaturan</button>
             </div>
 
-            <!-- Manajemen Pembayaran Mitra oleh Admin -->
             <div class="bg-white p-4 rounded-xl shadow-md space-y-3">
                 <h4 class="font-bold text-sm text-gray-700">Kelola Pembayaran Dana ke Mitra</h4>
-                <div id="admin-payout-container" class="space-y-3 text-xs">
-                    <!-- Daftar tagihan ke penjual -->
-                </div>
+                <div id="admin-payout-container" class="space-y-3 text-xs"></div>
             </div>
         </section>
 
@@ -206,12 +215,12 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // State Aplikasi (Database Lokal)
         let appConfig = JSON.parse(localStorage.getItem('umah_config')) || {
             brandName: "Jastip Umah Sanum",
-            brandAddress: "Rajeg, Tangerang, Banten",
-            logoUrl: "",
-            bgUrl: "",
+            brandAddress: "Tangerang",
+            rajaOngkirKey: "",
+            promoStatus: "active",
+            subsidiNominal: 15000,
             categories: ["Makanan", "Minuman", "Sembako", "Elektronik"]
         };
 
@@ -224,6 +233,7 @@
         let selectedStoreId = null;
         let selectedCategoryFilter = 'Semua';
         let cart = [];
+        let currentShippingCost = 15000;
 
         window.onload = function() {
             applyConfig();
@@ -237,28 +247,9 @@
             
             document.getElementById('admin-setting-brand').value = appConfig.brandName;
             document.getElementById('admin-setting-address').value = appConfig.brandAddress;
-            document.getElementById('admin-setting-logo').value = appConfig.logoUrl || '';
-            document.getElementById('admin-setting-bg').value = appConfig.bgUrl || '';
-
-            const logoImg = document.getElementById('header-logo-img');
-            const brandText = document.getElementById('brand-logo');
-            if (appConfig.logoUrl) {
-                logoImg.src = appConfig.logoUrl;
-                logoImg.classList.remove('hidden');
-                brandText.classList.add('hidden');
-            } else {
-                logoImg.classList.add('hidden');
-                brandText.classList.remove('hidden');
-            }
-
-            const buyerDash = document.getElementById('view-buyer-dashboard');
-            if (appConfig.bgUrl) {
-                buyerDash.style.backgroundImage = `url('${appConfig.bgUrl}')`;
-            } else {
-                buyerDash.style.backgroundImage = 'none';
-            }
-
-            renderAdminCategoryList();
+            document.getElementById('admin-rajaongkir-key').value = appConfig.rajaOngkirKey || '';
+            document.getElementById('admin-promo-status').value = appConfig.promoStatus || 'active';
+            document.getElementById('admin-subsidi-nominal').value = appConfig.subsidiNominal || 15000;
         }
 
         function checkSession() {
@@ -293,7 +284,6 @@
                 document.getElementById('field-address').classList.remove('hidden');
                 document.getElementById('field-bank').classList.remove('hidden');
                 
-                // Isi dropdown kategori pendaftaran penjual
                 const catSelect = document.getElementById('auth-category');
                 catSelect.innerHTML = '';
                 appConfig.categories.forEach(cat => {
@@ -350,12 +340,10 @@
             document.getElementById('user-info-display').innerText = "Belum Login";
         }
 
-        // --- BUYER DASHBOARD & KATEGORI FILTER ---
         function showBuyerDashboard() {
             hideAllViews();
             document.getElementById('view-buyer-dashboard').classList.remove('hidden');
             
-            // Render Filter Kategori di Atas Etalase
             const filterContainer = document.getElementById('category-filters-container');
             filterContainer.innerHTML = `<button onclick="filterByCategory('Semua')" class="px-3 py-1 rounded-full text-xs font-semibold ${selectedCategoryFilter === 'Semua' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}">Semua</button>`;
             
@@ -364,7 +352,6 @@
                 filterContainer.innerHTML += `<button onclick="filterByCategory('${cat}')" class="px-3 py-1 rounded-full text-xs font-semibold ${isActive ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}">${cat}</button>`;
             });
 
-            // Render Toko Berdasarkan Filter
             const container = document.getElementById('buyer-shops-container');
             container.innerHTML = '';
 
@@ -439,24 +426,38 @@
                     </div>
                 `;
             });
+
+            hitungOngkirRajaOngkir();
         }
 
         function backToBuyerDashboard() {
             selectedStoreId = null;
             cart = [];
-            updateCartTotal();
             showBuyerDashboard();
         }
 
         function addToCart(id, name, price) {
             cart.push({ id, name, price, storeId: selectedStoreId });
-            updateCartTotal();
+            hitungOngkirRajaOngkir();
             alert(name + " berhasil ditambahkan ke keranjang!");
         }
 
-        function updateCartTotal() {
-            let total = cart.reduce((sum, item) => sum + item.price, 0);
-            document.getElementById('cart-total-price').innerText = "Rp" + total.toLocaleString();
+        // --- SIMULASI & HITUNG ONGKIR RAJAONGKIR ---
+        function hitungOngkirRajaOngkir() {
+            let subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+            
+            // Simulasi hasil tarif RajaOngkir (atau sambungkan fetch API RajaOngkir asli jika API key aktif)
+            let baseRajaOngkirCost = 15000; 
+            let subsidi = (appConfig.promoStatus === 'active') ? (appConfig.subsidiNominal || 15000) : 0;
+            
+            currentShippingCost = Math.max(0, baseRajaOngkirCost - subsidi);
+            let totalFinal = subtotal + currentShippingCost;
+
+            document.getElementById('cart-subtotal').innerText = "Rp" + subtotal.toLocaleString();
+            document.getElementById('shipping-cost').innerText = "Rp" + baseRajaOngkirCost.toLocaleString();
+            document.getElementById('promo-discount-text').innerText = "-Rp" + subsidi.toLocaleString() + " (Subsidi Platform)";
+            document.getElementById('cart-total-final').innerText = "Rp" + totalFinal.toLocaleString();
+            document.getElementById('footer-total-price').innerText = "Rp" + totalFinal.toLocaleString();
         }
 
         function checkoutOrder() {
@@ -465,12 +466,17 @@
                 return;
             }
 
+            let subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+            let totalFinal = subtotal + currentShippingCost;
+
             const newOrder = {
                 id: 'ord_' + Date.now(),
                 buyerName: currentUser.name,
                 buyerWa: currentUser.wa,
                 items: [...cart],
-                total: cart.reduce((sum, item) => sum + item.price, 0),
+                subtotal: subtotal,
+                shippingCost: currentShippingCost,
+                total: totalFinal,
                 storeId: selectedStoreId,
                 status: 'Proses',
                 isPaidToSeller: false,
@@ -480,9 +486,9 @@
             orders.push(newOrder);
             localStorage.setItem('umah_orders', JSON.stringify(orders));
 
-            alert("Pesanan berhasil dibuat dengan metode COD! Terima kasih sudah berbelanja di " + appConfig.brandName);
+            alert("Pesanan COD berhasil dibuat! Total tagihan (termasuk ongkir RajaOngkir): Rp" + totalFinal.toLocaleString() + ". Terima kasih sudah berbelanja di " + appConfig.brandName);
             cart = [];
-            updateCartTotal();
+            hitungOngkirRajaOngkir();
             showBuyerDashboard();
         }
 
@@ -570,7 +576,7 @@
             });
         }
 
-        // --- ADMIN / SETTINGS & KATEGORI FLEKSIBEL ---
+        // --- ADMIN / SETTINGS & RAJAONGKIR ---
         function openAdminLogin() {
             const pin = prompt("Masukkan PIN Admin / Password Roda Gigi (Default: 123):");
             if (pin === "123") {
@@ -586,40 +592,16 @@
             checkSession();
         }
 
-        function addNewCategory() {
-            const newCat = document.getElementById('new-category-input').value.trim();
-            if (newCat && !appConfig.categories.includes(newCat)) {
-                appConfig.categories.push(newCat);
-                document.getElementById('new-category-input').value = '';
-                renderAdminCategoryList();
-                alert("Kategori '" + newCat + "' berhasil ditambahkan!");
-            } else {
-                alert("Kategori kosong atau sudah ada!");
-            }
-        }
-
-        function renderAdminCategoryList() {
-            const listContainer = document.getElementById('admin-category-list');
-            listContainer.innerHTML = '';
-            appConfig.categories.forEach((cat, index) => {
-                listContainer.innerHTML += `<span class="bg-gray-200 px-2 py-1 rounded font-medium">${cat} <button onclick="removeCategory(${index})" class="text-red-500 font-bold ml-1">×</button></span>`;
-            });
-        }
-
-        function removeCategory(index) {
-            appConfig.categories.splice(index, 1);
-            renderAdminCategoryList();
-        }
-
         function saveAdminSettings() {
             appConfig.brandName = document.getElementById('admin-setting-brand').value;
             appConfig.brandAddress = document.getElementById('admin-setting-address').value;
-            appConfig.logoUrl = document.getElementById('admin-setting-logo').value;
-            appConfig.bgUrl = document.getElementById('admin-setting-bg').value;
+            appConfig.rajaOngkirKey = document.getElementById('admin-rajaongkir-key').value;
+            appConfig.promoStatus = document.getElementById('admin-promo-status').value;
+            appConfig.subsidiNominal = parseInt(document.getElementById('admin-subsidi-nominal').value) || 0;
             
             localStorage.setItem('umah_config', JSON.stringify(appConfig));
             applyConfig();
-            alert("Pengaturan admin dan kategori berhasil disimpan!");
+            alert("Pengaturan admin, API RajaOngkir, & promo subsidi berhasil disimpan!");
         }
 
         function renderAdminPayouts() {
