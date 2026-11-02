@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="app-title">Jastip Umah Sanum</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .shop-closed {
+            filter: grayscale(100%) blur(1px);
+            opacity: 0.6;
+        }
+        #buyer-dashboard-bg {
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="bg-emerald-600 text-white p-4 shadow-md flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center space-x-2">
+            <img id="header-logo-img" src="" alt="" class="w-8 h-8 object-contain hidden">
+            <span id="brand-logo" class="text-xl font-bold">🛒 Jastip Umah Sanum</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <span id="user-info-display" class="text-sm bg-emerald-700 px-3 py-1 rounded-full">Belum Login</span>
+            <button onclick="openAdminLogin()" class="bg-emerald-700 p-2 rounded-full hover:bg-emerald-800 transition" title="Pengaturan Admin">
+                ⚙️
+            </button>
+        </div>
+    </header>
+
+    <!-- KONTEN UTAMA -->
+    <main class="max-w-md mx-auto p-4 min-h-screen pb-20">
+
+        <!-- 1. HALAMAN LOGIN / PILIH PERAN -->
+        <section id="view-auth" class="space-y-4 mt-10">
+            <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                <h2 id="login-brand-title" class="text-2xl font-bold text-emerald-600 mb-2">Jastip Umah Sanum</h2>
+                <p class="text-sm text-gray-500 mb-6">Silakan masuk atau daftar sesuai peran kamu</p>
+                
+                <div class="space-y-3">
+                    <button onclick="showLoginForm('buyer')" class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700">Masuk sebagai Pembeli</button>
+                    <button onclick="showLoginForm('seller')" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Masuk sebagai Penjual (Mitra)</button>
+                </div>
+            </div>
+
+            <!-- Form Dinamis Login/Register -->
+            <div id="dynamic-auth-form" class="bg-white p-6 rounded-xl shadow-md hidden">
+                <h3 id="auth-form-title" class="text-lg font-bold mb-4">Form</h3>
+                <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-3">
+                    <input type="hidden" id="auth-role" value="">
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600">Nama / Nama Toko</label>
+                        <input type="text" id="auth-name" required class="w-full p-2 border rounded-lg text-sm">
+                    </div>
+                    <div id="field-category" class="hidden">
+                        <label class="text-xs font-semibold text-gray-600">Kategori Toko / Dagangan</label>
+                        <select id="auth-category" class="w-full p-2 border rounded-lg text-sm">
+                            <!-- Dinamis diisi dari JS berdasarkan kategori sistem -->
+                        </select>
+                    </div>
+                    <div id="field-address" class="hidden">
+                        <label class="text-xs font-semibold text-gray-600">Alamat Lengkap</label>
+                        <textarea id="auth-address" class="w-full p-2 border rounded-lg text-sm"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600">No. WhatsApp</label>
+                        <input type="text" id="auth-wa" required class="w-full p-2 border rounded-lg text-sm">
+                    </div>
+                    <div id="field-bank" class="hidden">
+                        <label class="text-xs font-semibold text-gray-600">Info Rekening / E-Wallet (Bank/No Rek/Atas Nama)</label>
+                        <input type="text" id="auth-bank-info" placeholder="Cth: SeaBank 123456789 a.n Budi" class="w-full p-2 border rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600">Kata Sandi</label>
+                        <input type="password" id="auth-pass" required class="w-full p-2 border rounded-lg text-sm">
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-sm">Lanjutkan</button>
+                    <button type="button" onclick="cancelAuth()" class="w-full text-gray-500 text-xs py-1">Kembali</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 2. HALAMAN UTAMA PEMBELI (ETALASE TOKO & KATEGORI) -->
+        <section id="view-buyer-dashboard" class="space-y-4 hidden mt-4 p-2 rounded-xl">
+            <div class="flex justify-between items-center bg-white/90 p-3 rounded-lg shadow-sm">
+                <h3 class="text-lg font-bold text-gray-800">Daftar Toko / Mitra</h3>
+                <button onclick="logout()" class="text-xs text-red-500 font-semibold">Keluar</button>
+            </div>
+            
+            <!-- Filter Kategori Dinamis -->
+            <div id="category-filters-container" class="flex space-x-2 overflow-x-auto py-1">
+                <!-- Tombol filter kategori akan muncul di sini -->
+            </div>
+
+            <div id="buyer-shops-container" class="space-y-4">
+                <!-- Render via JS -->
+            </div>
+        </section>
+
+        <!-- 3. HALAMAN KATALOG PRODUK TOKO (UNTUK PEMBELI) -->
+        <section id="view-store-catalog" class="space-y-4 hidden mt-4">
+            <button onclick="backToBuyerDashboard()" class="text-xs bg-gray-200 px-3 py-1 rounded-lg font-semibold">← Kembali ke Daftar Toko</button>
+            <div id="store-catalog-header" class="bg-white p-4 rounded-xl shadow-md">
+                <!-- Header Toko Terpilih -->
+            </div>
+            <div id="store-products-container" class="grid grid-cols-1 gap-3">
+                <!-- Produk per Toko -->
+            </div>
+            <div class="fixed bottom-0 left-0 right-0 bg-white p-3 border-t shadow-lg max-w-md mx-auto flex justify-between items-center z-40">
+                <div>
+                    <p class="text-xs text-gray-500">Total Keranjang:</p>
+                    <p id="cart-total-price" class="font-bold text-emerald-600">Rp0</p>
+                </div>
+                <button onclick="checkoutOrder()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Checkout (COD)</button>
+            </div>
+        </section>
+
+        <!-- 4. HALAMAN DASHBOARD PENJUAL (MITRA) -->
+        <section id="view-seller-dashboard" class="space-y-4 hidden mt-4">
+            <div class="bg-white p-4 rounded-xl shadow-md flex justify-between items-center">
+                <div>
+                    <h3 id="seller-shop-name" class="font-bold text-lg">Toko Saya</h3>
+                    <p id="seller-shop-category" class="text-xs text-gray-500 font-medium">Kategori: -</p>
+                    <p id="seller-status-text" class="text-xs text-emerald-600 font-semibold mt-1">Status: BUKA</p>
+                </div>
+                <div class="space-x-2">
+                    <button onclick="toggleShopStatus()" id="btn-toggle-shop" class="bg-red-500 text-white text-xs px-3 py-1.5 rounded-lg font-semibold">Tutup Toko</button>
+                    <button onclick="logout()" class="text-xs text-gray-500">Keluar</button>
+                </div>
+            </div>
+
+            <!-- Input Produk Baru -->
+            <div class="bg-white p-4 rounded-xl shadow-md space-y-3">
+                <h4 class="font-bold text-sm text-gray-700">Tambah Produk / Menu Baru</h4>
+                <form onsubmit="addSellerProduct(event)" class="space-y-2">
+                    <input type="text" id="prod-name" placeholder="Nama Menu/Produk" required class="w-full p-2 border rounded-lg text-sm">
+                    <input type="number" id="prod-price" placeholder="Harga Dasar / Modal (Rp)" required class="w-full p-2 border rounded-lg text-sm">
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg text-xs font-semibold">Simpan Produk</button>
+                </form>
+            </div>
+
+            <!-- Daftar PO Masuk & Invoice -->
+            <div class="bg-white p-4 rounded-xl shadow-md space-y-3">
+                <h4 class="font-bold text-sm text-gray-700">Daftar PO Masuk & Invoice</h4>
+                <div id="seller-po-container" class="space-y-3 text-xs">
+                    <!-- PO & Invoice -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. PANEL ADMIN (PENGATURAN / RODA GIGI) -->
+        <section id="view-admin-panel" class="space-y-4 hidden mt-4">
+            <div class="bg-white p-4 rounded-xl shadow-md space-y-3">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-md text-emerald-600">⚙️ Panel Admin (Settings)</h3>
+                    <button onclick="backFromAdmin()" class="text-xs text-gray-500">Tutup</button>
+                </div>
+                <hr>
+                <div>
+                    <label class="text-xs font-semibold">Ubah Nama Brand / Jastip</label>
+                    <input type="text" id="admin-setting-brand" class="w-full p-2 border rounded-lg text-sm mt-1">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold">Ubah Alamat Pusat Jastip</label>
+                    <textarea id="admin-setting-address" class="w-full p-2 border rounded-lg text-sm mt-1"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold">Link URL Logo (Transparan PNG)</label>
+                    <input type="text" id="admin-setting-logo" class="w-full p-2 border rounded-lg text-sm mt-1">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold">Link URL Background Etalase</label>
+                    <input type="text" id="admin-setting-bg" class="w-full p-2 border rounded-lg text-sm mt-1">
+                </div>
+                
+                <!-- Tambah Kategori Fleksibel -->
+                <div class="pt-2 border-t">
+                    <label class="text-xs font-semibold text-emerald-700">Kelola / Tambah Kategori Baru</label>
+                    <div class="flex space-x-2 mt-1">
+                        <input type="text" id="new-category-input" placeholder="Cth: Fashion, Elektronik" class="w-full p-2 border rounded-lg text-sm">
+                        <button onclick="addNewCategory()" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-semibold">Tambah</button>
+                    </div>
+                    <div id="admin-category-list" class="flex flex-wrap gap-1 mt-2 text-xs">
+                        <!-- Daftar kategori aktif -->
+                    </div>
+                </div>
+
+                <button onclick="saveAdminSettings()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-xs font-semibold mt-2">Simpan Semua Pengaturan</button>
+            </div>
+
+            <!-- Manajemen Pembayaran Mitra oleh Admin -->
+            <div class="bg-white p-4 rounded-xl shadow-md space-y-3">
+                <h4 class="font-bold text-sm text-gray-700">Kelola Pembayaran Dana ke Mitra</h4>
+                <div id="admin-payout-container" class="space-y-3 text-xs">
+                    <!-- Daftar tagihan ke penjual -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // State Aplikasi (Database Lokal)
+        let appConfig = JSON.parse(localStorage.getItem('umah_config')) || {
+            brandName: "Jastip Umah Sanum",
+            brandAddress: "Rajeg, Tangerang, Banten",
+            logoUrl: "",
+            bgUrl: "",
+            categories: ["Makanan", "Minuman", "Sembako", "Elektronik"]
+        };
+
+        let users = JSON.parse(localStorage.getItem('umah_users')) || [];
+        let products = JSON.parse(localStorage.getItem('umah_products')) || [];
+        let orders = JSON.parse(localStorage.getItem('umah_orders')) || [];
+        
+        let currentUser = JSON.parse(localStorage.getItem('umah_current_user')) || null;
+        let activeRole = null;
+        let selectedStoreId = null;
+        let selectedCategoryFilter = 'Semua';
+        let cart = [];
+
+        window.onload = function() {
+            applyConfig();
+            checkSession();
+        }
+
+        function applyConfig() {
+            document.getElementById('app-title').innerText = appConfig.brandName;
+            document.getElementById('brand-logo').innerText = "🛒 " + appConfig.brandName;
+            document.getElementById('login-brand-title').innerText = appConfig.brandName;
+            
+            document.getElementById('admin-setting-brand').value = appConfig.brandName;
+            document.getElementById('admin-setting-address').value = appConfig.brandAddress;
+            document.getElementById('admin-setting-logo').value = appConfig.logoUrl || '';
+            document.getElementById('admin-setting-bg').value = appConfig.bgUrl || '';
+
+            const logoImg = document.getElementById('header-logo-img');
+            const brandText = document.getElementById('brand-logo');
+            if (appConfig.logoUrl) {
+                logoImg.src = appConfig.logoUrl;
+                logoImg.classList.remove('hidden');
+                brandText.classList.add('hidden');
+            } else {
+                logoImg.classList.add('hidden');
+                brandText.classList.remove('hidden');
+            }
+
+            const buyerDash = document.getElementById('view-buyer-dashboard');
+            if (appConfig.bgUrl) {
+                buyerDash.style.backgroundImage = `url('${appConfig.bgUrl}')`;
+            } else {
+                buyerDash.style.backgroundImage = 'none';
+            }
+
+            renderAdminCategoryList();
+        }
+
+        function checkSession() {
+            if (currentUser) {
+                document.getElementById('user-info-display').innerText = currentUser.name + " (" + currentUser.role + ")";
+                hideAllViews();
+                if (currentUser.role === 'buyer') {
+                    showBuyerDashboard();
+                } else if (currentUser.role === 'seller') {
+                    showSellerDashboard();
+                }
+            }
+        }
+
+        function hideAllViews() {
+            document.getElementById('view-auth').classList.add('hidden');
+            document.getElementById('view-buyer-dashboard').classList.add('hidden');
+            document.getElementById('view-store-catalog').classList.add('hidden');
+            document.getElementById('view-seller-dashboard').classList.add('hidden');
+            document.getElementById('view-admin-panel').classList.add('hidden');
+            document.getElementById('dynamic-auth-form').classList.add('hidden');
+        }
+
+        function showLoginForm(role) {
+            activeRole = role;
+            document.getElementById('auth-role').value = role;
+            document.getElementById('dynamic-auth-form').classList.remove('hidden');
+            document.getElementById('auth-form-title').innerText = role === 'buyer' ? 'Daftar / Masuk Pembeli' : 'Daftar / Masuk Penjual (Mitra)';
+            
+            if (role === 'seller') {
+                document.getElementById('field-category').classList.remove('hidden');
+                document.getElementById('field-address').classList.remove('hidden');
+                document.getElementById('field-bank').classList.remove('hidden');
+                
+                // Isi dropdown kategori pendaftaran penjual
+                const catSelect = document.getElementById('auth-category');
+                catSelect.innerHTML = '';
+                appConfig.categories.forEach(cat => {
+                    catSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+            } else {
+                document.getElementById('field-category').classList.add('hidden');
+                document.getElementById('field-address').classList.add('hidden');
+                document.getElementById('field-bank').classList.add('hidden');
+            }
+        }
+
+        function cancelAuth() {
+            document.getElementById('dynamic-auth-form').classList.add('hidden');
+        }
+
+        function handleAuth(event) {
+            event.preventDefault();
+            const name = document.getElementById('auth-name').value;
+            const wa = document.getElementById('auth-wa').value;
+            const pass = document.getElementById('auth-pass').value;
+            const category = document.getElementById('auth-category') ? document.getElementById('auth-category').value : '';
+            const address = document.getElementById('auth-address').value;
+            const bank = document.getElementById('auth-bank-info').value;
+
+            let user = users.find(u => u.wa === wa && u.role === activeRole);
+            if (!user) {
+                user = {
+                    id: 'usr_' + Date.now(),
+                    name: name,
+                    wa: wa,
+                    pass: pass,
+                    role: activeRole,
+                    category: category,
+                    address: address,
+                    bank: bank,
+                    isOpen: true
+                };
+                users.push(user);
+                localStorage.setItem('umah_users', JSON.stringify(users));
+            }
+
+            currentUser = user;
+            localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
+            checkSession();
+        }
+
+        function logout() {
+            localStorage.removeItem('umah_current_user');
+            currentUser = null;
+            cart = [];
+            hideAllViews();
+            document.getElementById('view-auth').classList.remove('hidden');
+            document.getElementById('user-info-display').innerText = "Belum Login";
+        }
+
+        // --- BUYER DASHBOARD & KATEGORI FILTER ---
+        function showBuyerDashboard() {
+            hideAllViews();
+            document.getElementById('view-buyer-dashboard').classList.remove('hidden');
+            
+            // Render Filter Kategori di Atas Etalase
+            const filterContainer = document.getElementById('category-filters-container');
+            filterContainer.innerHTML = `<button onclick="filterByCategory('Semua')" class="px-3 py-1 rounded-full text-xs font-semibold ${selectedCategoryFilter === 'Semua' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}">Semua</button>`;
+            
+            appConfig.categories.forEach(cat => {
+                const isActive = selectedCategoryFilter === cat;
+                filterContainer.innerHTML += `<button onclick="filterByCategory('${cat}')" class="px-3 py-1 rounded-full text-xs font-semibold ${isActive ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}">${cat}</button>`;
+            });
+
+            // Render Toko Berdasarkan Filter
+            const container = document.getElementById('buyer-shops-container');
+            container.innerHTML = '';
+
+            let sellers = users.filter(u => u.role === 'seller');
+            if (selectedCategoryFilter !== 'Semua') {
+                sellers = sellers.filter(s => s.category === selectedCategoryFilter);
+            }
+
+            if (sellers.length === 0) {
+                container.innerHTML = '<p class="text-xs text-gray-500 text-center bg-white/80 p-4 rounded-xl">Belum ada toko/mitra di kategori ini.</p>';
+                return;
+            }
+
+            sellers.forEach(seller => {
+                const isOpen = seller.isOpen !== false;
+                const statusClass = isOpen ? '' : 'shop-closed';
+                const statusBadge = isOpen ? '<span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-semibold">BUKA</span>' : '<span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded font-semibold">TUTUP</span>';
+
+                container.innerHTML += `
+                    <div onclick="openStoreCatalog('${seller.id}')" class="bg-white/95 p-4 rounded-xl shadow-md cursor-pointer transition hover:shadow-lg ${statusClass}">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-bold text-md text-emerald-800">${seller.name}</h4>
+                            ${statusBadge}
+                        </div>
+                        <p class="text-xs text-emerald-600 font-semibold mb-1">📂 ${seller.category || 'Umum'}</p>
+                        <p class="text-xs text-gray-500">📍 ${seller.address || 'Alamat tidak diisi'}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function filterByCategory(cat) {
+            selectedCategoryFilter = cat;
+            showBuyerDashboard();
+        }
+
+        function openStoreCatalog(sellerId) {
+            selectedStoreId = sellerId;
+            const seller = users.find(u => u.id === sellerId);
+            const isOpen = seller.isOpen !== false;
+
+            hideAllViews();
+            document.getElementById('view-store-catalog').classList.remove('hidden');
+
+            document.getElementById('store-catalog-header').innerHTML = `
+                <h3 class="font-bold text-lg text-emerald-800">${seller.name}</h3>
+                <p class="text-xs text-emerald-600 font-semibold">Kategori: ${seller.category}</p>
+                <p class="text-xs text-gray-500">📍 ${seller.address}</p>
+                <p class="text-xs mt-1 font-semibold ${isOpen ? 'text-emerald-600' : 'text-red-500'}">${isOpen ? 'Toko Sedang Buka' : 'Toko Sedang Tutup (Tidak Bisa Order)'}</p>
+            `;
+
+            const prodContainer = document.getElementById('store-products-container');
+            prodContainer.innerHTML = '';
+
+            const storeProds = products.filter(p => p.sellerId === sellerId);
+            if (storeProds.length === 0) {
+                prodContainer.innerHTML = '<p class="text-xs text-gray-500 text-center py-4">Belum ada produk di toko ini.</p>';
+                return;
+            }
+
+            storeProds.forEach(prod => {
+                const markupPrice = prod.basePrice + 5000;
+                const buyButton = isOpen ? `<button onclick="addToCart('${prod.id}', '${prod.name}', ${markupPrice})" class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg font-semibold">Tambah</button>` : `<span class="text-xs text-red-500 font-semibold">Tutup</span>`;
+
+                prodContainer.innerHTML += `
+                    <div class="bg-white p-3 rounded-xl shadow-sm flex justify-between items-center">
+                        <div>
+                            <h5 class="font-bold text-sm">${prod.name}</h5>
+                            <p class="text-xs text-emerald-600 font-semibold">Rp${markupPrice.toLocaleString()}</p>
+                        </div>
+                        ${buyButton}
+                    </div>
+                `;
+            });
+        }
+
+        function backToBuyerDashboard() {
+            selectedStoreId = null;
+            cart = [];
+            updateCartTotal();
+            showBuyerDashboard();
+        }
+
+        function addToCart(id, name, price) {
+            cart.push({ id, name, price, storeId: selectedStoreId });
+            updateCartTotal();
+            alert(name + " berhasil ditambahkan ke keranjang!");
+        }
+
+        function updateCartTotal() {
+            let total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cart-total-price').innerText = "Rp" + total.toLocaleString();
+        }
+
+        function checkoutOrder() {
+            if (cart.length === 0) {
+                alert("Keranjang masih kosong!");
+                return;
+            }
+
+            const newOrder = {
+                id: 'ord_' + Date.now(),
+                buyerName: currentUser.name,
+                buyerWa: currentUser.wa,
+                items: [...cart],
+                total: cart.reduce((sum, item) => sum + item.price, 0),
+                storeId: selectedStoreId,
+                status: 'Proses',
+                isPaidToSeller: false,
+                proofUrl: ''
+            };
+
+            orders.push(newOrder);
+            localStorage.setItem('umah_orders', JSON.stringify(orders));
+
+            alert("Pesanan berhasil dibuat dengan metode COD! Terima kasih sudah berbelanja di " + appConfig.brandName);
+            cart = [];
+            updateCartTotal();
+            showBuyerDashboard();
+        }
+
+        // --- SELLER DASHBOARD ---
+        function showSellerDashboard() {
+            hideAllViews();
+            document.getElementById('view-seller-dashboard').classList.remove('hidden');
+            document.getElementById('seller-shop-name').innerText = currentUser.name;
+            document.getElementById('seller-shop-category').innerText = "Kategori: " + (currentUser.category || 'Umum');
+
+            const isOpen = currentUser.isOpen !== false;
+            const statusText = document.getElementById('seller-status-text');
+            const btnToggle = document.getElementById('btn-toggle-shop');
+
+            if (isOpen) {
+                statusText.innerText = "Status: BUKA";
+                statusText.className = "text-xs text-emerald-600 font-semibold mt-1";
+                btnToggle.innerText = "Tutup Toko";
+                btnToggle.className = "bg-red-500 text-white text-xs px-3 py-1.5 rounded-lg font-semibold";
+            } else {
+                statusText.innerText = "Status: TUTUP";
+                statusText.className = "text-xs text-red-500 font-semibold mt-1";
+                btnToggle.innerText = "Buka Toko";
+                btnToggle.className = "bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg font-semibold";
+            }
+
+            renderSellerPOs();
+        }
+
+        function toggleShopStatus() {
+            currentUser.isOpen = currentUser.isOpen === false ? true : false;
+            users = users.map(u => u.id === currentUser.id ? currentUser : u);
+            localStorage.setItem('umah_users', JSON.stringify(users));
+            localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
+            showSellerDashboard();
+        }
+
+        function addSellerProduct(event) {
+            event.preventDefault();
+            const name = document.getElementById('prod-name').value;
+            const basePrice = parseInt(document.getElementById('prod-price').value);
+
+            const newProd = {
+                id: 'prd_' + Date.now(),
+                sellerId: currentUser.id,
+                name: name,
+                basePrice: basePrice
+            };
+
+            products.push(newProd);
+            localStorage.setItem('umah_products', JSON.stringify(products));
+
+            document.getElementById('prod-name').value = '';
+            document.getElementById('prod-price').value = '';
+            alert("Produk berhasil ditambahkan!");
+        }
+
+        function renderSellerPOs() {
+            const container = document.getElementById('seller-po-container');
+            container.innerHTML = '';
+
+            const myOrders = orders.filter(o => o.storeId === currentUser.id);
+            if (myOrders.length === 0) {
+                container.innerHTML = '<p class="text-gray-400">Belum ada PO masuk.</p>';
+                return;
+            }
+
+            myOrders.forEach(ord => {
+                const paidBadge = ord.isPaidToSeller 
+                    ? `<span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-bold">TELAH LUNAS / DIBAYAR OLEH ${appConfig.brandName}</span>` 
+                    : `<span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-bold">Belum Lunas</span>`;
+
+                let itemsHtml = ord.items.map(i => `<li>- ${i.name} (Rp${i.price.toLocaleString()})</li>`).join('');
+
+                container.innerHTML += `
+                    <div class="border p-3 rounded-lg space-y-1 bg-gray-50">
+                        <p class="font-bold">ID PO: ${ord.id}</p>
+                        <p>Pemesan: ${ord.buyerName} (${ord.buyerWa})</p>
+                        <ul class="pl-2">${itemsHtml}</ul>
+                        <p class="font-semibold text-emerald-700">Total Tagihan Dasar: Rp${ord.total.toLocaleString()}</p>
+                        <div class="mt-2">${paidBadge}</div>
+                        ${ord.proofUrl ? `<p class="mt-1"><a href="${ord.proofUrl}" target="_blank" class="text-blue-600 underline">Lihat Bukti Transfer</a></p>` : ''}
+                    </div>
+                `;
+            });
+        }
+
+        // --- ADMIN / SETTINGS & KATEGORI FLEKSIBEL ---
+        function openAdminLogin() {
+            const pin = prompt("Masukkan PIN Admin / Password Roda Gigi (Default: 123):");
+            if (pin === "123") {
+                hideAllViews();
+                document.getElementById('view-admin-panel').classList.remove('hidden');
+                renderAdminPayouts();
+            } else if (pin !== null) {
+                alert("PIN Salah!");
+            }
+        }
+
+        function backFromAdmin() {
+            checkSession();
+        }
+
+        function addNewCategory() {
+            const newCat = document.getElementById('new-category-input').value.trim();
+            if (newCat && !appConfig.categories.includes(newCat)) {
+                appConfig.categories.push(newCat);
+                document.getElementById('new-category-input').value = '';
+                renderAdminCategoryList();
+                alert("Kategori '" + newCat + "' berhasil ditambahkan!");
+            } else {
+                alert("Kategori kosong atau sudah ada!");
+            }
+        }
+
+        function renderAdminCategoryList() {
+            const listContainer = document.getElementById('admin-category-list');
+            listContainer.innerHTML = '';
+            appConfig.categories.forEach((cat, index) => {
+                listContainer.innerHTML += `<span class="bg-gray-200 px-2 py-1 rounded font-medium">${cat} <button onclick="removeCategory(${index})" class="text-red-500 font-bold ml-1">×</button></span>`;
+            });
+        }
+
+        function removeCategory(index) {
+            appConfig.categories.splice(index, 1);
+            renderAdminCategoryList();
+        }
+
+        function saveAdminSettings() {
+            appConfig.brandName = document.getElementById('admin-setting-brand').value;
+            appConfig.brandAddress = document.getElementById('admin-setting-address').value;
+            appConfig.logoUrl = document.getElementById('admin-setting-logo').value;
+            appConfig.bgUrl = document.getElementById('admin-setting-bg').value;
+            
+            localStorage.setItem('umah_config', JSON.stringify(appConfig));
+            applyConfig();
+            alert("Pengaturan admin dan kategori berhasil disimpan!");
+        }
+
+        function renderAdminPayouts() {
+            const container = document.getElementById('admin-payout-container');
+            container.innerHTML = '';
+
+            if (orders.length === 0) {
+                container.innerHTML = '<p class="text-gray-400">Belum ada transaksi pesanan.</p>';
+                return;
+            }
+
+            orders.forEach((ord, index) => {
+                const seller = users.find(u => u.id === ord.storeId);
+                const sellerName = seller ? seller.name : 'Toko';
+                const sellerBank = seller ? seller.bank : 'Info Bank Kosong';
+
+                container.innerHTML += `
+                    <div class="border p-3 rounded-lg space-y-1 bg-gray-50 text-xs">
+                        <p class="font-bold">PO: ${ord.id} | Toko: ${sellerName}</p>
+                        <p>Rekening Mitra: <b>${sellerBank}</b></p>
+                        <p>Nominal Bayar: Rp${ord.total.toLocaleString()}</p>
+                        <p>Status: ${ord.isPaidToSeller ? 'Lunas' : 'Belum Dibayar'}</p>
+                        <div class="space-y-1 mt-2">
+                            <input type="text" id="proof_${index}" placeholder="Link / URL Bukti Transfer" class="w-full p-1 border rounded text-xs" value="${ord.proofUrl || ''}">
+                            <button onclick="markAsPaid(${index})" class="bg-emerald-600 text-white px-3 py-1 rounded font-semibold">Tandai Sudah Dibayar & Upload Bukti</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function markAsPaid(index) {
+            const proofUrl = document.getElementById('proof_' + index).value;
+            if (!proofUrl) {
+                alert("Masukkan link bukti transfer terlebih dahulu!");
+                return;
+            }
+
+            orders[index].isPaidToSeller = true;
+            orders[index].proofUrl = proofUrl;
+            localStorage.setItem('umah_orders', JSON.stringify(orders));
+
+            alert("Status berhasil diubah menjadi LUNAS dan bukti transfer telah disematkan!");
+            renderAdminPayouts();
+        }
+    </script>
+</body>
+</html>
