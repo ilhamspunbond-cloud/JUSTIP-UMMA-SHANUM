@@ -35,7 +35,6 @@
         <!-- 1. HALAMAN AUTH -->
         <section id="view-auth" class="space-y-4 mt-10">
             <div id="auth-selection-card" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md text-center space-y-4">
-                <!-- LOGO / JUDUL MEREK GAMBAR (PNG/GIF) DI HALAMAN UTAMA -->
                 <div id="auth-brand-logo-display" class="flex justify-center mb-2">
                     <h2 id="login-brand-title" class="text-2xl font-bold text-emerald-600">Jastip Umah Sanum</h2>
                 </div>
@@ -64,8 +63,13 @@
                         <select id="auth-category" class="w-full p-2 border rounded-lg text-sm"></select>
                     </div>
                     <div id="field-address" class="hidden">
-                        <label class="text-xs font-semibold text-gray-600">Alamat Utama</label>
-                        <textarea id="auth-address" class="w-full p-2 border rounded-lg text-sm"></textarea>
+                        <label class="text-xs font-semibold text-gray-600">Alamat Lengkap / Wilayah</label>
+                        <textarea id="auth-address" placeholder="Cth: Jl. Raya Rajeg No.10, Tangerang" class="w-full p-2 border rounded-lg text-sm"></textarea>
+                    </div>
+                    <!-- UPLOAD LOGO TOKO KHUSUS PENJUAL -->
+                    <div id="field-store-logo" class="hidden">
+                        <label class="text-xs font-semibold text-gray-600">Upload Logo Toko (PNG/JPG)</label>
+                        <input type="file" id="auth-store-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
                     </div>
                     <div id="field-bank" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Info Rekening / E-Wallet (Pencairan Dana)</label>
@@ -99,6 +103,11 @@
             </div>
             
             <div id="category-filters-container" class="flex space-x-3 overflow-x-auto py-2"></div>
+            
+            <div class="flex justify-between items-center px-1">
+                <h4 class="font-bold text-sm text-gray-700">🏪 Daftar Toko / Mitra (Urut Terdekat)</h4>
+            </div>
+            
             <div id="buyer-shops-container" class="space-y-4"></div>
             <div id="promo-banner-bottom-container"></div>
 
@@ -161,14 +170,17 @@
         <!-- 4. DASHBOARD PENJUAL -->
         <section id="view-seller-dashboard" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md flex justify-between items-center">
-                <div>
-                    <h3 id="seller-shop-name" class="font-bold text-lg">Toko Saya</h3>
-                    <p id="seller-shop-category" class="text-xs text-gray-500 font-medium">Kategori: -</p>
-                    <p id="seller-status-text" class="text-xs text-emerald-600 font-semibold mt-1">Status: BUKA</p>
+                <div class="flex items-center space-x-3">
+                    <div id="seller-dashboard-logo" class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 border"></div>
+                    <div>
+                        <h3 id="seller-shop-name" class="font-bold text-lg">Toko Saya</h3>
+                        <p id="seller-shop-category" class="text-xs text-gray-500 font-medium">Kategori: -</p>
+                        <p id="seller-status-text" class="text-xs text-emerald-600 font-semibold mt-0.5">Status: BUKA</p>
+                    </div>
                 </div>
-                <div class="space-x-2">
-                    <button onclick="toggleShopStatus()" id="btn-toggle-shop" class="bg-red-500 text-white text-xs px-3 py-1.5 rounded-lg font-semibold">Tutup Toko</button>
-                    <button onclick="logout()" class="text-xs text-gray-500">Keluar</button>
+                <div class="space-x-1">
+                    <button onclick="toggleShopStatus()" id="btn-toggle-shop" class="bg-red-500 text-white text-[11px] px-2.5 py-1.5 rounded-lg font-semibold">Tutup</button>
+                    <button onclick="logout()" class="text-[11px] text-gray-500 font-semibold">Keluar</button>
                 </div>
             </div>
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
@@ -212,7 +224,7 @@
             </div>
         </section>
 
-        <!-- 6. PANEL ADMIN (UPLOAD LOGO TEKS MARKETPLACE / PNG / GIF) -->
+        <!-- 6. PANEL ADMIN -->
         <section id="view-admin-panel" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
                 <div class="flex justify-between items-center">
@@ -236,26 +248,20 @@
                     <label class="text-xs font-bold text-emerald-700">🌐 Pengaturan RajaOngkir (API Key)</label>
                     <input type="text" id="admin-setting-rajaongkir" placeholder="Masukkan API Key RajaOngkir..." class="w-full p-2 border rounded-lg text-sm">
                 </div>
-                
-                <!-- UPLOAD GAMBAR LOGO MEREK / MARKETPLACE (PNG/GIF) -->
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek / Marketplace (PNG / GIF)</label>
                     <input type="file" id="admin-marketplace-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
-                    <p class="text-[10px] text-gray-500">Akan tampil di halaman utama pembuka (login/daftar) menggantikan teks biasa.</p>
                 </div>
-
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🎨 Upload Logo Banner & Wallpaper</label>
                     <div><span class="text-[11px] text-gray-600 font-semibold">Logo Header Navbar:</span><input type="file" id="admin-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
                     <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Wallpaper Background:</span><input type="file" id="admin-wallpaper-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
                 </div>
-
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🎁 Pengaturan Iklan Banner / GIF Promo</label>
                     <div><span class="text-[11px] text-gray-600 font-semibold">Banner Promo ATAS (JPG/PNG/GIF):</span><input type="file" id="admin-promo-top-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
                     <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Banner Promo BAWAH (JPG/PNG/GIF):</span><input type="file" id="admin-promo-bottom-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
                 </div>
-
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">📂 Kelola Kategori Etalase & Ikon</label>
                     <div class="space-y-2 bg-gray-50 p-3 rounded border">
@@ -335,7 +341,6 @@
         function applyConfig() {
             document.getElementById('app-title').innerText = appConfig.brandName;
             
-            // Tampilkan Logo Judul Merek / Marketplace (PNG/GIF) di Halaman Login
             const marketLogoDisplay = document.getElementById('auth-brand-logo-display');
             const authFormLogo = document.getElementById('auth-form-brand-logo');
             if (appConfig.marketLogoBase64) {
@@ -389,6 +394,7 @@
             if (role === 'seller') {
                 document.getElementById('field-category').classList.remove('hidden');
                 document.getElementById('field-bank').classList.remove('hidden');
+                document.getElementById('field-store-logo').classList.remove('hidden');
                 const catSelect = document.getElementById('auth-category');
                 catSelect.innerHTML = '';
                 appConfig.categories.forEach(cat => {
@@ -398,6 +404,7 @@
             } else {
                 document.getElementById('field-category').classList.add('hidden');
                 document.getElementById('field-bank').classList.add('hidden');
+                document.getElementById('field-store-logo').classList.add('hidden');
             }
         }
 
@@ -410,6 +417,7 @@
                 document.getElementById('field-address').classList.add('hidden');
                 document.getElementById('field-category').classList.add('hidden');
                 document.getElementById('field-bank').classList.add('hidden');
+                document.getElementById('field-store-logo').classList.add('hidden');
                 document.getElementById('auth-submit-btn').innerText = "Masuk (Akun Terdaftar)";
             } else {
                 document.getElementById('field-name').classList.remove('hidden');
@@ -417,6 +425,7 @@
                 if(activeRole === 'seller') {
                     document.getElementById('field-category').classList.remove('hidden');
                     document.getElementById('field-bank').classList.remove('hidden');
+                    document.getElementById('field-store-logo').classList.remove('hidden');
                 }
                 document.getElementById('auth-submit-btn').innerText = "Daftar & Masuk";
             }
@@ -441,22 +450,35 @@
                 const address = document.getElementById('auth-address').value.trim();
                 if (!name || !address) { alert("Nama dan alamat wajib diisi untuk pendaftaran baru!"); return; }
                 
-                user = {
-                    id: 'usr_' + Date.now(),
-                    name: name,
-                    wa: wa,
-                    pass: pass,
-                    role: activeRole,
-                    category: activeRole === 'seller' ? document.getElementById('auth-category').value : '',
-                    addresses: [{ label: "Utama", detail: address }],
-                    bank: activeRole === 'seller' ? document.getElementById('auth-bank-info').value : '',
-                    isOpen: true
-                };
-                users.push(user);
-                localStorage.setItem('umah_users', JSON.stringify(users));
-                currentUser = user;
+                if (activeRole === 'seller') {
+                    const storeLogoFile = document.getElementById('auth-store-logo-file');
+                    if (storeLogoFile.files && storeLogoFile.files[0]) {
+                        compressImage(storeLogoFile.files[0], 200, 200, 0.7, function(base64Logo) {
+                            saveNewUser(name, wa, pass, address, base64Logo);
+                        });
+                        return;
+                    }
+                }
+                saveNewUser(name, wa, pass, address, "");
             }
+        }
 
+        function saveNewUser(name, wa, pass, address, storeLogo) {
+            let user = {
+                id: 'usr_' + Date.now(),
+                name: name,
+                wa: wa,
+                pass: pass,
+                role: activeRole,
+                category: activeRole === 'seller' ? document.getElementById('auth-category').value : '',
+                addresses: [{ label: "Utama", detail: address }],
+                storeLogo: storeLogo,
+                bank: activeRole === 'seller' ? document.getElementById('auth-bank-info').value : '',
+                isOpen: true
+            };
+            users.push(user);
+            localStorage.setItem('umah_users', JSON.stringify(users));
+            currentUser = user;
             localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
             checkSession();
         }
@@ -506,6 +528,16 @@
             let sellers = users.filter(u => u.role === 'seller');
             if (selectedCategoryFilter !== 'Semua') sellers = sellers.filter(s => s.category === selectedCategoryFilter);
 
+            // SIMULASI URUTKAN TOKO BERDASARKAN KEDEKATAN (Wilayah Pembeli vs Toko)
+            let userDefaultCity = currentUser.addresses && currentUser.addresses[0] ? currentUser.addresses[0].detail.toLowerCase() : '';
+            sellers.sort((a, b) => {
+                let aAddr = a.addresses && a.addresses[0] ? a.addresses[0].detail.toLowerCase() : '';
+                let bAddr = b.addresses && b.addresses[0] ? b.addresses[0].detail.toLowerCase() : '';
+                let aMatch = userDefaultCity && aAddr.includes(userDefaultCity) ? 0 : 1;
+                let bMatch = userDefaultCity && bAddr.includes(userDefaultCity) ? 0 : 1;
+                return aMatch - bMatch;
+            });
+
             if (sellers.length === 0) {
                 container.innerHTML = '<p class="text-xs text-gray-500 text-center bg-white/95 backdrop-blur p-4 rounded-xl">Belum ada toko di kategori ini.</p>';
             } else {
@@ -514,15 +546,19 @@
                     let storeReviews = reviews.filter(r => r.storeId === seller.id);
                     let avgRating = storeReviews.length > 0 ? (storeReviews.reduce((sum, r) => sum + r.rating, 0) / storeReviews.length).toFixed(1) : 'Belum ada rating';
                     const statusBadge = isOpen ? '<span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-semibold">BUKA</span>' : '<span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded font-semibold">TUTUP</span>';
-                    
+                    let storeLogoHtml = seller.storeLogo ? `<img src="${seller.storeLogo}" class="w-12 h-12 object-cover rounded-full mr-3 border flex-shrink-0">` : `<div class="w-12 h-12 bg-emerald-100 text-emerald-700 font-bold rounded-full mr-3 flex items-center justify-center flex-shrink-0">🛒</div>`;
+
                     container.innerHTML += `
-                        <div onclick="openStoreCatalog('${seller.id}')" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md cursor-pointer transition hover:shadow-lg ${isOpen ? '' : 'shop-closed'}">
-                            <div class="flex justify-between items-center mb-1">
-                                <h4 class="font-bold text-md text-emerald-800">${seller.name}</h4>
-                                ${statusBadge}
+                        <div onclick="openStoreCatalog('${seller.id}')" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md cursor-pointer transition hover:shadow-lg ${isOpen ? '' : 'shop-closed'} flex items-center">
+                            ${storeLogoHtml}
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-center mb-0.5">
+                                    <h4 class="font-bold text-md text-emerald-800">${seller.name}</h4>
+                                    ${statusBadge}
+                                </div>
+                                <p class="text-xs text-emerald-600 font-semibold mb-0.5">📂 ${seller.category || 'Umum'} | ⭐ ${avgRating} (${storeReviews.length})</p>
+                                <p class="text-xs text-gray-500">📍 ${seller.addresses ? seller.addresses[0].detail : 'Alamat tidak diisi'}</p>
                             </div>
-                            <p class="text-xs text-emerald-600 font-semibold mb-1">📂 ${seller.category || 'Umum'} | ⭐ ${avgRating} (${storeReviews.length} Ulasan)</p>
-                            <p class="text-xs text-gray-500">📍 ${seller.addresses ? seller.addresses[0].detail : 'Alamat tidak diisi'}</p>
                         </div>
                     `;
                 });
@@ -659,10 +695,16 @@
             
             let storeReviews = reviews.filter(r => r.storeId === sellerId);
             let avgRating = storeReviews.length > 0 ? (storeReviews.reduce((sum, r) => sum + r.rating, 0) / storeReviews.length).toFixed(1) : 'Belum ada';
+            let storeLogoHtml = seller.storeLogo ? `<img src="${seller.storeLogo}" class="w-14 h-14 object-cover rounded-full border shadow-sm">` : `<div class="w-14 h-14 bg-emerald-100 text-emerald-700 font-bold rounded-full flex items-center justify-center">🛒</div>`;
 
             document.getElementById('store-catalog-header').innerHTML = `
-                <h3 class="font-bold text-lg text-emerald-800">${seller.name}</h3>
-                <p class="text-xs text-emerald-600 font-semibold">Kategori: ${seller.category} | ⭐ Rating: ${avgRating} (${storeReviews.length} Ulasan)</p>
+                <div class="flex items-center space-x-3 mb-2">
+                    ${storeLogoHtml}
+                    <div>
+                        <h3 class="font-bold text-lg text-emerald-800">${seller.name}</h3>
+                        <p class="text-xs text-emerald-600 font-semibold">Kategori: ${seller.category} | ⭐ Rating: ${avgRating} (${storeReviews.length} Ulasan)</p>
+                    </div>
+                </div>
                 <p class="text-xs text-gray-500">📍 Lokasi: ${seller.addresses ? seller.addresses[0].detail : '-'}</p>
                 <p class="text-xs mt-1 font-semibold ${isOpen ? 'text-emerald-600' : 'text-red-500'}">${isOpen ? 'Toko Buka' : 'Toko Tutup'}</p>
             `;
@@ -768,10 +810,18 @@
             document.getElementById('view-seller-dashboard').classList.remove('hidden');
             document.getElementById('seller-shop-name').innerText = currentUser.name;
             document.getElementById('seller-shop-category').innerText = "Kategori: " + (currentUser.category || 'Umum');
+            
+            const sellerLogoContainer = document.getElementById('seller-dashboard-logo');
+            if(currentUser.storeLogo) {
+                sellerLogoContainer.innerHTML = `<img src="${currentUser.storeLogo}" class="w-full h-full object-cover">`;
+            } else {
+                sellerLogoContainer.innerHTML = `<div class="w-full h-full flex items-center justify-center font-bold text-emerald-700 bg-emerald-100">🛒</div>`;
+            }
+
             const isOpen = currentUser.isOpen !== false;
             document.getElementById('seller-status-text').innerText = isOpen ? "Status: BUKA" : "Status: TUTUP";
-            document.getElementById('btn-toggle-shop').innerText = isOpen ? "Tutup Toko" : "Buka Toko";
-            document.getElementById('btn-toggle-shop').className = isOpen ? "bg-red-500 text-white text-xs px-3 py-1.5 rounded-lg font-semibold" : "bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg font-semibold";
+            document.getElementById('btn-toggle-shop').innerText = isOpen ? "Tutup" : "Buka";
+            document.getElementById('btn-toggle-shop').className = isOpen ? "bg-red-500 text-white text-[11px] px-2.5 py-1.5 rounded-lg font-semibold" : "bg-emerald-600 text-white text-[11px] px-2.5 py-1.5 rounded-lg font-semibold";
             renderSellerPOs();
             renderSellerInvoice();
         }
