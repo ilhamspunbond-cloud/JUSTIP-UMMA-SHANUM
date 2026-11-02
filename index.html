@@ -34,13 +34,12 @@
 
         <!-- 1. HALAMAN AUTH -->
         <section id="view-auth" class="space-y-4 mt-10">
-            <div class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md text-center">
+            <div id="auth-selection-card" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md text-center">
                 <h2 id="login-brand-title" class="text-2xl font-bold text-emerald-600 mb-2">Jastip Umah Sanum</h2>
-                <p class="text-sm text-gray-500 mb-6">Silakan masuk atau daftar sesuai peran kamu</p>
-                
+                <p class="text-sm text-gray-500 mb-6">Silakan masuk sesuai peran kamu</p>
                 <div class="space-y-3">
-                    <button onclick="showLoginForm('buyer')" class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700">Masuk sebagai Pembeli</button>
-                    <button onclick="showLoginForm('seller')" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Masuk sebagai Penjual (Mitra)</button>
+                    <button onclick="showAuthMode('buyer')" class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700">Masuk / Daftar sebagai Pembeli</button>
+                    <button onclick="showAuthMode('seller')" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Masuk / Daftar sebagai Penjual (Mitra)</button>
                 </div>
             </div>
 
@@ -49,20 +48,20 @@
                 <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-3">
                     <input type="hidden" id="auth-role" value="">
                     <div>
+                        <label class="text-xs font-semibold text-gray-600">No. WhatsApp (ID Utama)</label>
+                        <input type="text" id="auth-wa" required onblur="checkExistingUser()" placeholder="Cth: 08123456789" class="w-full p-2 border rounded-lg text-sm">
+                    </div>
+                    <div id="field-name">
                         <label class="text-xs font-semibold text-gray-600">Nama Lengkap / Nama Toko</label>
-                        <input type="text" id="auth-name" required class="w-full p-2 border rounded-lg text-sm">
+                        <input type="text" id="auth-name" class="w-full p-2 border rounded-lg text-sm">
                     </div>
                     <div id="field-category" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Pilih Kategori Etalase Toko</label>
                         <select id="auth-category" class="w-full p-2 border rounded-lg text-sm"></select>
                     </div>
                     <div id="field-address" class="hidden">
-                        <label class="text-xs font-semibold text-gray-600">Alamat Lengkap</label>
+                        <label class="text-xs font-semibold text-gray-600">Alamat Utama</label>
                         <textarea id="auth-address" class="w-full p-2 border rounded-lg text-sm"></textarea>
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-gray-600">No. WhatsApp</label>
-                        <input type="text" id="auth-wa" required class="w-full p-2 border rounded-lg text-sm">
                     </div>
                     <div id="field-bank" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Info Rekening / E-Wallet (Pencairan Dana)</label>
@@ -78,7 +77,7 @@
                         <label class="text-xs font-semibold text-gray-600">Kata Sandi</label>
                         <input type="password" id="auth-pass" required class="w-full p-2 border rounded-lg text-sm">
                     </div>
-                    <button type="submit" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-sm">Lanjutkan</button>
+                    <button type="submit" id="auth-submit-btn" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-sm">Masuk / Daftar</button>
                     <button type="button" onclick="cancelAuth()" class="w-full text-gray-500 text-xs py-1">Kembali</button>
                 </form>
             </div>
@@ -86,26 +85,62 @@
 
         <!-- 2. HALAMAN UTAMA PEMBELI -->
         <section id="view-buyer-dashboard" class="space-y-4 hidden mt-4 p-2 rounded-xl">
+            <!-- PROMO BANNER ATAS -->
+            <div id="promo-banner-top-container"></div>
+
             <div class="flex justify-between items-center bg-white/95 backdrop-blur p-3 rounded-lg shadow-sm">
-                <h3 class="text-lg font-bold text-gray-800">Daftar Toko / Mitra</h3>
+                <div>
+                    <h3 id="buyer-greeting" class="font-bold text-md text-gray-800">Halo, Pembeli</h3>
+                    <button onclick="openAddressManager()" class="text-[11px] text-emerald-600 font-semibold underline">📍 Kelola Daftar Alamat Kirim</button>
+                </div>
                 <button onclick="logout()" class="text-xs text-red-500 font-semibold">Keluar</button>
             </div>
-            <!-- KATEGORI ETALASE DENGAN IKON GAMBAR -->
+            
             <div id="category-filters-container" class="flex space-x-3 overflow-x-auto py-2"></div>
             <div id="buyer-shops-container" class="space-y-4"></div>
+            
+            <!-- PROMO BANNER BAWAH -->
+            <div id="promo-banner-bottom-container"></div>
+
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3 mt-6">
                 <h4 class="font-bold text-sm text-gray-700">📦 Status & Pelacakan Pesanan Saya</h4>
                 <div id="buyer-tracking-container" class="space-y-3 text-xs"></div>
             </div>
         </section>
 
-        <!-- 3. HALAMAN KATALOG PRODUK & CHECKOUT -->
+        <!-- MODAL KELOLA BEBERAPA ALAMAT PEMBELI -->
+        <div id="modal-address-manager" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white p-5 rounded-xl max-w-sm w-full space-y-3">
+                <h3 class="font-bold text-md text-gray-800">📍 Daftar Alamat Pengiriman Saya</h3>
+                <div id="buyer-address-list" class="space-y-2 text-xs max-h-40 overflow-y-auto"></div>
+                <div class="border-t pt-2 space-y-2">
+                    <input type="text" id="new-addr-label" placeholder="Label Alamat (Cth: Rumah, Kantor, Kos)" class="w-full p-2 border rounded text-xs">
+                    <textarea id="new-addr-detail" placeholder="Detail Alamat Lengkap & Patokan" class="w-full p-2 border rounded text-xs"></textarea>
+                    <button onclick="addNewBuyerAddress()" class="w-full bg-blue-600 text-white py-1.5 rounded text-xs font-semibold">Tambah Alamat Baru</button>
+                </div>
+                <button onclick="closeAddressManager()" class="w-full bg-gray-300 text-gray-700 py-1.5 rounded text-xs font-semibold">Tutup</button>
+            </div>
+        </div>
+
+        <!-- 3. HALAMAN KATALOG PRODUK & REVIEW TOKO -->
         <section id="view-store-catalog" class="space-y-4 hidden mt-4">
             <button onclick="backToBuyerDashboard()" class="text-xs bg-gray-200 px-3 py-1 rounded-lg font-semibold">← Kembali ke Daftar Toko</button>
-            <div id="store-catalog-header" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md"></div>
+            <div id="store-catalog-header" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-2"></div>
+            
+            <!-- REVIEW & KOMENTAR TOKO -->
+            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
+                <h4 class="font-bold text-sm text-gray-700">⭐ Rating & Komentar Pembeli</h4>
+                <div id="store-reviews-container" class="space-y-3 text-xs max-h-60 overflow-y-auto"></div>
+            </div>
+
             <div id="store-products-container" class="grid grid-cols-1 gap-3"></div>
+            
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3 mt-4">
                 <h4 class="font-bold text-sm text-gray-700">Ringkasan & Pengiriman</h4>
+                <div>
+                    <label class="text-xs font-semibold text-gray-600">Pilih Alamat Pengiriman Tujuan:</label>
+                    <select id="checkout-address-select" class="w-full p-2 border rounded-lg text-xs mt-1"></select>
+                </div>
                 <div id="store-origin-info" class="text-xs text-emerald-700 font-semibold bg-emerald-50 p-2 rounded"></div>
                 <div class="text-xs space-y-1 text-gray-600 pt-2 border-t">
                     <div class="flex justify-between"><span>Subtotal Produk:</span> <span id="cart-subtotal" class="font-semibold">Rp0</span></div>
@@ -124,7 +159,7 @@
             </div>
         </section>
 
-        <!-- 4. HALAMAN DASHBOARD PENJUAL (DENGAN UPLOAD FOTO PRODUK) -->
+        <!-- 4. HALAMAN DASHBOARD PENJUAL -->
         <section id="view-seller-dashboard" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md flex justify-between items-center">
                 <div>
@@ -138,12 +173,12 @@
                 </div>
             </div>
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
-                <h4 class="font-bold text-sm text-gray-700">Tambah Produk / Menu Baru (Upload Foto)</h4>
+                <h4 class="font-bold text-sm text-gray-700">Tambah Produk / Menu Baru</h4>
                 <form onsubmit="addSellerProduct(event)" class="space-y-2">
                     <input type="text" id="prod-name" placeholder="Nama Menu/Produk" required class="w-full p-2 border rounded-lg text-sm">
                     <input type="number" id="prod-price" placeholder="Harga Dasar / Modal (Rp)" required class="w-full p-2 border rounded-lg text-sm">
                     <div>
-                        <label class="text-xs font-semibold text-gray-600">Upload Foto Produk (Otomatis Kompres HD)</label>
+                        <label class="text-xs font-semibold text-gray-600">Upload Foto Produk</label>
                         <input type="file" id="prod-image-file" accept="image/*" required class="w-full p-1.5 border rounded-lg text-xs mt-1 bg-white">
                     </div>
                     <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg text-xs font-semibold">Simpan Produk</button>
@@ -159,7 +194,7 @@
             </div>
         </section>
 
-        <!-- 5. HALAMAN DASHBOARD SALES (PRIVAT VIA RODA GIGI) -->
+        <!-- 5. HALAMAN DASHBOARD SALES (VIA RODA GIGI) -->
         <section id="view-sales-dashboard" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md flex justify-between items-center">
                 <div>
@@ -178,7 +213,7 @@
             </div>
         </section>
 
-        <!-- 6. PANEL ADMIN UTAMA (UPLOAD LOGO & IKON KATEGORI) -->
+        <!-- 6. PANEL ADMIN UTAMA (PENGATURAN PROMO BANNER / GIF) -->
         <section id="view-admin-panel" class="space-y-4 hidden mt-4">
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
                 <div class="flex justify-between items-center">
@@ -194,92 +229,42 @@
                     <label class="text-xs font-semibold">Alamat Kantor Pusat</label>
                     <textarea id="admin-setting-address" class="w-full p-2 border rounded-lg text-sm mt-1"></textarea>
                 </div>
-
-                <!-- PENGATURAN KATA SANDI ADMIN -->
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🔐 Ganti Kata Sandi Admin</label>
                     <input type="text" id="admin-setting-pass" placeholder="Kata Sandi Baru Admin" class="w-full p-2 border rounded-lg text-sm">
                 </div>
-
-                <!-- PENGATURAN RAJAONGKIR API -->
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🌐 Pengaturan RajaOngkir (API Key)</label>
                     <input type="text" id="admin-setting-rajaongkir" placeholder="Masukkan API Key RajaOngkir..." class="w-full p-2 border rounded-lg text-sm">
                 </div>
-
-                <!-- UPLOAD LOGO UTAMA & WALLPAPER (LANGSUNG FILE) -->
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🎨 Upload Logo Utama (Banner) & Wallpaper</label>
-                    <div>
-                        <span class="text-[11px] text-gray-600 font-semibold">Pilih File Logo Banner Utama:</span>
-                        <input type="file" id="admin-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
-                    </div>
-                    <div class="mt-2">
-                        <span class="text-[11px] text-gray-600 font-semibold">Pilih File Wallpaper Background:</span>
-                        <input type="file" id="admin-wallpaper-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
-                    </div>
-                    <select id="admin-setting-theme" class="w-full p-2 border rounded-lg text-sm mt-2">
-                        <option value="bg-emerald-600">Hijau Emerald (Default)</option>
-                        <option value="bg-blue-600">Biru Elegan</option>
-                        <option value="bg-purple-600">Ungu Mewah</option>
-                        <option value="bg-amber-600">Oranye / Emas</option>
-                    </select>
+                    <label class="text-xs font-bold text-emerald-700">🎨 Upload Logo Utama & Wallpaper</label>
+                    <div><span class="text-[11px] text-gray-600 font-semibold">Logo Banner:</span><input type="file" id="admin-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
+                    <div class="mt-2"><span class="text-[11px] text-gray-600 font-semibold">Wallpaper:</span><input type="file" id="admin-wallpaper-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white"></div>
                 </div>
 
-                <!-- KELOLA KATEGORI & UPLOAD IKON GAMBARNYA -->
+                <!-- PENGATURAN BANNER PROMO / GIF ATAS & BAWAH -->
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">📂 Kelola Kategori Etalase & Upload Ikon Gambar</label>
+                    <label class="text-xs font-bold text-emerald-700">🎁 Pengaturan Iklan Banner / GIF Promo</label>
+                    <div>
+                        <span class="text-[11px] text-gray-600 font-semibold">Upload Banner Promo ATAS (JPG/PNG/GIF):</span>
+                        <input type="file" id="admin-promo-top-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
+                    </div>
+                    <div class="mt-2">
+                        <span class="text-[11px] text-gray-600 font-semibold">Upload Banner Promo BAWAH (JPG/PNG/GIF):</span>
+                        <input type="file" id="admin-promo-bottom-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
+                    </div>
+                </div>
+
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">📂 Kelola Kategori Etalase & Ikon</label>
                     <div class="space-y-2 bg-gray-50 p-3 rounded border">
-                        <input type="text" id="new-category-name" placeholder="Nama Kategori (Cth: Makanan, Minuman)" class="w-full p-1.5 border rounded text-xs">
-                        <div>
-                            <span class="text-[10px] text-gray-500">Upload Ikon Gambar Kategori:</span>
-                            <input type="file" id="new-category-icon-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
-                        </div>
+                        <input type="text" id="new-category-name" placeholder="Nama Kategori" class="w-full p-1.5 border rounded text-xs">
+                        <input type="file" id="new-category-icon-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
                         <button onclick="addNewCategoryWithIcon()" class="w-full bg-blue-600 text-white py-1.5 rounded text-xs font-semibold">Tambah Kategori + Ikon</button>
                     </div>
                     <div id="admin-category-list" class="space-y-2 mt-2 text-xs"></div>
                 </div>
-
-                <!-- AUDIO NOTIFIKASI -->
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🎵 Link URL MP3 Notifikasi Penjual</label>
-                    <input type="text" id="admin-notif-audio" placeholder="https://..." class="w-full p-2 border rounded-lg text-sm">
-                </div>
-
-                <!-- PENGATURAN KOMISI PERSENTASE -->
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">📈 Komisi Sales (% Dari Keuntungan Bersih / Profit)</label>
-                    <div class="flex items-center space-x-2">
-                        <input type="number" id="admin-comm-percentage" class="w-full p-2 border rounded-lg text-sm" placeholder="Contoh: 30 untuk 30%" value="30">
-                        <span class="text-sm font-bold">%</span>
-                    </div>
-                </div>
-
-                <!-- KELOLA AKUN SALES -->
-                <div class="pt-2 border-t space-y-3">
-                    <label class="text-xs font-bold text-emerald-700">Kelola Akun Sales / Pemasar</label>
-                    <div class="space-y-2 bg-gray-50 p-3 rounded border">
-                        <input type="text" id="sales-input-name" placeholder="Nama Sales" class="w-full p-1.5 border rounded text-xs">
-                        <input type="text" id="sales-input-wa" placeholder="No WhatsApp" class="w-full p-1.5 border rounded text-xs">
-                        <input type="text" id="sales-input-bank" placeholder="Info Rekening / E-Wallet" class="w-full p-1.5 border rounded text-xs">
-                        <input type="password" id="sales-input-pass" placeholder="Kata Sandi Sales" class="w-full p-1.5 border rounded text-xs">
-                        <button onclick="addNewSalesAccount()" class="w-full bg-blue-600 text-white py-1.5 rounded text-xs font-semibold">Simpan Akun Sales Baru</button>
-                    </div>
-                    <div id="admin-sales-list-detailed" class="space-y-2 text-xs"></div>
-                </div>
-
-                <!-- PEMBAYARAN KOMISI SALES -->
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">💰 Pembayaran Komisi Sales</label>
-                    <div id="admin-sales-payout-container" class="space-y-3 text-xs"></div>
-                </div>
-
-                <!-- PEMBAYARAN MITRA PENJUAL -->
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🤝 Pembayaran Dana ke Mitra Penjual</label>
-                    <div id="admin-seller-payout-container" class="space-y-3 text-xs"></div>
-                </div>
-
                 <button onclick="saveAdminSettings()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-xs font-semibold mt-2">Simpan Semua Pengaturan</button>
             </div>
         </section>
@@ -295,9 +280,10 @@
             rajaOngkirKey: "",
             logoBannerBase64: "",
             wallpaperBase64: "",
+            promoTopBase64: "",
+            promoBottomBase64: "",
             themeColor: "bg-emerald-600",
             notifAudioUrl: "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3",
-            markupAmount: 10000,
             commPercentage: 30,
             salesAccounts: [
                 { id: "sls_1", name: "Asep Sales", wa: "08123456789", bank: "BCA 987654 a.n Asep", pass: "sales123" }
@@ -313,6 +299,7 @@
         let users = JSON.parse(localStorage.getItem('umah_users')) || [];
         let products = JSON.parse(localStorage.getItem('umah_products')) || [];
         let orders = JSON.parse(localStorage.getItem('umah_orders')) || [];
+        let reviews = JSON.parse(localStorage.getItem('umah_reviews')) || [];
         
         let currentUser = JSON.parse(localStorage.getItem('umah_current_user')) || null;
         let activeRole = null;
@@ -320,25 +307,11 @@
         let selectedCategoryFilter = 'Semua';
         let cart = [];
 
-        let audioQueue = [];
-        let isPlayingAudio = false;
-
         function playNotificationSound() {
-            const audioUrl = appConfig.notifAudioUrl || "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3";
-            audioQueue.push(audioUrl);
-            processAudioQueue();
+            const audio = new Audio(appConfig.notifAudioUrl || "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3");
+            audio.play().catch(e => console.log("Audio blocked"));
         }
 
-        function processAudioQueue() {
-            if (isPlayingAudio || audioQueue.length === 0) return;
-            isPlayingAudio = true;
-            const currentUrl = audioQueue.shift();
-            const audio = new Audio(currentUrl);
-            audio.play().catch(e => { console.log("Audio blocked"); isPlayingAudio = false; });
-            audio.onended = function() { isPlayingAudio = false; processAudioQueue(); };
-        }
-
-        // FUNGSI KOMPRESSI GAMBAR OTOMATIS (HD & RINGAN)
         function compressImage(file, maxWidth, maxHeight, quality, callback) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -346,23 +319,14 @@
                 const img = new Image();
                 img.src = event.target.result;
                 img.onload = function() {
-                    let width = img.width;
-                    let height = img.height;
-                    if (width > maxWidth) {
-                        height = Math.round((height * maxWidth) / width);
-                        width = maxWidth;
-                    }
-                    if (height > maxHeight) {
-                        width = Math.round((width * maxHeight) / height);
-                        height = maxHeight;
-                    }
+                    let width = img.width, height = img.height;
+                    if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; }
+                    if (height > maxHeight) { width = Math.round((width * maxHeight) / height); height = maxHeight; }
                     const canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
+                    canvas.width = width; canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-                    callback(compressedDataUrl);
+                    callback(canvas.toDataURL('image/jpeg', quality));
                 }
             }
         }
@@ -374,34 +338,17 @@
 
         function applyConfig() {
             document.getElementById('app-title').innerText = appConfig.brandName;
-            
             const logoContainer = document.getElementById('brand-logo-container');
             if (appConfig.logoBannerBase64) {
-                logoContainer.innerHTML = `<img src="${appConfig.logoBannerBase64}" alt="${appConfig.brandName}" class="h-9 max-w-[190px] object-contain filter drop-shadow">`;
+                logoContainer.innerHTML = `<img src="${appConfig.logoBannerBase64}" class="h-9 max-w-[190px] object-contain filter drop-shadow">`;
             } else {
                 logoContainer.innerHTML = `<span class="text-xl font-bold">🛒 ${appConfig.brandName}</span>`;
             }
-            
-            const headerEl = document.getElementById('app-header');
-            headerEl.className = `${appConfig.themeColor || 'bg-emerald-600'} text-white p-3 shadow-md flex justify-between items-center sticky top-0 z-50 transition-all`;
-
-            const bodyEl = document.getElementById('app-body');
-            if (appConfig.wallpaperBase64) {
-                bodyEl.style.backgroundImage = `linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url('${appConfig.wallpaperBase64}')`;
-            } else {
-                bodyEl.style.backgroundImage = 'none';
-            }
-
             document.getElementById('admin-setting-brand').value = appConfig.brandName;
             document.getElementById('admin-setting-address').value = appConfig.brandAddress;
             document.getElementById('admin-setting-pass').value = appConfig.adminPass || 'Rojak123';
             document.getElementById('admin-setting-rajaongkir').value = appConfig.rajaOngkirKey || '';
-            document.getElementById('admin-setting-theme').value = appConfig.themeColor || 'bg-emerald-600';
-            document.getElementById('admin-notif-audio').value = appConfig.notifAudioUrl || '';
-            document.getElementById('admin-comm-percentage').value = appConfig.commPercentage || 30;
-            
             renderAdminCategoryList();
-            renderAdminSalesListDetailed();
         }
 
         function checkSession() {
@@ -414,80 +361,90 @@
         }
 
         function hideAllViews() {
-            document.getElementById('view-auth').classList.add('hidden');
-            document.getElementById('view-buyer-dashboard').classList.add('hidden');
-            document.getElementById('view-store-catalog').classList.add('hidden');
-            document.getElementById('view-seller-dashboard').classList.add('hidden');
-            document.getElementById('view-sales-dashboard').classList.add('hidden');
-            document.getElementById('view-admin-panel').classList.add('hidden');
+            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
             document.getElementById('dynamic-auth-form').classList.add('hidden');
+            document.getElementById('auth-selection-card').classList.add('hidden');
         }
 
-        function showLoginForm(role) {
+        function showAuthMode(role) {
             activeRole = role;
             document.getElementById('auth-role').value = role;
+            document.getElementById('auth-selection-card').classList.add('hidden');
             document.getElementById('dynamic-auth-form').classList.remove('hidden');
-            document.getElementById('auth-form-title').innerText = role === 'buyer' ? 'Masuk Pembeli' : 'Masuk Penjual (Mitra)';
+            document.getElementById('auth-form-title').innerText = role === 'buyer' ? 'Masuk / Daftar Pembeli' : 'Masuk / Daftar Mitra Penjual';
             
-            const salesRefDiv = document.getElementById('field-sales-ref');
-            const salesSelect = document.getElementById('auth-sales-ref');
-            salesSelect.innerHTML = '<option value="-">-- Tidak Ada --</option>';
-            if (appConfig.salesAccounts) {
-                appConfig.salesAccounts.forEach(s => {
-                    salesSelect.innerHTML += `<option value="${s.name}">${s.name}</option>`;
-                });
-            }
-
-            if (role === 'buyer') {
-                salesRefDiv.classList.remove('hidden');
-                document.getElementById('field-category').classList.add('hidden');
-                document.getElementById('field-address').classList.add('hidden');
-                document.getElementById('field-bank').classList.add('hidden');
-            } else if (role === 'seller') {
-                salesRefDiv.classList.remove('hidden');
+            document.getElementById('field-name').classList.remove('hidden');
+            document.getElementById('field-address').classList.remove('hidden');
+            if (role === 'seller') {
                 document.getElementById('field-category').classList.remove('hidden');
-                document.getElementById('field-address').classList.remove('hidden');
                 document.getElementById('field-bank').classList.remove('hidden');
-                
                 const catSelect = document.getElementById('auth-category');
                 catSelect.innerHTML = '';
                 appConfig.categories.forEach(cat => {
-                    let catName = typeof cat === 'string' ? cat : cat.name;
-                    catSelect.innerHTML += `<option value="${catName}">${catName}</option>`;
+                    let cName = typeof cat === 'string' ? cat : cat.name;
+                    catSelect.innerHTML += `<option value="${cName}">${cName}</option>`;
                 });
+            } else {
+                document.getElementById('field-category').classList.add('hidden');
+                document.getElementById('field-bank').classList.add('hidden');
             }
         }
 
-        function cancelAuth() { document.getElementById('dynamic-auth-form').classList.add('hidden'); }
+        function checkExistingUser() {
+            const wa = document.getElementById('auth-wa').value.trim();
+            if (!wa) return;
+            let existing = users.find(u => u.wa === wa && u.role === activeRole);
+            if (existing) {
+                document.getElementById('field-name').classList.add('hidden');
+                document.getElementById('field-address').classList.add('hidden');
+                document.getElementById('field-category').classList.add('hidden');
+                document.getElementById('field-bank').classList.add('hidden');
+                document.getElementById('auth-submit-btn').innerText = "Masuk (Akun Terdaftar)";
+            } else {
+                document.getElementById('field-name').classList.remove('hidden');
+                document.getElementById('field-address').classList.remove('hidden');
+                if(activeRole === 'seller') {
+                    document.getElementById('field-category').classList.remove('hidden');
+                    document.getElementById('field-bank').classList.remove('hidden');
+                }
+                document.getElementById('auth-submit-btn').innerText = "Daftar & Masuk";
+            }
+        }
+
+        function cancelAuth() {
+            document.getElementById('dynamic-auth-form').classList.add('hidden');
+            document.getElementById('auth-selection-card').classList.remove('hidden');
+        }
 
         function handleAuth(event) {
             event.preventDefault();
-            const name = document.getElementById('auth-name').value;
-            const wa = document.getElementById('auth-wa').value;
-            const pass = document.getElementById('auth-pass').value;
-            const category = document.getElementById('auth-category') ? document.getElementById('auth-category').value : '';
-            const address = document.getElementById('auth-address').value;
-            const bank = document.getElementById('auth-bank-info').value;
-            const referredBy = document.getElementById('auth-sales-ref').value;
-
+            const wa = document.getElementById('auth-wa').value.trim();
+            const pass = document.getElementById('auth-pass').value.trim();
+            
             let user = users.find(u => u.wa === wa && u.role === activeRole);
-            if (!user) {
+            if (user) {
+                if (user.pass !== pass) { alert("Kata sandi salah!"); return; }
+                currentUser = user;
+            } else {
+                const name = document.getElementById('auth-name').value.trim();
+                const address = document.getElementById('auth-address').value.trim();
+                if (!name || !address) { alert("Nama dan alamat wajib diisi untuk pendaftaran baru!"); return; }
+                
                 user = {
                     id: 'usr_' + Date.now(),
                     name: name,
                     wa: wa,
                     pass: pass,
                     role: activeRole,
-                    category: category,
-                    address: address,
-                    bank: bank,
-                    referredBy: referredBy,
+                    category: activeRole === 'seller' ? document.getElementById('auth-category').value : '',
+                    addresses: [{ label: "Utama", detail: address }],
+                    bank: activeRole === 'seller' ? document.getElementById('auth-bank-info').value : '',
                     isOpen: true
                 };
                 users.push(user);
                 localStorage.setItem('umah_users', JSON.stringify(users));
-            } else if (user.pass !== pass) { alert("Kata sandi salah!"); return; }
-            currentUser = user;
+                currentUser = user;
+            }
 
             localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
             checkSession();
@@ -499,24 +456,37 @@
             cart = [];
             hideAllViews();
             document.getElementById('view-auth').classList.remove('hidden');
+            document.getElementById('auth-selection-card').classList.remove('hidden');
             document.getElementById('user-info-display').innerText = "Belum Login";
         }
 
         function showBuyerDashboard() {
             hideAllViews();
             document.getElementById('view-buyer-dashboard').classList.remove('hidden');
+            document.getElementById('buyer-greeting').innerText = "Halo, " + currentUser.name;
             
+            // RENDER PROMO BANNER ATAS & BAWAH
+            const topBannerContainer = document.getElementById('promo-banner-top-container');
+            if (appConfig.promoTopBase64) {
+                topBannerContainer.innerHTML = `<div class="mb-3 rounded-xl overflow-hidden shadow-md"><img src="${appConfig.promoTopBase64}" class="w-full h-auto object-cover max-h-40"></div>`;
+            } else { topBannerContainer.innerHTML = ''; }
+
+            const bottomBannerContainer = document.getElementById('promo-banner-bottom-container');
+            if (appConfig.promoBottomBase64) {
+                bottomBannerContainer.innerHTML = `<div class="mt-4 rounded-xl overflow-hidden shadow-md"><img src="${appConfig.promoBottomBase64}" class="w-full h-auto object-cover max-h-40"></div>`;
+            } else { bottomBannerContainer.innerHTML = ''; }
+
             const filterContainer = document.getElementById('category-filters-container');
             filterContainer.innerHTML = `<button onclick="filterByCategory('Semua')" class="flex flex-col items-center p-2 rounded-xl text-xs font-semibold ${selectedCategoryFilter === 'Semua' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}"><span class="text-lg">🌐</span><span>Semua</span></button>`;
             
             appConfig.categories.forEach(cat => {
-                let catName = typeof cat === 'string' ? cat : cat.name;
-                let catIcon = (typeof cat === 'object' && cat.icon) ? `<img src="${cat.icon}" class="w-8 h-8 object-cover rounded-full mb-1">` : `<span class="text-lg">🏷️</span>`;
-                const isActive = selectedCategoryFilter === catName;
+                let cName = typeof cat === 'string' ? cat : cat.name;
+                let cIcon = (typeof cat === 'object' && cat.icon) ? `<img src="${cat.icon}" class="w-8 h-8 object-cover rounded-full mb-1">` : `<span class="text-lg">🏷️</span>`;
+                const isActive = selectedCategoryFilter === cName;
                 filterContainer.innerHTML += `
-                    <button onclick="filterByCategory('${catName}')" class="flex flex-col items-center p-2 rounded-xl text-xs font-semibold min-w-[70px] ${isActive ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}">
-                        ${catIcon}
-                        <span>${catName}</span>
+                    <button onclick="filterByCategory('${cName}')" class="flex flex-col items-center p-2 rounded-xl text-xs font-semibold min-w-[70px] ${isActive ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700 shadow-sm'}">
+                        ${cIcon}
+                        <span>${cName}</span>
                     </button>
                 `;
             });
@@ -531,15 +501,18 @@
             } else {
                 sellers.forEach(seller => {
                     const isOpen = seller.isOpen !== false;
+                    let storeReviews = reviews.filter(r => r.storeId === seller.id);
+                    let avgRating = storeReviews.length > 0 ? (storeReviews.reduce((sum, r) => sum + r.rating, 0) / storeReviews.length).toFixed(1) : 'Belum ada rating';
                     const statusBadge = isOpen ? '<span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-semibold">BUKA</span>' : '<span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded font-semibold">TUTUP</span>';
+                    
                     container.innerHTML += `
                         <div onclick="openStoreCatalog('${seller.id}')" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md cursor-pointer transition hover:shadow-lg ${isOpen ? '' : 'shop-closed'}">
                             <div class="flex justify-between items-center mb-1">
                                 <h4 class="font-bold text-md text-emerald-800">${seller.name}</h4>
                                 ${statusBadge}
                             </div>
-                            <p class="text-xs text-emerald-600 font-semibold mb-1">📂 ${seller.category || 'Umum'}</p>
-                            <p class="text-xs text-gray-500">📍 ${seller.address || 'Alamat tidak diisi'}</p>
+                            <p class="text-xs text-emerald-600 font-semibold mb-1">📂 ${seller.category || 'Umum'} | ⭐ ${avgRating} (${storeReviews.length} Ulasan)</p>
+                            <p class="text-xs text-gray-500">📍 ${seller.addresses ? seller.addresses[0].detail : 'Alamat tidak diisi'}</p>
                         </div>
                     `;
                 });
@@ -549,6 +522,48 @@
 
         function filterByCategory(cat) { selectedCategoryFilter = cat; showBuyerDashboard(); }
 
+        function openAddressManager() {
+            document.getElementById('modal-address-manager').classList.remove('hidden');
+            renderBuyerAddressList();
+        }
+        function closeAddressManager() { document.getElementById('modal-address-manager').classList.add('hidden'); }
+
+        function renderBuyerAddressList() {
+            const container = document.getElementById('buyer-address-list');
+            container.innerHTML = '';
+            if (!currentUser.addresses) currentUser.addresses = [];
+            currentUser.addresses.forEach((addr, idx) => {
+                container.innerHTML += `
+                    <div class="border p-2 rounded bg-gray-50 flex justify-between items-center">
+                        <div><b>${addr.label}</b>: ${addr.detail}</div>
+                        ${currentUser.addresses.length > 1 ? `<button onclick="removeBuyerAddress(${idx})" class="text-red-500 font-bold px-2">×</button>` : ''}
+                    </div>
+                `;
+            });
+        }
+
+        function addNewBuyerAddress() {
+            const label = document.getElementById('new-addr-label').value.trim();
+            const detail = document.getElementById('new-addr-detail').value.trim();
+            if (!label || !detail) { alert("Label dan detail alamat wajib diisi!"); return; }
+            currentUser.addresses.push({ label, detail });
+            users = users.map(u => u.id === currentUser.id ? currentUser : u);
+            localStorage.setItem('umah_users', JSON.stringify(users));
+            localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
+            document.getElementById('new-addr-label').value = '';
+            document.getElementById('new-addr-detail').value = '';
+            renderBuyerAddressList();
+            alert("Alamat baru ditambahkan!");
+        }
+
+        function removeBuyerAddress(idx) {
+            currentUser.addresses.splice(idx, 1);
+            users = users.map(u => u.id === currentUser.id ? currentUser : u);
+            localStorage.setItem('umah_users', JSON.stringify(users));
+            localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
+            renderBuyerAddressList();
+        }
+
         function renderBuyerTracking() {
             const container = document.getElementById('buyer-tracking-container');
             container.innerHTML = '';
@@ -556,14 +571,73 @@
             const myOrders = allOrders.filter(o => o.buyerWa === currentUser.wa);
             if (myOrders.length === 0) { container.innerHTML = '<p class="text-gray-400">Belum ada pesanan.</p>'; return; }
             myOrders.forEach(ord => {
+                let isCompleted = ord.deliveryStatus === 'Pesanan Selesai / Diterima';
+                let hasReviewed = reviews.some(r => r.orderId === ord.id && r.buyerWa === currentUser.wa);
+                let reviewFormHtml = '';
+                if (isCompleted && !hasReviewed) {
+                    reviewFormHtml = `
+                        <div class="mt-2 pt-2 border-t space-y-2">
+                            <p class="font-bold text-purple-700">⭐ Pesanan Tiba! Wajib Beri Ulasan & Rating:</p>
+                            <select id="rev_star_${ord.id}" class="w-full p-1 border rounded text-xs">
+                                <option value="5">⭐⭐⭐⭐⭐ Sangat Bagus (Puas)</option>
+                                <option value="4">⭐⭐⭐⭐ Bagus</option>
+                                <option value="3">⭐⭐⭐ Cukup</option>
+                                <option value="2">⭐⭐ Kurang</option>
+                                <option value="1">⭐ Buruk (Kecewa)</option>
+                            </select>
+                            <input type="text" id="rev_text_${ord.id}" placeholder="Tulis komentar ulasan..." class="w-full p-1 border rounded text-xs">
+                            <div>
+                                <label class="text-[10px] font-semibold text-gray-600">Upload Foto Fisik Produk (Auto-Compress):</label>
+                                <input type="file" id="rev_file_${ord.id}" accept="image/*" class="w-full p-1 border rounded text-xs bg-white">
+                            </div>
+                            <button onclick="submitReviewWithPhoto('${ord.id}', '${ord.storeId}')" class="w-full bg-purple-600 text-white py-1 rounded text-xs font-semibold">Kirim Ulasan & Foto</button>
+                        </div>
+                    `;
+                } else if (hasReviewed) {
+                    reviewFormHtml = `<p class="text-emerald-600 font-semibold mt-1">✓ Ulasan telah dikirim.</p>`;
+                }
+
                 container.innerHTML += `
                     <div class="border p-3 rounded-lg space-y-1 bg-white/95">
                         <p class="font-bold">ID PO: ${ord.id}</p>
                         <p>Total: Rp${ord.total.toLocaleString()}</p>
-                        <div class="mt-2 p-2 rounded text-center font-bold bg-emerald-100 text-emerald-800">🛵 Status: ${ord.deliveryStatus || 'Menunggu Konfirmasi'}</div>
+                        <div class="p-2 rounded text-center font-bold bg-emerald-100 text-emerald-800">🛵 Status: ${ord.deliveryStatus || 'Menunggu Konfirmasi'}</div>
+                        ${reviewFormHtml}
                     </div>
                 `;
             });
+        }
+
+        function submitReviewWithPhoto(orderId, storeId) {
+            const rating = parseInt(document.getElementById('rev_star_' + orderId).value);
+            const comment = document.getElementById('rev_text_' + orderId).value.trim();
+            const fileInput = document.getElementById('rev_file_' + orderId);
+
+            if (!comment) { alert("Tuliskan komentar ulasan Anda!"); return; }
+
+            if (fileInput.files && fileInput.files[0]) {
+                compressImage(fileInput.files[0], 400, 400, 0.6, function(base64Photo) {
+                    saveReviewData(orderId, storeId, rating, comment, base64Photo);
+                });
+            } else {
+                saveReviewData(orderId, storeId, rating, comment, "");
+            }
+        }
+
+        function saveReviewData(orderId, storeId, rating, comment, photoBase64) {
+            reviews.push({
+                orderId,
+                storeId,
+                buyerName: currentUser.name,
+                buyerWa: currentUser.wa,
+                rating,
+                comment,
+                photo: photoBase64,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem('umah_reviews', JSON.stringify(reviews));
+            alert("Terima kasih! Ulasan dan foto berhasil dikirim.");
+            showBuyerDashboard();
         }
 
         function openStoreCatalog(sellerId) {
@@ -572,13 +646,45 @@
             const isOpen = seller.isOpen !== false;
             hideAllViews();
             document.getElementById('view-store-catalog').classList.remove('hidden');
+            
+            let storeReviews = reviews.filter(r => r.storeId === sellerId);
+            let avgRating = storeReviews.length > 0 ? (storeReviews.reduce((sum, r) => sum + r.rating, 0) / storeReviews.length).toFixed(1) : 'Belum ada';
+
             document.getElementById('store-catalog-header').innerHTML = `
                 <h3 class="font-bold text-lg text-emerald-800">${seller.name}</h3>
-                <p class="text-xs text-emerald-600 font-semibold">Kategori: ${seller.category}</p>
-                <p class="text-xs text-gray-500">📍 Lokasi: ${seller.address}</p>
+                <p class="text-xs text-emerald-600 font-semibold">Kategori: ${seller.category} | ⭐ Rating: ${avgRating} (${storeReviews.length} Ulasan)</p>
+                <p class="text-xs text-gray-500">📍 Lokasi: ${seller.addresses ? seller.addresses[0].detail : '-'}</p>
                 <p class="text-xs mt-1 font-semibold ${isOpen ? 'text-emerald-600' : 'text-red-500'}">${isOpen ? 'Toko Buka' : 'Toko Tutup'}</p>
             `;
-            document.getElementById('store-origin-info').innerHTML = `📦 Asal Pengiriman: <b>${seller.address}</b>`;
+
+            const revContainer = document.getElementById('store-reviews-container');
+            revContainer.innerHTML = '';
+            if (storeReviews.length === 0) {
+                revContainer.innerHTML = '<p class="text-gray-400">Belum ada ulasan untuk toko ini.</p>';
+            } else {
+                storeReviews.slice().reverse().forEach(rev => {
+                    let stars = '⭐'.repeat(rev.rating);
+                    let photoHtml = rev.photo ? `<div class="mt-1"><img src="${rev.photo}" class="w-20 h-20 object-cover rounded border"></div>` : '';
+                    revContainer.innerHTML += `
+                        <div class="border p-2 rounded bg-white space-y-1">
+                            <div class="flex justify-between font-bold text-gray-700"><span>${rev.buyerName}</span><span>${stars}</span></div>
+                            <p class="text-gray-600">"${rev.comment}"</p>
+                            ${photoHtml}
+                            <p class="text-[10px] text-gray-400">${rev.date}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            const addrSelect = document.getElementById('checkout-address-select');
+            addrSelect.innerHTML = '';
+            if (currentUser.addresses) {
+                currentUser.addresses.forEach(addr => {
+                    addrSelect.innerHTML += `<option value="${addr.detail}">[${addr.label}] ${addr.detail}</option>`;
+                });
+            }
+
+            document.getElementById('store-origin-info').innerHTML = `📦 Asal Pengiriman: <b>${seller.addresses ? seller.addresses[0].detail : '-'}</b>`;
             
             const prodContainer = document.getElementById('store-products-container');
             prodContainer.innerHTML = '';
@@ -586,7 +692,7 @@
             const storeProds = allProducts.filter(p => p.sellerId === sellerId);
             if (storeProds.length === 0) { prodContainer.innerHTML = '<p class="text-xs text-gray-500 text-center py-4">Belum ada produk.</p>'; return; }
             storeProds.forEach(prod => {
-                const markupPrice = prod.basePrice + (appConfig.markupAmount || 10000);
+                const markupPrice = prod.basePrice + 10000;
                 const buyBtn = isOpen ? `<button onclick="addToCart('${prod.id}', '${prod.name}', ${prod.basePrice}, ${markupPrice})" class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg font-semibold">Tambah</button>` : `<span class="text-xs text-red-500">Tutup</span>`;
                 let imgTag = prod.image ? `<img src="${prod.image}" class="w-16 h-16 object-cover rounded-lg mr-3 shadow-sm">` : `<div class="w-16 h-16 bg-gray-200 rounded-lg mr-3 flex items-center justify-center text-xs text-gray-400">No Img</div>`;
                 prodContainer.innerHTML += `
@@ -603,13 +709,7 @@
         }
 
         function backToBuyerDashboard() { selectedStoreId = null; cart = []; showBuyerDashboard(); }
-        
-        function addToCart(id, name, basePrice, price) { 
-            cart.push({ id, name, basePrice, price, storeId: selectedStoreId }); 
-            updateCartSummary(); 
-            alert(name + " ditambahkan!"); 
-        }
-
+        function addToCart(id, name, basePrice, price) { cart.push({ id, name, basePrice, price, storeId: selectedStoreId }); updateCartSummary(); alert(name + " ditambahkan!"); }
         function updateCartSummary() {
             let subtotal = cart.reduce((sum, i) => sum + i.price, 0);
             let shipping = subtotal > 0 ? 15000 : 0;
@@ -622,21 +722,19 @@
 
         function checkoutOrder() {
             if (cart.length === 0) { alert("Keranjang kosong!"); return; }
+            let chosenAddress = document.getElementById('checkout-address-select').value;
             let subtotal = cart.reduce((sum, i) => sum + i.price, 0);
             let totalModal = cart.reduce((sum, i) => sum + (i.basePrice || 0), 0);
             let netProfit = subtotal - totalModal;
 
             let seller = users.find(u => u.id === selectedStoreId);
-            let sellerReferredBy = seller ? seller.referredBy : '-';
-            let buyerReferredBy = currentUser.referredBy || '-';
-
             let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
+            
             const newOrder = {
                 id: 'ord_' + Date.now(),
                 buyerName: currentUser.name,
                 buyerWa: currentUser.wa,
-                buyerReferredBy: buyerReferredBy,
-                sellerReferredBy: sellerReferredBy,
+                buyerAddress: chosenAddress,
                 items: [...cart],
                 subtotal: subtotal,
                 total: subtotal,
@@ -648,10 +746,9 @@
             };
             allOrders.push(newOrder);
             localStorage.setItem('umah_orders', JSON.stringify(allOrders));
-            
             playNotificationSound();
 
-            alert("Pesanan COD berhasil dibuat! Notifikasi suara dikirim ke toko.");
+            alert("Pesanan COD berhasil dibuat! Dikirim ke alamat: " + chosenAddress);
             cart = [];
             showBuyerDashboard();
         }
@@ -677,7 +774,6 @@
             showSellerDashboard();
         }
 
-        // TAMBAH PRODUK DENGAN UPLOAD FILE FOTO & KOMPRESI OTOMATIS
         function addSellerProduct(event) {
             event.preventDefault();
             const name = document.getElementById('prod-name').value;
@@ -687,22 +783,14 @@
             if (fileInput.files && fileInput.files[0]) {
                 compressImage(fileInput.files[0], 500, 500, 0.7, function(base64Img) {
                     let allProducts = JSON.parse(localStorage.getItem('umah_products')) || [];
-                    allProducts.push({ 
-                        id: 'prd_' + Date.now(), 
-                        sellerId: currentUser.id, 
-                        name, 
-                        basePrice, 
-                        image: base64Img 
-                    });
+                    allProducts.push({ id: 'prd_' + Date.now(), sellerId: currentUser.id, name, basePrice, image: base64Img });
                     localStorage.setItem('umah_products', JSON.stringify(allProducts));
                     document.getElementById('prod-name').value = '';
                     document.getElementById('prod-price').value = '';
                     fileInput.value = '';
-                    alert("Produk & Foto berhasil disimpan secara real-time!");
+                    alert("Produk berhasil disimpan!");
                 });
-            } else {
-                alert("Wajib upload foto produk!");
-            }
+            } else { alert("Wajib upload foto produk!"); }
         }
 
         function renderSellerPOs() {
@@ -717,6 +805,7 @@
                     <div class="border p-3 rounded-lg space-y-2 bg-white/95">
                         <p class="font-bold">ID PO: ${ord.id}</p>
                         <p>Pemesan: ${ord.buyerName} (${ord.buyerWa})</p>
+                        <p class="text-[11px] text-gray-600">Alamat Kirim: <b>${ord.buyerAddress || '-'}</b></p>
                         <ul class="pl-2">${items}</ul>
                         <p class="font-semibold text-emerald-700">Total: Rp${ord.total.toLocaleString()}</p>
                         <select id="status_${ord.id}" onchange="updateStatus('${ord.id}')" class="w-full p-1 border rounded text-xs">
@@ -746,134 +835,55 @@
             let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
             const myOrders = allOrders.filter(o => o.storeId === currentUser.id);
             if (myOrders.length === 0) { container.innerHTML = '<p class="text-gray-400">Belum ada data transaksi.</p>'; return; }
-
             myOrders.forEach(ord => {
-                let badge = ord.isPaidToSeller ? '<span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded font-bold">SUDAH LUNAS / DIBAYARKAN</span>' : '<span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-bold">Menunggu Pencairan Admin</span>';
-                let itemsBlock = ord.items.map(i => `<div class="border p-2 rounded mb-1 bg-white flex justify-between"><span>${i.name}</span><span>Rp${i.price.toLocaleString()}</span></div>`).join('');
-                
+                let badge = ord.isPaidToSeller ? '<span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded font-bold">LUNAS</span>' : '<span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-bold">Menunggu Pencairan</span>';
                 container.innerHTML += `
                     <div class="border p-3 rounded-lg bg-white/95 space-y-2">
-                        <div class="flex justify-between items-center text-[11px] font-bold text-gray-500">
-                            <span>BRAND: ${appConfig.brandName}</span>
-                            <span>${badge}</span>
-                        </div>
-                        <p class="font-bold text-emerald-800">INVOICE PENCAIRAN TOKO (PO: ${ord.id})</p>
-                        <p class="text-gray-600">Halo Kak <b>${currentUser.name}</b>, terima kasih telah menjadi mitra terpercaya di <b>${appConfig.brandName}</b>! Sukses dan laris selalu usahanya ya! 🙏✨</p>
-                        <div class="mt-2"><p class="font-semibold mb-1">Rincian Produk Terjual:</p>${itemsBlock}</div>
-                        <p class="font-bold text-emerald-700 mt-2">Total Dana Cair: Rp${ord.total.toLocaleString()}</p>
-                        ${ord.proofUrl ? `<div class="mt-2"><p class="font-semibold">Bukti Transfer Admin:</p><img src="${ord.proofUrl}" class="w-full h-32 object-cover rounded mt-1 border"></div>` : ''}
+                        <div class="flex justify-between items-center text-[11px] font-bold text-gray-500"><span>PO: ${ord.id}</span><span>${badge}</span></div>
+                        <p class="font-bold text-emerald-700">Total Cair: Rp${ord.total.toLocaleString()}</p>
                     </div>
                 `;
             });
         }
 
-        // --- DASHBOARD SALES (VIA RODA GIGI) ---
         function showSalesDashboard(salesObj) {
             hideAllViews();
             document.getElementById('view-sales-dashboard').classList.remove('hidden');
             document.getElementById('sales-dashboard-name').innerText = "Dashboard Komisi: " + salesObj.name;
-            
-            const recap = document.getElementById('sales-personal-recap');
-            let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
-            
-            let myReferredOrders = allOrders.filter(o => o.buyerReferredBy === salesObj.name || o.sellerReferredBy === salesObj.name);
-            let totalCount = myReferredOrders.length;
-            
-            let percentage = appConfig.commPercentage || 30;
-            let totalProfit = myReferredOrders.reduce((sum, o) => sum + (o.netProfit || 0), 0);
-            let totalCommission = (totalProfit * percentage) / 100;
-            
-            recap.innerHTML = `
-                <p><b>Nama Pemasar:</b> ${salesObj.name}</p>
-                <p><b>WhatsApp:</b> ${salesObj.wa}</p>
-                <p><b>Info Rekening:</b> ${salesObj.bank || 'Belum diisi'}</p>
-                <p><b>Total Order Terhubung:</b> ${totalCount} Pesanan</p>
-                <p><b>Akumulasi Keuntungan Bersih Jaringan:</b> Rp${totalProfit.toLocaleString()}</p>
-                <p class="text-emerald-700 font-bold"><b>Total Komisi Anda (${percentage}%):</b> Rp${totalCommission.toLocaleString()}</p>
-            `;
-
-            const invContainer = document.getElementById('sales-invoice-container');
-            invContainer.innerHTML = '';
-            
-            let salesPayouts = JSON.parse(localStorage.getItem('umah_sales_payouts')) || {};
-            let isPaid = salesPayouts[salesObj.name]?.isPaid || false;
-            let proof = salesPayouts[salesObj.name]?.proof || '';
-
-            let badge = isPaid ? '<span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded font-bold">SUDAH LUNAS / DIBAYARKAN</span>' : '<span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-bold">Belum Dibayar Admin</span>';
-            let tableRows = myReferredOrders.map(o => {
-                let ordProfit = o.netProfit || 0;
-                let ordComm = (ordProfit * percentage) / 100;
-                let typeLabel = (o.buyerReferredBy === salesObj.name && o.sellerReferredBy === salesObj.name) ? 'Double Komisi (Buyer & Seller)' : o.buyerReferredBy === salesObj.name ? 'Rujukan Buyer' : 'Rujukan Seller';
-                return `<div class="border p-2 rounded mb-1 bg-white text-[11px]"><div class="flex justify-between font-bold"><span>PO: ${o.id}</span><span>Komisi: Rp${ordComm.toLocaleString()}</span></div><span class="text-purple-600">Kategori: ${typeLabel}</span></div>`;
-            }).join('');
-            if(!tableRows) tableRows = '<p class="text-gray-400">Belum ada transaksi dari jaringan Anda.</p>';
-
-            invContainer.innerHTML = `
-                <div class="border p-3 rounded-lg bg-white/95 space-y-2">
-                    <div class="flex justify-between items-center text-[11px] font-bold text-gray-500">
-                        <span>BRAND: ${appConfig.brandName}</span>
-                        <span>${badge}</span>
-                    </div>
-                    <p class="font-bold text-purple-800">RIWAYAT & INVOICE KOMISI</p>
-                    <p class="text-gray-600">Terima kasih Kak <b>${salesObj.name}</b>, kerja keras Anda sangat luar biasa! 🙏✨</p>
-                    <div class="mt-2"><p class="font-semibold mb-1">Rincian Komisi:</p>${tableRows}</div>
-                    <p class="font-bold text-emerald-700 mt-2">Total Komisi: Rp${totalCommission.toLocaleString()}</p>
-                    ${proof ? `<div class="mt-2"><p class="font-semibold">Bukti Transfer Admin:</p><img src="${proof}" class="w-full h-32 object-cover rounded mt-1 border"></div>` : ''}
-                </div>
-            `;
         }
-
         function backFromSalesPanel() { checkSession(); }
 
-        // --- PANEL ADMIN & LOGIN GANDA (RODA GIGI) ---
         function openAdminOrSalesLogin() {
             const inputKey = prompt("Masukkan Kata Sandi (Admin / Sales):");
             if (inputKey === null) return;
-
-            let currentAdminPass = appConfig.adminPass || "Rojak123";
-            if (inputKey === currentAdminPass) {
+            if (inputKey === (appConfig.adminPass || "Rojak123")) {
                 hideAllViews();
                 document.getElementById('view-admin-panel').classList.remove('hidden');
-                renderAdminCategoryList();
-                renderAdminSalesListDetailed();
-                renderAdminSalesPayouts();
-                renderAdminSellerPayouts();
                 return;
             }
-
             let matchedSales = appConfig.salesAccounts.find(s => s.pass === inputKey);
-            if (matchedSales) {
-                showSalesDashboard(matchedSales);
-                return;
-            }
-
+            if (matchedSales) { showSalesDashboard(matchedSales); return; }
             alert("Kata sandi salah!");
         }
 
         function backFromAdmin() { checkSession(); }
 
-        // TAMBAH KATEGORI DENGAN UPLOAD IKON GAMBAR
         function addNewCategoryWithIcon() {
             const name = document.getElementById('new-category-name').value.trim();
             const iconFile = document.getElementById('new-category-icon-file');
-
             if (!name) { alert("Nama kategori wajib diisi!"); return; }
-
             if (iconFile.files && iconFile.files[0]) {
                 compressImage(iconFile.files[0], 150, 150, 0.7, function(base64Icon) {
                     appConfig.categories.push({ name: name, icon: base64Icon });
-                    document.getElementById('new-category-name').value = '';
-                    iconFile.value = '';
                     localStorage.setItem('umah_config', JSON.stringify(appConfig));
                     renderAdminCategoryList();
-                    alert("Kategori dan ikon berhasil ditambahkan!");
+                    alert("Kategori & ikon ditambahkan!");
                 });
             } else {
                 appConfig.categories.push({ name: name, icon: "" });
-                document.getElementById('new-category-name').value = '';
                 localStorage.setItem('umah_config', JSON.stringify(appConfig));
                 renderAdminCategoryList();
-                alert("Kategori berhasil ditambahkan (tanpa ikon)!");
+                alert("Kategori ditambahkan!");
             }
         }
 
@@ -881,129 +891,15 @@
             const container = document.getElementById('admin-category-list');
             container.innerHTML = '';
             appConfig.categories.forEach((cat, index) => {
-                let catName = typeof cat === 'string' ? cat : cat.name;
-                let catIcon = (typeof cat === 'object' && cat.icon) ? `<img src="${cat.icon}" class="w-6 h-6 object-cover rounded-full inline-block mr-1">` : '';
-                container.innerHTML += `
-                    <div class="bg-gray-50 p-2 rounded border flex justify-between items-center">
-                        <div class="flex items-center">${catIcon}<span>${catName}</span></div>
-                        <button onclick="removeCategory(${index})" class="text-red-500 font-bold px-2">×</button>
-                    </div>
-                `;
+                let cName = typeof cat === 'string' ? cat : cat.name;
+                container.innerHTML += `<div class="bg-gray-50 p-2 rounded border flex justify-between items-center"><span>${cName}</span><button onclick="removeCategory(${index})" class="text-red-500 font-bold px-2">×</button></div>`;
             });
         }
 
         function removeCategory(index) {
-            if(appConfig.categories.length <= 1) { alert("Minimal 1 kategori!"); return; }
             appConfig.categories.splice(index, 1);
             localStorage.setItem('umah_config', JSON.stringify(appConfig));
             renderAdminCategoryList();
-        }
-
-        function addNewSalesAccount() {
-            const name = document.getElementById('sales-input-name').value.trim();
-            const wa = document.getElementById('sales-input-wa').value.trim();
-            const bank = document.getElementById('sales-input-bank').value.trim();
-            const pass = document.getElementById('sales-input-pass').value.trim();
-
-            if (!name || !pass) { alert("Nama dan Kata Sandi wajib diisi!"); return; }
-            appConfig.salesAccounts.push({ id: 'sls_' + Date.now(), name, wa, bank, pass });
-            localStorage.setItem('umah_config', JSON.stringify(appConfig));
-            
-            document.getElementById('sales-input-name').value = '';
-            document.getElementById('sales-input-wa').value = '';
-            document.getElementById('sales-input-bank').value = '';
-            document.getElementById('sales-input-pass').value = '';
-            renderAdminSalesListDetailed();
-            alert("Akun sales berhasil disimpan!");
-        }
-
-        function renderAdminSalesListDetailed() {
-            const container = document.getElementById('admin-sales-list-detailed');
-            container.innerHTML = '';
-            appConfig.salesAccounts.forEach((s, idx) => {
-                container.innerHTML += `
-                    <div class="bg-gray-50 p-2 rounded border flex justify-between items-center">
-                        <div><p class="font-bold"><b>${s.name}</b> (WA: ${s.wa})</p><p class="text-[10px]">Rek: ${s.bank || '-'} | Pass: ••••••</p></div>
-                        <button onclick="removeSalesAccount(${idx})" class="text-red-500 font-bold text-sm px-2">× Hapus</button>
-                    </div>
-                `;
-            });
-        }
-
-        function removeSalesAccount(idx) {
-            appConfig.salesAccounts.splice(idx, 1);
-            localStorage.setItem('umah_config', JSON.stringify(appConfig));
-            renderAdminSalesListDetailed();
-        }
-
-        function renderAdminSalesPayouts() {
-            const container = document.getElementById('admin-sales-payout-container');
-            container.innerHTML = '';
-            let salesPayouts = JSON.parse(localStorage.getItem('umah_sales_payouts')) || {};
-            let percentage = appConfig.commPercentage || 30;
-            let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
-
-            appConfig.salesAccounts.forEach(s => {
-                let myOrders = allOrders.filter(o => o.buyerReferredBy === s.name || o.sellerReferredBy === s.name);
-                let count = myOrders.length;
-                let totalProfit = myOrders.reduce((sum, o) => sum + (o.netProfit || 0), 0);
-                let commission = (totalProfit * percentage) / 100;
-                let isPaid = salesPayouts[s.name]?.isPaid || false;
-                let proof = salesPayouts[s.name]?.proof || '';
-
-                container.innerHTML += `
-                    <div class="border p-3 rounded-lg bg-white/95 space-y-2">
-                        <p class="font-bold">Sales: ${s.name} | Order Jaringan: ${count} | Komisi (${percentage}%): Rp${commission.toLocaleString()}</p>
-                        <p>Rekening: <b>${s.bank || 'Belum diisi'}</b></p>
-                        <p>Status: ${isPaid ? '<span class="text-emerald-600 font-bold">Lunas</span>' : '<span class="text-yellow-600 font-bold">Belum Dibayar</span>'}</p>
-                        <input type="text" id="sales_proof_${s.id}" placeholder="Link / URL Bukti Foto Transfer" class="w-full p-1 border rounded text-xs" value="${proof}">
-                        <button onclick="markSalesPaid('${s.name}', '${s.id}')" class="w-full bg-emerald-600 text-white py-1 rounded text-xs font-semibold">Tandai Komisi Lunas & Terbitkan Invoice</button>
-                    </div>
-                `;
-            });
-        }
-
-        function markSalesPaid(salesName, salesId) {
-            let proofUrl = document.getElementById('sales_proof_' + salesId).value;
-            if (!proofUrl) { alert("Wajib menyertakan link foto bukti pembayaran agar invoice lunas resmi diterbitkan!"); return; }
-            let salesPayouts = JSON.parse(localStorage.getItem('umah_sales_payouts')) || {};
-            salesPayouts[salesName] = { isPaid: true, proof: proofUrl };
-            localStorage.setItem('umah_sales_payouts', JSON.stringify(salesPayouts));
-            alert("Komisi sales LUNAS dan invoice resmi diterbitkan!");
-            renderAdminSalesPayouts();
-        }
-
-        function renderAdminSellerPayouts() {
-            const container = document.getElementById('admin-seller-payout-container');
-            container.innerHTML = '';
-            let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
-            if (allOrders.length === 0) { container.innerHTML = '<p class="text-gray-400">Belum ada transaksi.</p>'; return; }
-            
-            allOrders.forEach((ord, index) => {
-                const seller = users.find(u => u.id === ord.storeId);
-                const sellerName = seller ? seller.name : 'Toko';
-                container.innerHTML += `
-                    <div class="border p-3 rounded-lg bg-white/95 space-y-2 text-xs">
-                        <p class="font-bold">PO: ${ord.id} | Toko: ${sellerName}</p>
-                        <p>Rekening Mitra: <b>${seller ? seller.bank : '-'}</b></p>
-                        <p>Total Tagihan: Rp${ord.total.toLocaleString()}</p>
-                        <p>Status: ${ord.isPaidToSeller ? '<span class="text-emerald-600 font-bold">Lunas</span>' : '<span class="text-yellow-600 font-bold">Belum Dibayar</span>'}</p>
-                        <input type="text" id="proof_seller_${index}" placeholder="Link Bukti Foto Transfer" class="w-full p-1 border rounded text-xs" value="${ord.proofUrl || ''}">
-                        <button onclick="markSellerPaid(${index})" class="w-full bg-emerald-600 text-white py-1 rounded font-semibold">Tandai Lunas Mitra & Terbitkan Invoice</button>
-                    </div>
-                `;
-            });
-        }
-
-        function markSellerPaid(index) {
-            let proofUrl = document.getElementById('proof_seller_' + index).value;
-            if (!proofUrl) { alert("Wajib menyertakan link bukti foto transfer!"); return; }
-            let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
-            allOrders[index].isPaidToSeller = true;
-            allOrders[index].proofUrl = proofUrl;
-            localStorage.setItem('umah_orders', JSON.stringify(allOrders));
-            alert("Dana penjual ditandai lunas dan invoice toko diperbarui!");
-            renderAdminSellerPayouts();
         }
 
         function saveAdminSettings() {
@@ -1012,41 +908,39 @@
             let newPass = document.getElementById('admin-setting-pass').value.trim();
             if (newPass) appConfig.adminPass = newPass;
             appConfig.rajaOngkirKey = document.getElementById('admin-setting-rajaongkir').value.trim();
-            appConfig.themeColor = document.getElementById('admin-setting-theme').value;
-            appConfig.commPercentage = parseFloat(document.getElementById('admin-comm-percentage').value) || 30;
 
-            const logoFile = document.getElementById('admin-logo-file');
-            const wallFile = document.getElementById('admin-wallpaper-file');
+            const topPromoFile = document.getElementById('admin-promo-top-file');
+            const bottomPromoFile = document.getElementById('admin-promo-bottom-file');
+            
+            let pending = 0;
+            if(topPromoFile.files[0]) pending++;
+            if(bottomPromoFile.files[0]) pending++;
 
-            let pendingSaves = 0;
-            if (logoFile.files && logoFile.files[0]) pendingSaves++;
-            if (wallFile.files && wallFile.files[0]) pendingSaves++;
-
-            if (pendingSaves === 0) {
+            if(pending === 0) {
                 localStorage.setItem('umah_config', JSON.stringify(appConfig));
                 applyConfig();
-                alert("Pengaturan admin berhasil disimpan secara real-time!");
+                alert("Pengaturan admin berhasil disimpan!");
             } else {
-                if (logoFile.files && logoFile.files[0]) {
-                    compressImage(logoFile.files[0], 600, 150, 0.75, function(base64Logo) {
-                        appConfig.logoBannerBase64 = base64Logo;
-                        checkFinish();
+                if(topPromoFile.files[0]) {
+                    compressImage(topPromoFile.files[0], 600, 250, 0.75, function(base64) {
+                        appConfig.promoTopBase64 = base64;
+                        checkDone();
                     });
                 }
-                if (wallFile.files && wallFile.files[0]) {
-                    compressImage(wallFile.files[0], 800, 800, 0.7, function(base64Wall) {
-                        appConfig.wallpaperBase64 = base64Wall;
-                        checkFinish();
+                if(bottomPromoFile.files[0]) {
+                    compressImage(bottomPromoFile.files[0], 600, 250, 0.75, function(base64) {
+                        appConfig.promoBottomBase64 = base64;
+                        checkDone();
                     });
                 }
             }
 
-            function checkFinish() {
-                pendingSaves--;
-                if (pendingSaves <= 0) {
+            function checkDone() {
+                pending--;
+                if(pending <= 0) {
                     localStorage.setItem('umah_config', JSON.stringify(appConfig));
                     applyConfig();
-                    alert("Pengaturan, logo, wallpaper & kompresi berhasil disimpan secara real-time!");
+                    alert("Pengaturan & Banner Promo berhasil disimpan secara real-time!");
                 }
             }
         }
