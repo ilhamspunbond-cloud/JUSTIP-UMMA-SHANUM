@@ -7,10 +7,10 @@ let appConfig = JSON.parse(localStorage.getItem('umah_config')) || {
     sellerAudioUrl: "https://www.myinstants.com/media/sounds/notification-sound-7062.mp3",
     buyerAudioUrl: "https://www.myinstants.com/media/sounds/success-1-6283.mp3",
 
-    // Konfigurasi API Eksternal & Pembayaran
-    rajaOngkirApiKey: "",
-    paymentApiKey: "",
-    qrislyApiKey: "",
+    // Konfigurasi API Eksternal & Pembayaran (Permanen Sesuai Permintaan)
+    rajaOngkirApiKey: "https://contemporary-bronze-d2cow3xp.edgeone.dev/",
+    paymentApiKey: "bZHmdIPnebfe35ddf393f5dbXpvCtSa8",
+    qrislyApiKey: "bZHmdIPnebfe35ddf393f5dbXpvCtSa8",
 
     marketLogoBase64: "",
     promoTopBase64: "",
@@ -356,6 +356,7 @@ function handleAuth(event) {
     if (user) {
         if (user.pass !== pass) { alert("Kata sandi salah!"); return; }
         currentUser = user;
+        localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
         checkSession();
     } else {
         const name = document.getElementById('auth-name').value.trim();
@@ -617,6 +618,21 @@ function showSellerDashboard() {
     let viewSel = document.getElementById('view-seller-dashboard');
     if(viewSel) viewSel.classList.remove('hidden');
     if(document.getElementById('seller-shop-name')) document.getElementById('seller-shop-name').innerText = currentUser.name;
+    
+    // Tampilkan Tanda Tangan Digital Mitra & Info Sales Pendamping
+    const savedSigBox = document.getElementById('display-saved-signature');
+    if(savedSigBox) {
+        if(currentUser.signature) {
+            savedSigBox.innerHTML = `<img src="${currentUser.signature}" class="h-16 mx-auto object-contain border bg-white rounded p-1">`;
+        } else {
+            savedSigBox.innerHTML = `<span class="text-[10px] text-gray-400">Belum ada tanda tangan</span>`;
+        }
+    }
+    const salesBox = document.getElementById('display-assigned-sales');
+    if(salesBox) {
+        salesBox.innerText = currentUser.referredBy ? currentUser.referredBy : 'Kantor Pusat';
+    }
+
     renderSellerPOs();
 }
 
@@ -662,11 +678,13 @@ function renderSellerPOs() {
     const myOrders = allOrders.filter(o => o.storeId === currentUser.id);
     if (myOrders.length === 0) { container.innerHTML = '<p class="text-gray-400">Belum ada PO masuk.</p>'; return; }
     myOrders.forEach(ord => {
+        let waLink = `https://wa.me/${ord.buyerWa}?text=Halo%20Kak%20${encodeURIComponent(ord.buyerName)},%20terima%20kasih%20telah%20berbelanja%20di%20Jastip%20Umma%20Shanum.%20Pesanan%20Anda%20sedang%20kami%20proses!`;
         container.innerHTML += `
             <div class="border p-3 rounded-lg space-y-2 bg-white/95">
                 <p class="font-bold">ID PO: ${ord.id}</p>
-                <p>Pemesan: ${ord.buyerName}</p>
+                <p>Pemesan: ${ord.buyerName} (${ord.buyerWa})</p>
                 <p class="font-semibold text-emerald-700">Total: Rp${ord.total.toLocaleString()}</p>
+                <a href="${waLink}" target="_blank" class="block text-center bg-emerald-600 text-white py-1.5 rounded text-xs font-semibold">💬 Chat Pembeli via WhatsApp</a>
             </div>
         `;
     });
