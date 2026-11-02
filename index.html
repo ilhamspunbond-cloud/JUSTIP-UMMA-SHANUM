@@ -10,7 +10,6 @@
             filter: grayscale(100%) blur(1px);
             opacity: 0.6;
         }
-        /* Memastikan seluruh gambar upload transparan & rapi */
         img {
             background-color: transparent !important;
         }
@@ -26,7 +25,6 @@
             </div>
         </div>
         <div class="flex items-center space-x-3">
-            <span id="user-info-display" class="text-xs bg-black/20 px-3 py-1 rounded-full">Belum Login</span>
             <button onclick="openAdminOrSalesLogin()" class="bg-black/20 p-2 rounded-full hover:bg-black/30 transition" title="Pengaturan Admin & Cek Komisi Sales">
                 ⚙️
             </button>
@@ -70,7 +68,6 @@
                         <label class="text-xs font-semibold text-gray-600">Alamat Lengkap / Wilayah</label>
                         <textarea id="auth-address" placeholder="Cth: Jl. Raya Rajeg No.10, Tangerang" class="w-full p-2 border rounded-lg text-sm"></textarea>
                     </div>
-                    <!-- UPLOAD LOGO TOKO KHUSUS PENJUAL (TRANSPARAN) -->
                     <div id="field-store-logo" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Upload Logo Toko (PNG Transparan / JPG)</label>
                         <input type="file" id="auth-store-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
@@ -148,10 +145,18 @@
             <div id="store-products-container" class="grid grid-cols-1 gap-3"></div>
             
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3 mt-4">
-                <h4 class="font-bold text-sm text-gray-700">Ringkasan & Pengiriman</h4>
+                <h4 class="font-bold text-sm text-gray-700">Ringkasan & Metode Pembayaran</h4>
                 <div>
                     <label class="text-xs font-semibold text-gray-600">Pilih Alamat Pengiriman Tujuan:</label>
                     <select id="checkout-address-select" class="w-full p-2 border rounded-lg text-xs mt-1"></select>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-gray-600">Metode Pembayaran:</label>
+                    <select id="checkout-payment-method" class="w-full p-2 border rounded-lg text-xs mt-1 font-semibold text-emerald-700">
+                        <option value="COD">Bayar di Tempat (COD)</option>
+                        <option value="QRIS">QRIS / E-Wallet (Scan Otomatis)</option>
+                        <option value="Virtual Account">Virtual Account (Bank Transfer)</option>
+                    </select>
                 </div>
                 <div id="store-origin-info" class="text-xs text-emerald-700 font-semibold bg-emerald-50 p-2 rounded"></div>
                 <div class="text-xs space-y-1 text-gray-600 pt-2 border-t">
@@ -159,7 +164,7 @@
                     <div class="flex justify-between"><span>Ongkos Kirim:</span> <span id="shipping-cost" class="font-semibold">Rp15.000</span></div>
                     <div class="flex justify-between text-emerald-600 font-bold"><span>Subsidi / Potongan:</span> <span id="promo-discount-text">-Rp15.000</span></div>
                     <hr>
-                    <div class="flex justify-between text-sm font-bold text-gray-900"><span>Total Tagihan (COD):</span> <span id="cart-total-final" class="text-emerald-600">Rp0</span></div>
+                    <div class="flex justify-between text-sm font-bold text-gray-900"><span>Total Tagihan:</span> <span id="cart-total-final" class="text-emerald-600">Rp0</span></div>
                 </div>
             </div>
             <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur p-3 border-t shadow-lg max-w-md mx-auto flex justify-between items-center z-40">
@@ -167,7 +172,7 @@
                     <p class="text-xs text-gray-500">Total Akhir:</p>
                     <p id="footer-total-price" class="font-bold text-emerald-600 text-sm">Rp0</p>
                 </div>
-                <button onclick="checkoutOrder()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Checkout (COD)</button>
+                <button onclick="checkoutOrder()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Buat Pesanan</button>
             </div>
         </section>
 
@@ -233,7 +238,7 @@
             <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
                 <div class="flex justify-between items-center">
                     <h3 class="font-bold text-md text-emerald-600">⚙️ Panel Admin & Keamanan</h3>
-                    <button onclick="backFromAdmin()" class="text-xs text-gray-500">Tutup</button>
+                    <button onclick="backFromAdmin()" class="text-xs text-gray-500 font-semibold bg-gray-200 px-3 py-1 rounded">Tutup</button>
                 </div>
                 <hr>
                 <div>
@@ -250,7 +255,15 @@
                 </div>
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🌐 Pengaturan RajaOngkir (API Key)</label>
-                    <input type="text" id="admin-setting-rajaongkir" placeholder="Masukkan API Key RajaOngkir..." class="w-full p-2 border rounded-lg text-sm">
+                    <input type="text" id="admin-setting-rajaongkir" placeholder="Masukkan Shipping Cost API Key..." class="w-full p-2 border rounded-lg text-sm">
+                </div>
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">💳 Pengaturan Payment API Key</label>
+                    <input type="text" id="admin-setting-payment" placeholder="Masukkan Payment API Key..." class="w-full p-2 border rounded-lg text-sm">
+                </div>
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">📲 Pengaturan QRISLY API Key</label>
+                    <input type="text" id="admin-setting-qrisly" placeholder="Masukkan QRISLY API Key..." class="w-full p-2 border rounded-lg text-sm">
                 </div>
                 <div class="pt-2 border-t space-y-2">
                     <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek / Marketplace (PNG Transparan / GIF)</label>
@@ -288,6 +301,8 @@
             brandAddress: "Kantor Pusat Rajeg, Tangerang",
             adminPass: "Rojak123",
             rajaOngkirKey: "",
+            paymentApiKey: "",
+            qrislyApiKey: "",
             marketLogoBase64: "",
             logoBannerBase64: "",
             wallpaperBase64: "",
@@ -318,7 +333,6 @@
             audio.play().catch(e => console.log("Audio blocked"));
         }
 
-        // Kompresi PNG dengan tetap mempertahankan transparansi alpha channel
         function compressImage(file, maxWidth, maxHeight, quality, callback) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -332,10 +346,8 @@
                     const canvas = document.createElement('canvas');
                     canvas.width = width; canvas.height = height;
                     const ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, width, height); // Bersihkan canvas untuk menjaga transparansi PNG
+                    ctx.clearRect(0, 0, width, height);
                     ctx.drawImage(img, 0, 0, width, height);
-                    
-                    // Jika file berjenis PNG, gunakan format image/png agar transparan tidak hilang
                     let mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
                     callback(canvas.toDataURL(mimeType, quality));
                 }
@@ -373,15 +385,20 @@
             document.getElementById('admin-setting-address').value = appConfig.brandAddress;
             document.getElementById('admin-setting-pass').value = appConfig.adminPass || 'Rojak123';
             document.getElementById('admin-setting-rajaongkir').value = appConfig.rajaOngkirKey || '';
+            document.getElementById('admin-setting-payment').value = appConfig.paymentApiKey || '';
+            document.getElementById('admin-setting-qrisly').value = appConfig.qrislyApiKey || '';
             renderAdminCategoryList();
         }
 
         function checkSession() {
             if (currentUser) {
-                document.getElementById('user-info-display').innerText = currentUser.name + " (" + currentUser.role + ")";
                 hideAllViews();
                 if (currentUser.role === 'buyer') showBuyerDashboard();
                 else if (currentUser.role === 'seller') showSellerDashboard();
+            } else {
+                hideAllViews();
+                document.getElementById('view-auth').classList.remove('hidden');
+                document.getElementById('auth-selection-card').classList.remove('hidden');
             }
         }
 
@@ -496,10 +513,7 @@
             localStorage.removeItem('umah_current_user');
             currentUser = null;
             cart = [];
-            hideAllViews();
-            document.getElementById('view-auth').classList.remove('hidden');
-            document.getElementById('auth-selection-card').classList.remove('hidden');
-            document.getElementById('user-info-display').innerText = "Belum Login";
+            checkSession();
         }
 
         function showBuyerDashboard() {
@@ -654,7 +668,7 @@
                 container.innerHTML += `
                     <div class="border p-3 rounded-lg space-y-1 bg-white/95">
                         <p class="font-bold">ID PO: ${ord.id}</p>
-                        <p>Total: Rp${ord.total.toLocaleString()}</p>
+                        <p>Total: Rp${ord.total.toLocaleString()} (${ord.paymentMethod || 'COD'})</p>
                         <div class="p-2 rounded text-center font-bold bg-emerald-100 text-emerald-800">🛵 Status: ${ord.deliveryStatus || 'Menunggu Konfirmasi'}</div>
                         ${reviewFormHtml}
                     </div>
@@ -783,11 +797,11 @@
         function checkoutOrder() {
             if (cart.length === 0) { alert("Keranjang kosong!"); return; }
             let chosenAddress = document.getElementById('checkout-address-select').value;
+            let paymentMethod = document.getElementById('checkout-payment-method').value;
             let subtotal = cart.reduce((sum, i) => sum + i.price, 0);
             let totalModal = cart.reduce((sum, i) => sum + (i.basePrice || 0), 0);
             let netProfit = subtotal - totalModal;
 
-            let seller = users.find(u => u.id === selectedStoreId);
             let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
             
             const newOrder = {
@@ -795,6 +809,7 @@
                 buyerName: currentUser.name,
                 buyerWa: currentUser.wa,
                 buyerAddress: chosenAddress,
+                paymentMethod: paymentMethod,
                 items: [...cart],
                 subtotal: subtotal,
                 total: subtotal,
@@ -808,7 +823,7 @@
             localStorage.setItem('umah_orders', JSON.stringify(allOrders));
             playNotificationSound();
 
-            alert("Pesanan COD berhasil dibuat! Dikirim ke alamat: " + chosenAddress);
+            alert(`Pesanan berhasil dibuat dengan metode (${paymentMethod})! Dikirim ke alamat: ` + chosenAddress);
             cart = [];
             showBuyerDashboard();
         }
@@ -872,7 +887,7 @@
                 container.innerHTML += `
                     <div class="border p-3 rounded-lg space-y-2 bg-white/95">
                         <p class="font-bold">ID PO: ${ord.id}</p>
-                        <p>Pemesan: ${ord.buyerName} (${ord.buyerWa})</p>
+                        <p>Pemesan: ${ord.buyerName} (${ord.buyerWa}) - <b>[${ord.paymentMethod || 'COD'}]</b></p>
                         <p class="text-[11px] text-gray-600">Alamat Kirim: <b>${ord.buyerAddress || '-'}</b></p>
                         <ul class="pl-2">${items}</ul>
                         <p class="font-semibold text-emerald-700">Total: Rp${ord.total.toLocaleString()}</p>
@@ -934,7 +949,9 @@
             alert("Kata sandi salah!");
         }
 
-        function backFromAdmin() { checkSession(); }
+        function backFromAdmin() {
+            checkSession();
+        }
 
         function addNewCategoryWithIcon() {
             const name = document.getElementById('new-category-name').value.trim();
@@ -976,6 +993,8 @@
             let newPass = document.getElementById('admin-setting-pass').value.trim();
             if (newPass) appConfig.adminPass = newPass;
             appConfig.rajaOngkirKey = document.getElementById('admin-setting-rajaongkir').value.trim();
+            appConfig.paymentApiKey = document.getElementById('admin-setting-payment').value.trim();
+            appConfig.qrislyApiKey = document.getElementById('admin-setting-qrisly').value.trim();
 
             const marketLogoFile = document.getElementById('admin-marketplace-logo-file');
             const topPromoFile = document.getElementById('admin-promo-top-file');
@@ -989,7 +1008,7 @@
             if(pending === 0) {
                 localStorage.setItem('umah_config', JSON.stringify(appConfig));
                 applyConfig();
-                alert("Pengaturan admin berhasil disimpan!");
+                alert("Pengaturan admin & Payment/QRISLY berhasil disimpan!");
             } else {
                 if(marketLogoFile.files[0]) {
                     compressImage(marketLogoFile.files[0], 500, 200, 0.9, function(base64) {
@@ -1016,7 +1035,7 @@
                 if(pending <= 0) {
                     localStorage.setItem('umah_config', JSON.stringify(appConfig));
                     applyConfig();
-                    alert("Pengaturan, Logo Marketplace & Banner Promo berhasil disimpan secara real-time!");
+                    alert("Pengaturan, API Key & Banner Promo berhasil disimpan secara real-time!");
                 }
             }
         }
