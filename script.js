@@ -1303,12 +1303,75 @@ function setupSignaturePad(canvasId, statusId) {
     canvas.addEventListener('touchend', stopDrawing);
 }
 
-// Fungsi untuk menghapus / mengulang tanda tangan admin
+// ⭐ Perbaikan Fungsi Tanda Tangan agar Bisa Dikunci Setelah Ditandatangani
+function setupSignaturePad(canvasId, statusId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let isLocked = false; // 🔒 Status penguncian kanvas
+
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
+    function startDrawing(e) {
+        if (isLocked) return; // 🚫 Kalau sudah dikunci, abaikan sentuhan/coretan
+        isDrawing = true;
+        const pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+        e.preventDefault();
+    }
+
+    function draw(e) {
+        if (!isDrawing || isLocked) return; // 🚫 Terkunci
+        const pos = getPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        e.preventDefault();
+    }
+
+    function stopDrawing() {
+        if (!isDrawing) return;
+        isDrawing = false;
+        isLocked = true; // 🔒 Otomatis KUNCI kanvas setelah lepas jari/mouse!
+
+        const statusText = document.getElementById(statusId);
+        if (statusText) {
+            statusText.innerText = "✓ Tanda Tangan Terkunci & Sah";
+            statusText.className = "text-[10px] text-emerald-600 font-semibold";
+        }
+    }
+
+    // Event Listener Mouse & Touch
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing);
+}
+
+// ⭐ Fungsi Hapus / Reset (Membuka Kunci Kembali)
 function clearAdminSignature() {
     const canvas = document.getElementById('admin-sig-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Muat ulang setup supaya kuncinya terbuka lagi pas dihapus
+    setupSignaturePad('admin-sig-canvas', 'admin-sig-status');
+    
     const statusText = document.getElementById('admin-sig-status');
     if (statusText) {
         statusText.innerText = "Belum ada tanda tangan";
@@ -1316,18 +1379,21 @@ function clearAdminSignature() {
     }
 }
 
-// Fungsi untuk menghapus / mengulang tanda tangan seller/mitra
 function clearSellerSignature() {
     const canvas = document.getElementById('seller-sig-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    setupSignaturePad('seller-sig-canvas', 'sig-status-text');
+    
     const statusText = document.getElementById('sig-status-text');
     if (statusText) {
         statusText.innerText = "Belum ditandatangani";
         statusText.className = "text-[10px] text-gray-500 font-semibold";
     }
 }
+
 
 // Jalankan fungsi saat halaman dimuat
 window.addEventListener('DOMContentLoaded', () => {
