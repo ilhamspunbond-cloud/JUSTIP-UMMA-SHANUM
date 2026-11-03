@@ -422,19 +422,7 @@ function saveNewUser(name, wa, pass, address, storeLogo, signature) {
     checkSession();
 }
 
-    users.push(user);
-    localStorage.setItem('umah_users', JSON.stringify(users));
-    currentUser = user;
-    localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
-    checkSession();
-}
-
-function logout() {
-    localStorage.removeItem('umah_current_user');
-    currentUser = null;
-    cart = [];
-    checkSession();
-}
+    
 
 // ⭐ DASHBOARD PEMBELI DENGAN FILTER RADIUS TERDEKAT (MAKSIMAL 10 KM / WILAYAH) & PENCARIAN MANUAL
 function showBuyerDashboard() {
