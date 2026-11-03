@@ -880,4 +880,82 @@ function renderAdminStatistics() {
     if(elBuy) elBuy.innerText = totalBuyers.toLocaleString();
     if(elSal) elSal.innerText = totalSales.toLocaleString();
     if(elSel) elSel.innerText = totalSellers.toLocaleString();
+} 
+
+// ⭐ RENDER BUKTI & DAFTAR SETORAN COD MITRA TOKO (7 HARI)
+function renderAdminCodProofs() {
+    const container = document.getElementById('admin-cod-proofs-container'); // Pastikan elemen ini ada atau buat div-nya di panel admin jika diperlukan
+    if(!container) return;
+    container.innerHTML = '';
+    
+    let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
+    let codOrders = allOrders.filter(o => o.paymentMethod === 'COD');
+
+    if (codOrders.length === 0) {
+        container.innerHTML = '<p class="text-gray-400 text-xs">Belum ada transaksi COD yang masuk.</p>';
+        return;
+    }
+
+    codOrders.forEach(ord => {
+        let seller = users.find(u => u.id === ord.storeId);
+        let sellerName = seller ? seller.name : 'Toko Tidak Dikenal';
+        let statusColor = ord.codStatus === 'Lunas' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700';
+
+        container.innerHTML += `
+            <div class="border p-2.5 rounded-lg bg-white space-y-1.5 text-xs shadow-sm">
+                <div class="flex justify-between items-center font-bold">
+                    <span>PO: ${ord.id}</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] ${statusColor}">${ord.codStatus || 'Belum Setor'}</span>
+                </div>
+                <p class="text-gray-600">Toko: <b>${sellerName}</b> | Pembeli: ${ord.buyerName}</p>
+                <p class="font-semibold text-emerald-700">Total Tagihan COD: Rp${ord.total.toLocaleString()}</p>
+                ${ord.codStatus !== 'Lunas' ? `<button onclick="verifyCodPayment('${ord.id}')" class="w-full bg-emerald-600 text-white py-1 rounded text-[11px] font-semibold mt-1">✓ Validasi Setoran Lunas</button>` : ''}
+            </div>
+        `;
+    });
+}
+
+// ⭐ FUNGSI VALIDASI SETORAN COD OLEH ADMIN
+function verifyCodPayment(orderId) {
+    let allOrders = JSON.parse(localStorage.getItem('umah_orders')) || [];
+    allOrders = allOrders.map(o => {
+        if(o.id === orderId) {
+            o.codStatus = 'Lunas';
+            o.deliveryStatus = 'Selesai & Setoran COD Valid';
+        }
+        return o;
+    });
+    localStorage.setItem('umah_orders', JSON.stringify(allOrders));
+    alert(`Status PO ${orderId} berhasil divalidasi Lunas!`);
+    renderAdminCodProofs();
+}
+
+// ⭐ RENDER REKAPITULASI GLOBAL KOMISI & JARINGAN SALES DI PANEL ADMIN
+function renderAdminGlobalRecap() {
+    const container = document.getElementById('admin-global-sales-recap');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    let salesList = users.filter(u => u.role === 'sales');
+    if (salesList.length === 0) {
+        container.innerHTML = '<p class="text-gray-400 text-xs">Belum ada Mitra Sales terdaftar.</p>';
+        return;
+    }
+
+    salesList.forEach(s => {
+        let downlines = users.filter(u => u.referredBy === s.refCode);
+        let totalDownlineSellers = downlines.filter(u => u.role === 'seller').length;
+        
+        container.innerHTML += `
+            <div class="border p-2.5 rounded-lg bg-white flex justify-between items-center text-xs shadow-sm">
+                <div>
+                    <p class="font-bold text-purple-800 text-sm">${s.name} <span class="text-xs bg-purple-100 px-1.5 py-0.5 rounded text-purple-700">${s.refCode}</span></p>
+                    <p class="text-[11px] text-gray-500 mt-0.5">No. WA: ${s.wa} | Toko Binaan: <b>${totalDownlineSellers} Toko</b></p>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs font-bold text-emerald-600">Aktif</span>
+                </div>
+            </div>
+        `;
+    });
 }
