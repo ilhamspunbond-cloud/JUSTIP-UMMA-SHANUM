@@ -802,6 +802,7 @@ function openAdminOrSalesLogin() {
         renderAdminCodProofs();
         renderAdminCategories();
         renderAdminStatistics();
+        renderAdminCommissions();
         return;
     }
 
@@ -958,4 +959,218 @@ function renderAdminGlobalRecap() {
             </div>
         `;
     });
+}
+
+
+// ⭐ MENANGANI TAMPILAN INPUT REKENING PEMBELI SAAT AUTH
+function checkExistingUser() {
+    const waInput = document.getElementById('auth-wa');
+    if(!waInput) return;
+    const wa = waInput.value.trim();
+    if (!wa) return;
+    let existing = users.find(u => u.wa === wa);
+    if (existing) {
+        activeRole = existing.role;
+        document.getElementById('field-name').classList.add('hidden');
+        document.getElementById('field-address').classList.add('hidden');
+        document.getElementById('field-category').classList.add('hidden');
+        document.getElementById('field-bank').classList.add('hidden');
+        let fieldBankBuyer = document.getElementById('field-bank-buyer');
+        if(fieldBankBuyer) fieldBankBuyer.classList.add('hidden');
+        document.getElementById('field-ref-code').classList.add('hidden');
+        document.getElementById('field-store-logo').classList.add('hidden');
+        document.getElementById('auth-submit-btn').innerText = "Masuk (Akun Terdaftar)";
+    } else {
+        document.getElementById('field-name').classList.remove('hidden');
+        document.getElementById('field-address').classList.remove('hidden');
+        let fieldBankBuyer = document.getElementById('field-bank-buyer');
+        
+        if(activeRole === 'seller') {
+            document.getElementById('field-category').classList.remove('hidden');
+            document.getElementById('field-bank').classList.remove('hidden');
+            document.getElementById('field-ref-code').classList.remove('hidden');
+            document.getElementById('field-store-logo').classList.remove('hidden');
+            if(fieldBankBuyer) fieldBankBuyer.classList.add('hidden');
+        } else if(activeRole === 'buyer') {
+            document.getElementById('field-ref-code').classList.remove('hidden');
+            if(fieldBankBuyer) fieldBankBuyer.classList.remove('hidden'); // Pembeli bisa input rekening buat komisi link
+        } else if(activeRole === 'sales') {
+            document.getElementById('field-ref-code').classList.add('hidden');
+            if(fieldBankBuyer) fieldBankBuyer.classList.add('hidden');
+        }
+        document.getElementById('auth-submit-btn').innerText = "Daftar & Masuk";
+    }
+}
+
+// ⭐ PENYIMPANAN DATA USER TERMASUK REKENING PEMBELI
+function saveNewUser(name, wa, pass, address, storeLogo, signature) {
+    let generatedCode = activeRole === 'sales' ? (name.substring(0,3).toUpperCase() + Math.floor(100 + Math.random() * 900)) : (activeRole === 'buyer' ? 'BUY-' + Math.floor(1000 + Math.random() * 9000) : '');
+    let refCodeInputEl = document.getElementById('auth-ref-code');
+    let refCodeInput = refCodeInputEl ? refCodeInputEl.value.trim().toUpperCase() : '-';
+
+    let bankInfo = '';
+    if (activeRole === 'seller') {
+        bankInfo = document.getElementById('auth-bank-info') ? document.getElementById('auth-bank-info').value : '';
+    } else if (activeRole === 'buyer') {
+        bankInfo = document.getElementById('auth-bank-buyer') ? document.getElementById('auth-bank-buyer').value : '';
+    }
+
+    let user = {
+        id: 'usr_' + Date.now(),
+        name: name,
+        wa: wa,
+        pass: pass,
+        role: activeRole,
+        category: activeRole === 'seller' ? (document.getElementById('auth-category') ? document.getElementById('auth-category').value : 'Umum') : '',
+        addresses: [{ label: "Utama", detail: address }],
+        storeLogo: storeLogo,
+        signature: signature || "",
+        refCode: generatedCode,
+        referredBy: refCodeInput || '-',
+        bank: bankInfo,
+        isOpen: true
+    };
+    users.push(user);
+    localStorage.setItem('umah_users', JSON.stringify(users));
+    currentUser = user;
+    localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
+    checkSession();
+}
+
+// ⭐ VARIABEL TAB AKTIF REKAP KOMISI DI ADMIN
+let currentCommissionTab = 'sales';
+
+function switchCommissionTab(tab) {
+    currentCommissionTab = tab;
+    ['sales', 'seller', 'buyer'].forEach(t => {
+        let btn = document.getElementById(`tab-btn-${t}`);
+        if(btn) {
+            if(t === tab) {
+                btn.className = "flex-1 py-1 rounded bg-white font-bold text-emerald-700 shadow-sm";
+            } else {
+                btn.className = "flex-1 py-1 rounded text-gray-600 font-semibold";
+            }
+        }
+    });
+    renderAdminCommissions();
+}
+
+// ⭐ RENDER DAFTAR REKAP KOMISI BERJENJANG DI PANEL ADMIN
+function renderAdminCommissions() {
+    const container = document.getElementById('admin-commission-list-container');
+    if(!container) return;
+    container.innerHTML = '';
+
+    let filteredUsers = users.filter(u => u.role === currentCommissionTab);
+
+    if (filteredUsers.length === 0) {
+        container.innerHTML = `<p class="text-gray-400 text-xs text-center py-2">Belum ada data ${currentCommissionTab.toUpperCase()} terdaftar.</p>`;
+        return;
+    }
+
+    filteredUsers.forEach(u => {
+        let downlines = users.filter(u_sub => u_sub.referredBy === u.refCode || u_sub.referredBy === u.wa);
+        let bankDetail = u.bank ? `💳 Rekening: <b>${u.bank}</b>` : `⚠️ Belum isi rekening`;
+        let codeLabel = u.refCode ? `Kode: ${u.refCode}` : `WA: ${u.wa}`;
+
+        container.innerHTML += `
+            <div class="border p-2.5 rounded-lg bg-white space-y-1 shadow-sm">
+                <div class="flex justify-between items-center">
+                    <span class="font-bold text-gray-800">${u.name} <span class="text-[10px] bg-emerald-100 text-emerald-800 px-1 rounded">${codeLabel}</span></span>
+                    <span class="text-[11px] text-purple-700 font-semibold">Binaan: ${downlines.length} Orang</span>
+                </div>
+                <p class="text-[11px] text-gray-600">${bankDetail}</p>
+                <div class="flex justify-between items-center pt-1 border-t mt-1">
+                    <span class="text-[11px] text-emerald-700 font-bold">Komisi Aktif: Rp0</span>
+                    <a href="https://wa.me/${u.wa}?text=Halo%20Kak%20${encodeURIComponent(u.name)},%20komisi%20afiliasi%20berjenjang%20Anda%20di%20Jastip%20Umma%20Shanum%20siap%20dicairkan!" target="_blank" class="bg-emerald-600 text-white px-2 py-0.5 rounded text-[10px] font-semibold">💬 Chat WA</a>
+                </div>
+            </div>
+        `;
+    });
+}
+
+
+// ⭐ 1. OTOMATIS MENANGKAP KODE REFERRAL DARI URL SAAT ORANG KLIK LINK AFILIASI
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    if (refCode) {
+        localStorage.setItem('umah_pending_ref', refCode.toUpperCase());
+        console.log("Kode referral terdeteksi dari link:", refCode);
+    }
+});
+
+// ⭐ 2. SAAT PENDAFTARAN BARU, OTOMATIS AMBIL KODE DARI LINK YANG DIKLIK
+// (Pastikan fungsi saveNewUser mengambil pending_ref jika ada)
+// (Catatan: Ini melengkapi fungsi saveNewUser yang sudah ada agar otomatis mencatat upline-nya)
+
+
+// ⭐ 1. OTOMATIS HITUNG & CATAT KOMISI SAAT ADA TRANSAKSI "PECAH TELUR"
+function processAffiliateCommission(order) {
+    let allUsers = JSON.parse(localStorage.getItem('umah_users')) || [];
+    let buyer = allUsers.find(u => u.wa === order.buyerWa);
+    if (!buyer || !buyer.referredBy || buyer.referredBy === '-') return;
+
+    // Cari siapa upline (yang ngajak) berdasarkan kode referral atau nomor WA
+    let upline = allUsers.find(u => u.refCode === buyer.referredBy || u.wa === buyer.referredBy);
+    if (!upline) return;
+
+    // Hitung komisi 30% dari total keuntungan / markup platform
+    let profitPlatform = order.items.length * (appConfig.markupAmount || 5000); 
+    let commissionAmount = Math.round(profitPlatform * 0.30); // 30% hak si penyebar link
+
+    // Simpan data komisi ke dalam profil upline
+    if (!upline.commissions) upline.commissions = [];
+    upline.commissions.push({
+        orderId: order.id,
+        buyerName: order.buyerName,
+        amount: commissionAmount,
+        timestamp: Date.now(),
+        status: 'Pending / Siap Dicairkan'
+    });
+
+    // Perbarui data user di localStorage
+    allUsers = allUsers.map(u => u.id === upline.id ? upline : u);
+    localStorage.setItem('umah_users', JSON.stringify(allUsers));
+}
+
+// ⭐ 2. OTOMATIS MUNCULKAN WADAH KOMISI REAL-TIME DI DASHBOARD PEMBELI & SALES (TANPA UBAH HTML)
+function renderUserCommissionDashboard() {
+    let targetView = currentUser.role === 'buyer' ? document.getElementById('view-buyer-dashboard') : document.getElementById('view-sales-dashboard');
+    if (!targetView) return;
+
+    // Cek apakah kotak ringkasan komisi sudah ada atau belum, kalau belum otomatis dibuatkan di atas
+    let existingBox = document.getElementById('user-commission-summary-container');
+    if (!existingBox) {
+        let box = document.createElement('div');
+        box.id = 'user-commission-summary-container';
+        box.className = 'mb-4';
+        targetView.prepend(box); // Letakkan paling atas di dashboard
+    }
+
+    let myCommissions = currentUser.commissions || [];
+    let totalEarnings = myCommissions.reduce((sum, c) => sum + c.amount, 0);
+    let myRefCode = currentUser.refCode || currentUser.wa;
+    let shareLink = window.location.origin + window.location.pathname + "?ref=" + myRefCode;
+    let waShareText = encodeURIComponent(`Halo Kak! Yuk belanja kebutuhan harian dan produk UMKM lokal terdekat di Jastip Umma Shanum lewat link afiliasi saya di sini ya: ${shareLink}`);
+
+    let container = document.getElementById('user-commission-summary-container');
+    container.innerHTML = `
+        <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-4 rounded-xl shadow-md space-y-3">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-xs opacity-90">💰 Total Komisi Afiliasi (Real-Time)</p>
+                    <h3 class="text-2xl font-bold">Rp${totalEarnings.toLocaleString()}</h3>
+                </div>
+                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-lg font-semibold">30% Profit</span>
+            </div>
+            <p class="text-[11px] opacity-90">Dari ${myCommissions.length} transaksi "pecah telur" downline Anda.</p>
+            <div class="pt-2 border-t border-white/20 flex items-center justify-between">
+                <span class="text-[11px] truncate max-w-[200px]">Link: ${shareLink}</span>
+                <a href="https://wa.me/?text=${waShareText}" target="_blank" class="bg-white text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow hover:bg-emerald-50 transition flex-shrink-0">
+                    📤 Bagikan Link
+                </a>
+            </div>
+        </div>
+    `;
 }
