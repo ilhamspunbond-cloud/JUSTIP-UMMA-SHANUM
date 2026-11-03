@@ -378,9 +378,12 @@ function handleAuth(event) {
 }
 
 function saveNewUser(name, wa, pass, address, storeLogo, signature) {
-    let generatedCode = activeRole === 'sales' ? (name.substring(0,3).toUpperCase() + Math.floor(100 + Math.random() * 900)) : '';
-    let refCodeInputEl = document.getElementById('auth-ref-code');
-    let refCodeInput = refCodeInputEl ? refCodeInputEl.value.trim().toUpperCase() : '-';
+    // Di dalam fungsi saveNewUser:
+let pendingRef = localStorage.getItem('umah_pending_ref') || '';
+let refCodeInputEl = document.getElementById('auth-ref-code');
+let refCodeInput = refCodeInputEl ? refCodeInputEl.value.trim().toUpperCase() : '';
+
+let finalReferral = refCodeInput || pendingRef || '-';
 
     let user = {
         id: 'usr_' + Date.now(),
