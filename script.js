@@ -377,13 +377,23 @@ function handleAuth(event) {
     }
 }
 
+// ⭐ PENYIMPANAN DATA USER TERMASUK PELACAK LINK AFILIASI OTOMATIS
 function saveNewUser(name, wa, pass, address, storeLogo, signature) {
-    // Di dalam fungsi saveNewUser:
-let pendingRef = localStorage.getItem('umah_pending_ref') || '';
-let refCodeInputEl = document.getElementById('auth-ref-code');
-let refCodeInput = refCodeInputEl ? refCodeInputEl.value.trim().toUpperCase() : '';
+    let generatedCode = activeRole === 'sales' ? (name.substring(0,3).toUpperCase() + Math.floor(100 + Math.random() * 900)) : (activeRole === 'buyer' ? 'BUY-' + Math.floor(1000 + Math.random() * 9000) : '');
+    
+    // 1. Ambil kode dari link yang diklik (pending_ref) atau ketik manual
+    let pendingRef = localStorage.getItem('umah_pending_ref') || '';
+    let refCodeInputEl = document.getElementById('auth-ref-code');
+    let refCodeInput = refCodeInputEl ? refCodeInputEl.value.trim().toUpperCase() : '';
 
-let finalReferral = refCodeInput || pendingRef || '-';
+    let finalReferral = refCodeInput || pendingRef || '-';
+
+    let bankInfo = '';
+    if (activeRole === 'seller') {
+        bankInfo = document.getElementById('auth-bank-info') ? document.getElementById('auth-bank-info').value : '';
+    } else if (activeRole === 'buyer') {
+        bankInfo = document.getElementById('auth-bank-buyer') ? document.getElementById('auth-bank-buyer').value : '';
+    }
 
     let user = {
         id: 'usr_' + Date.now(),
@@ -396,10 +406,22 @@ let finalReferral = refCodeInput || pendingRef || '-';
         storeLogo: storeLogo,
         signature: signature || "",
         refCode: generatedCode,
-        referredBy: refCodeInput || '-',
-        bank: activeRole === 'seller' ? (document.getElementById('auth-bank-info') ? document.getElementById('auth-bank-info').value : '') : '',
+        referredBy: finalReferral, // 👈 Gunakan variabel finalReferral di sini!
+        bank: bankInfo,
         isOpen: true
     };
+    
+    users.push(user);
+    localStorage.setItem('umah_users', JSON.stringify(users));
+    
+    // Hapus memori pending_ref setelah berhasil daftar agar bersih
+    localStorage.removeItem('umah_pending_ref');
+
+    currentUser = user;
+    localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
+    checkSession();
+}
+
     users.push(user);
     localStorage.setItem('umah_users', JSON.stringify(users));
     currentUser = user;
