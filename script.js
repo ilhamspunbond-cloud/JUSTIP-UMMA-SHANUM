@@ -1241,3 +1241,97 @@ function sendWelcomeWhatsAppNotification(newUser) {
         window.open(waUrl, '_blank');
     }
 }
+
+// --- FUNGSI INISIALISASI & LOGIKA TANDA TANGAN DIGITAL ---
+function setupSignaturePad(canvasId, statusId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    // Atur gaya garis pena
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+        };
+    }
+
+    function startDrawing(e) {
+        isDrawing = true;
+        const pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+        e.preventDefault();
+    }
+
+    function draw(e) {
+        if (!isDrawing) return;
+        const pos = getPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        
+        // Ubah status jadi terverifikasi/tertanda tangani
+        const statusText = document.getElementById(statusId);
+        if (statusText) {
+            statusText.innerText = "✓ Tertanda tangan";
+            statusText.className = "text-[10px] text-emerald-600 font-semibold";
+        }
+        e.preventDefault();
+    }
+
+    function stopDrawing() {
+        isDrawing = false;
+    }
+
+    // Event Mouse (PC / Laptop)
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+
+    // Event Touch (HP / Tablet Android / iOS)
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing);
+}
+
+// Fungsi untuk menghapus / mengulang tanda tangan admin
+function clearAdminSignature() {
+    const canvas = document.getElementById('admin-sig-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const statusText = document.getElementById('admin-sig-status');
+    if (statusText) {
+        statusText.innerText = "Belum ada tanda tangan";
+        statusText.className = "text-[10px] text-gray-500 font-semibold";
+    }
+}
+
+// Fungsi untuk menghapus / mengulang tanda tangan seller/mitra
+function clearSellerSignature() {
+    const canvas = document.getElementById('seller-sig-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const statusText = document.getElementById('sig-status-text');
+    if (statusText) {
+        statusText.innerText = "Belum ditandatangani";
+        statusText.className = "text-[10px] text-gray-500 font-semibold";
+    }
+}
+
+// Jalankan fungsi saat halaman dimuat
+window.addEventListener('DOMContentLoaded', () => {
+    setupSignaturePad('admin-sig-canvas', 'admin-sig-status');
+    setupSignaturePad('seller-sig-canvas', 'sig-status-text');
+});
+
