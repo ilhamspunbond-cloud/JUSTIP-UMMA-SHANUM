@@ -7,13 +7,39 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- PWA MANIFEST & ICON DINAMIS -->
-    <link rel="manifest" id="pwa-manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Jastip%20Umma%20Shanum%22%2C%22short_name%22%3A%22UmmaShanum%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23ffffff%22%2C%22theme_color%22%3A%22%23059669%22%2C%22icons%22%3A%5B%5D%7D">
-    <meta name="theme-color" content="#059669">
+    <link rel="manifest" id="pwa-manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Jastip%20Umma%20Shanum%22%2C%22short_name%22%3A%22UmmaShanum%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23ffffff%22%2C%22theme_color%22%3A%22%23db2777%22%2C%22icons%22%3A%5B%5D%7D">
+    <meta name="theme-color" content="#db2777">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="UmmaShanum">
 
     <style>
+        :root {
+            --pink-soft: #fff0f5;
+            --pink-pastel: #ffe4e6;
+            --pink-primary: #db2777;
+            --pink-hover: #be185d;
+        }
+
+        body {
+            background-color: var(--pink-soft) !important;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(244, 114, 182, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(219, 39, 119, 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .btn-pink-premium {
+            background: linear-gradient(135deg, #f472b6, #db2777);
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(219, 39, 119, 0.25);
+        }
+        .btn-pink-premium:hover {
+            background: linear-gradient(135deg, #db2777, #be185d);
+            box-shadow: 0 6px 15px rgba(219, 39, 119, 0.4);
+        }
+
         .shop-closed {
             filter: grayscale(100%) blur(1px);
             opacity: 0.6;
@@ -22,25 +48,25 @@
             background-color: transparent !important;
         }
         .sig-canvas {
-            border: 2px dashed #cbd5e1;
-            background-color: #f8fafc;
+            border: 2px dashed #f472b6;
+            background-color: #fffbfe;
             border-radius: 8px;
             cursor: crosshair;
             touch-action: none;
         }
     </style>
 </head>
-<body id="app-body" class="bg-gray-100 font-sans text-gray-800 bg-cover bg-center bg-fixed flex flex-col min-h-screen" style="background-image: none;">
+<body id="app-body" class="font-sans text-gray-800 flex flex-col min-h-screen">
 
     <!-- HEADER / NAVBAR -->
-    <header id="app-header" class="bg-emerald-600 text-white p-3 shadow-md flex justify-between items-center sticky top-0 z-50 transition-all">
+    <header id="app-header" class="bg-gradient-to-r from-pink-600 to-rose-500 text-white p-3 shadow-md flex justify-between items-center sticky top-0 z-50 transition-all">
         <div class="flex items-center space-x-2">
             <div id="brand-logo-container" class="flex items-center">
-                <span id="brand-logo-fallback" class="text-xl font-bold">🛒 Jastip Umma Shanum</span>
+                <span id="brand-logo-fallback" class="text-xl font-bold tracking-wide">🛍️ Jastip Umma Shanum</span>
             </div>
         </div>
         <div class="flex items-center space-x-3">
-            <button onclick="openAdminOrSalesLogin()" class="bg-black/20 p-2 rounded-full hover:bg-black/30 transition text-xs font-bold px-3 py-1.5 flex items-center space-x-1" title="Pengaturan Admin & Akses Mitra/Sales">
+            <button onclick="openAdminOrSalesLogin()" class="bg-white/20 p-2 rounded-full hover:bg-white/30 transition text-xs font-bold px-3 py-1.5 flex items-center space-x-1 border border-pink-300/30" title="Pengaturan Admin & Akses Mitra/Sales">
                 <span>⚙️ Menu Akses</span>
             </button>
         </div>
@@ -51,40 +77,40 @@
 
         <!-- 1. HALAMAN AUTH & SAMBUTAN VISI UMKM -->
         <section id="view-auth" class="space-y-4 mt-6">
-            <div class="bg-gradient-to-br from-emerald-50 to-blue-50 border border-emerald-200 p-4 rounded-xl shadow-sm space-y-2 text-xs text-gray-700">
+            <div class="bg-white border border-pink-200 p-4 rounded-xl shadow-sm space-y-2 text-xs text-gray-700">
                 <div class="flex items-center space-x-2">
                     <span class="text-xl">🌟</span>
-                    <h3 class="font-bold text-emerald-800 text-sm">Selamat Datang di Jastip Umma Shanum!</h3>
+                    <h3 class="font-bold text-pink-800 text-sm">Selamat Datang di Jastip Umma Shanum!</h3>
                 </div>
                 <p class="leading-relaxed">
                     Platform digital cerdas yang didedikasikan khusus untuk <b>memajukan & mendigitalkan UMKM lokal</b> serta memudahkan kebutuhan harian Anda.
                 </p>
-                <div class="border-t border-emerald-200/60 pt-2 space-y-1">
+                <div class="border-t border-pink-100 pt-2 space-y-1">
                     <p>🏪 <b>Mitra Toko:</b> Sistem <b>100% keuntungan bersih utuh tanpa potongan</b> harga dasar.</p>
                     <p>🛍️ <b>Pembeli:</b> Belanja produk lokal terdekat dengan cepat, aman, dan nyaman.</p>
                 </div>
             </div>
 
             <!-- KARTU UTAMA HALAMAN DEPAN -->
-            <div id="auth-selection-card" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md text-center space-y-4">
+            <div id="auth-selection-card" class="bg-white/95 backdrop-blur p-6 rounded-2xl shadow-xl text-center space-y-4 border border-pink-100">
                 <div id="auth-brand-logo-display" class="flex justify-center mb-2">
-                    <h2 id="login-brand-title" class="text-2xl font-bold text-emerald-600">Jastip Umma Shanum</h2>
+                    <h2 id="login-brand-title" class="text-2xl font-extrabold text-pink-600">Jastip Umma Shanum</h2>
                 </div>
                 <p class="text-xs text-gray-500">Platform belanja & bermitra lokal terpercaya tanpa potongan.</p>
                 
                 <div class="space-y-3 pt-2">
-                    <button onclick="unlockAudioAndProceed('buyer')" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow hover:bg-emerald-700 transition">
+                    <button onclick="unlockAudioAndProceed('buyer')" class="w-full btn-pink-premium py-3 rounded-xl font-bold text-sm transition">
                         🛍️ Masuk / Daftar sebagai Pembeli
                     </button>
-                    <button onclick="unlockAudioAndProceed('seller-prop')" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold text-sm shadow hover:bg-purple-700 transition">
+                    <button onclick="unlockAudioAndProceed('seller-prop')" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-bold text-sm shadow hover:opacity-95 transition">
                         🤝 Daftar sebagai Mitra Penjual (Proposal & Syarat)
                     </button>
-                    <button onclick="showSalesRegistration()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm shadow hover:bg-blue-700 transition">
+                    <button onclick="showSalesRegistration()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-3 rounded-xl font-bold text-sm shadow hover:opacity-95 transition">
                         👔 Daftar sebagai Mitra Sales (Afiliasi)
                     </button>
                 </div>
                 
-                <div class="pt-4 border-t text-[11px] text-gray-400">
+                <div class="pt-4 border-t border-pink-100 text-[11px] text-gray-400">
                     Punya kode mitra atau sandi khusus? Silakan klik tombol <b>⚙️ Menu Akses</b> di pojok atas.
                 </div>
             </div>
@@ -92,13 +118,13 @@
             <!-- VIEW PROPOSAL KEMITRAAN & PERJANJIAN DIGITAL (SELLER PROPOSAL + BENEFIT) -->
             <section id="view-seller-proposal" class="hidden max-w-xl mx-auto p-4 bg-white shadow-lg rounded-2xl my-6 space-y-4">
                 <div class="text-center border-b pb-3">
-                    <h2 class="text-xl font-bold text-emerald-800">SURAT PERJANJIAN KERJASAMA KEMITRAAN</h2>
+                    <h2 class="text-xl font-bold text-pink-800">SURAT PERJANJIAN KERJASAMA KEMITRAAN</h2>
                     <p class="text-xs text-gray-500">Platform Jastip Umma Shanum & Mitra Toko UMKM</p>
                 </div>
 
                 <!-- 🌟 PENJELASAN BENEFIT / KEUNTUNGAN MITRA & SALES -->
-                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl space-y-2 text-xs text-emerald-900">
-                    <p class="font-bold text-emerald-800">💡 KEUNTUNGAN & BENEFIT BERGABUNG:</p>
+                <div class="bg-pink-50 border border-pink-200 p-3 rounded-xl space-y-2 text-xs text-pink-900">
+                    <p class="font-bold text-pink-800">💡 KEUNTUNGAN & BENEFIT BERGABUNG:</p>
                     <p>✅ <b>Untuk Mitra Toko:</b> Modal dasar <b>100% utuh tanpa potongan sepeser pun</b>. Produk Anda dipasarkan digital secara luas ke warga sekitar tanpa biaya pendaftaran.</p>
                     <p>✅ <b>Untuk Mitra Sales (Afiliasi):</b> Peluang pendapatan pasif melimpah melalui komisi dari rekrutmen toko/pelanggan baru, serta jaringan sales binaan.</p>
                     <p>✅ <b>Untuk Pelanggan:</b> Kemudahan belanja produk lokal terdekat dengan layanan cepat dan subsidi diskon menarik.</p>
@@ -106,12 +132,12 @@
 
                 <!-- ISI KLAUSUL PERJANJIAN -->
                 <div class="text-xs text-gray-700 space-y-2 max-h-48 overflow-y-auto p-3 bg-gray-50 rounded-lg border">
-                    <p class="font-bold text-emerald-700">KETENTUAN UMUM & OPERASIONAL:</p>
+                    <p class="font-bold text-pink-700">KETENTUAN UMUM & OPERASIONAL:</p>
                     <p>1. <b>Sistem Harga & Keuntungan:</b> Mitra Toko berhak menetapkan harga modal bersih produk. Keuntungan platform diperoleh melalui sistem penyesuaian harga (markup) yang transparan tanpa memotong modal dasar penjual.</p>
                     <p>2. <b>Ketentuan Pembayaran & Setoran COD (7 Hari):</b> Setiap transaksi dengan metode pembayaran COD wajib disetorkan kepada pihak platform paling lambat <b>7 (tujuh) hari kalender</b> setelah dana diterima oleh Mitra Toko.</p>
                     <p>3. <b>Integritas Data & Perangkat:</b> Mitra Toko wajib menjaga kelangsungan akun. Apabila terjadi pembersihan data perangkat (*clear cache/data*), Pemilik Toko wajib melakukan login ulang dan <b>tidak dapat menggunakan alasan kehilangan data perangkat untuk menghindari kewajiban setoran dana COD</b>.</p>
                     <p>4. <b>Sanksi Kepatuhan & SLA:</b> Apabila dalam batas waktu 7 hari dana modal COD belum disetorkan dan divalidasi oleh Admin, maka Platform berhak memberikan peringatan keras, menonaktifkan status toko sementara, hingga pemutusan kerja sama secara sepihak.</p>
-                    <p class="font-bold text-emerald-700 mt-2">PENGESAHAN PIHAK-PIHAK (TRIPARTIT):</p>
+                    <p class="font-bold text-pink-700 mt-2">PENGESAHAN PIHAK-PIHAK (TRIPARTIT):</p>
                     <p>Perjanjian ini diikat secara sah melalui persetujuan elektronik dan tanda tangan digital antara <b>Pemilik Toko</b>, <b>Mitra Sales Pendamping (Upline)</b>, dan <b>Manajemen Platform (Admin)</b>.</p>
                 </div>
 
@@ -130,23 +156,23 @@
                 <!-- TOMBOL AKSI PROPOSAL -->
                 <div class="flex space-x-2 pt-2">
                     <button type="button" onclick="cancelProposal()" class="w-1/2 bg-gray-300 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Batal</button>
-                    <button type="button" onclick="agreeProposalAndProceed()" class="w-1/2 bg-emerald-600 text-white py-2.5 rounded-xl text-xs font-bold shadow-md hover:bg-emerald-700">Setuju & Lanjutkan Pendaftaran</button>
+                    <button type="button" onclick="agreeProposalAndProceed()" class="w-1/2 btn-pink-premium py-2.5 rounded-xl text-xs font-bold shadow-md">Setuju & Lanjutkan Pendaftaran</button>
                 </div>
             </section>
 
             <!-- HALAMAN 1.2: FORM PENDAFTARAN / LOGIN -->
-            <div id="dynamic-auth-form" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md hidden space-y-4">
+            <div id="dynamic-auth-form" class="bg-white/95 backdrop-blur p-6 rounded-2xl shadow-xl hidden space-y-4 border border-pink-100">
                 <div id="auth-form-brand-logo" class="flex justify-center"></div>
-                <h3 id="auth-form-title" class="text-lg font-bold text-center mb-2">Form</h3>
+                <h3 id="auth-form-title" class="text-lg font-bold text-center mb-2 text-pink-700">Form</h3>
                 
                 <!-- KETERANGAN / PENJELASAN LEGALITAS RESMI UNTUK CALON MITRA & PENJUAL -->
-                <div id="legal-notice-box" class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-xs text-blue-900 space-y-1.5">
+                <div id="legal-notice-box" class="bg-pink-50 border border-pink-200 p-3 rounded-lg text-xs text-pink-950 space-y-1.5">
                     <p class="font-bold flex items-center space-x-1">
                         <span>🛡️</span>
                         <span>Legalitas & Keamanan Usaha Terjamin</span>
                     </p>
                     <p class="leading-relaxed">
-                        Bergabung bersama Jastip Umma Shanum berarti Anda bermitra dengan platform digital yang berbadan usaha resmi dan legal. Kami telah mengantongi izin operasional melalui Nomor Induk Berusaha (NIB): <b class="text-emerald-700">0311260134277</b>. Seluruh operasional, transaksi, dan kerja sama kemitraan dilindungi oleh regulasi hukum yang sah, transparan, dan terpercaya.
+                        Bergabung bersama Jastip Umma Shanum berarti Anda bermitra dengan platform digital yang berbadan usaha resmi dan legal. Kami telah mengantongi izin operasional melalui Nomor Induk Berusaha (NIB): <b class="text-pink-700">0311260134277</b>. Seluruh operasional, transaksi, dan kerja sama kemitraan dilindungi oleh regulasi hukum yang sah, transparan, dan terpercaya.
                     </p>
                 </div>
 
@@ -154,23 +180,23 @@
                     <input type="hidden" id="auth-role" value="">
                     <div>
                         <label class="text-xs font-semibold text-gray-600">No. WhatsApp (ID Utama)</label>
-                        <input type="text" id="auth-wa" required onblur="checkExistingUser()" placeholder="Cth: 08123456789" class="w-full p-2 border rounded-lg text-sm">
+                        <input type="text" id="auth-wa" required onblur="checkExistingUser()" placeholder="Cth: 08123456789" class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-pink-500">
                     </div>
                     <div id="field-name">
                         <label class="text-xs font-semibold text-gray-600">Nama Lengkap / Nama Toko</label>
-                        <input type="text" id="auth-name" class="w-full p-2 border rounded-lg text-sm">
+                        <input type="text" id="auth-name" class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-pink-500">
                     </div>
                     <div id="field-category" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Pilih Kategori Etalase Toko</label>
-                        <select id="auth-category" class="w-full p-2 border rounded-lg text-sm"></select>
+                        <select id="auth-category" class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-pink-500"></select>
                     </div>
                     <div id="field-address" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Alamat Lengkap / Wilayah (Cth: Rajeg, Tangerang)</label>
-                        <textarea id="auth-address" placeholder="Cth: Jl. Raya Rajeg No.10, Tangerang" class="w-full p-2 border rounded-lg text-sm"></textarea>
+                        <textarea id="auth-address" placeholder="Cth: Jl. Raya Rajeg No.10, Tangerang" class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-pink-500"></textarea>
                     </div>
                     <div id="field-ref-code" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Kode Referensi Sales (Opsional)</label>
-                        <input type="text" id="auth-ref-code" placeholder="Cth: ROJAK88 (Kosongkan jika tidak ada)" class="w-full p-2 border rounded-lg text-sm font-semibold text-purple-700 uppercase">
+                        <input type="text" id="auth-ref-code" placeholder="Cth: ROJAK88 (Kosongkan jika tidak ada)" class="w-full p-2 border border-gray-300 rounded-lg text-sm font-semibold text-purple-700 uppercase focus:outline-none focus:border-pink-500">
                     </div>
                     <div id="field-store-logo" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Upload Logo Toko</label>
@@ -178,13 +204,13 @@
                     </div>
                     <div id="field-bank" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Info Rekening / E-Wallet (Pencairan Dana)</label>
-                        <input type="text" id="auth-bank-info" placeholder="Cth: SeaBank 123456789" class="w-full p-2 border rounded-lg text-sm">
+                        <input type="text" id="auth-bank-info" placeholder="Cth: SeaBank 123456789" class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-pink-500">
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">Kata Sandi</label>
-                        <input type="password" id="auth-pass" required class="w-full p-2 border rounded-lg text-sm">
+                        <input type="password" id="auth-pass" required class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-pink-500">
                     </div>
-                    <button type="submit" id="auth-submit-btn" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-sm">Masuk / Daftar</button>
+                    <button type="submit" id="auth-submit-btn" class="w-full btn-pink-premium py-2.5 rounded-lg font-semibold text-sm">Masuk / Daftar</button>
                     <button type="button" onclick="cancelAuth()" class="w-full text-gray-500 text-xs py-1">Kembali</button>
                 </form>
             </div>
@@ -193,10 +219,10 @@
         <!-- 2. HALAMAN UTAMA PEMBELI -->
         <section id="view-buyer-dashboard" class="space-y-4 hidden mt-4 p-2 rounded-xl">
             <div id="promo-banner-top-container"></div>
-            <div class="flex justify-between items-center bg-white/95 backdrop-blur p-3 rounded-lg shadow-sm">
+            <div class="flex justify-between items-center bg-white/95 backdrop-blur p-3 rounded-xl shadow-sm border border-pink-100">
                 <div>
                     <h3 id="buyer-greeting" class="font-bold text-md text-gray-800">Halo, Pembeli</h3>
-                    <button onclick="openAddressManager()" class="text-[11px] text-emerald-600 font-semibold underline">📍 Kelola Alamat & Filter Wilayah</button>
+                    <button onclick="openAddressManager()" class="text-[11px] text-pink-600 font-semibold underline">📍 Kelola Alamat & Filter Wilayah</button>
                 </div>
                 <button onclick="logout()" class="text-xs text-red-500 font-semibold">Keluar</button>
             </div>
@@ -210,7 +236,7 @@
             <div id="buyer-shops-container" class="space-y-4"></div>
             <div id="promo-banner-bottom-container"></div>
 
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3 mt-6">
+            <div class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md space-y-3 mt-6 border border-pink-100">
                 <h4 class="font-bold text-sm text-gray-700">📦 Status & Pelacakan Pesanan Saya</h4>
                 <div id="buyer-tracking-container" class="space-y-3 text-xs"></div>
             </div>
@@ -224,7 +250,7 @@
 
         <!-- MODAL KELOLA ALAMAT -->
         <div id="modal-address-manager" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
-            <div class="bg-white p-5 rounded-xl max-w-sm w-full space-y-3">
+            <div class="bg-white p-5 rounded-2xl max-w-sm w-full space-y-3 shadow-2xl border border-pink-100">
                 <h3 class="font-bold text-md text-gray-800">📍 Daftar Alamat & Wilayah Pengiriman</h3>
                 <div id="buyer-address-list" class="space-y-2 text-xs max-h-40 overflow-y-auto"></div>
                 <div class="border-t pt-2 space-y-2">
@@ -239,16 +265,16 @@
         <!-- 3. HALAMAN KATALOG PRODUK & REVIEW -->
         <section id="view-store-catalog" class="space-y-4 hidden mt-4">
             <button onclick="backToBuyerDashboard()" class="text-xs bg-gray-200 px-3 py-1 rounded-lg font-semibold">← Kembali ke Daftar Toko</button>
-            <div id="store-catalog-header" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-2"></div>
+            <div id="store-catalog-header" class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md space-y-2 border border-pink-100"></div>
             
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
+            <div class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md space-y-3 border border-pink-100">
                 <h4 class="font-bold text-sm text-gray-700">⭐ Rating & Komentar Pembeli</h4>
                 <div id="store-reviews-container" class="space-y-3 text-xs max-h-60 overflow-y-auto"></div>
             </div>
 
             <div id="store-products-container" class="grid grid-cols-1 gap-3"></div>
             
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3 mt-4">
+            <div class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md space-y-3 mt-4 border border-pink-100">
                 <h4 class="font-bold text-sm text-gray-700">Ringkasan & Metode Pembayaran</h4>
                 <div>
                     <label class="text-xs font-semibold text-gray-600">Pilih Alamat Pengiriman Tujuan:</label>
@@ -256,39 +282,39 @@
                 </div>
                 <div>
                     <label class="text-xs font-semibold text-gray-600">Metode Pembayaran:</label>
-                    <select id="checkout-payment-method" class="w-full p-2 border rounded-lg text-xs mt-1 font-semibold text-emerald-700">
+                    <select id="checkout-payment-method" class="w-full p-2 border rounded-lg text-xs mt-1 font-semibold text-pink-700">
                         <option value="COD">Bayar di Tempat (COD)</option>
                         <option value="QRIS">QRIS / E-Wallet (Scan Otomatis)</option>
                         <option value="Virtual Account">Virtual Account (Bank Transfer)</option>
                     </select>
                 </div>
-                <div id="store-origin-info" class="text-xs text-emerald-700 font-semibold bg-emerald-50 p-2 rounded"></div>
+                <div id="store-origin-info" class="text-xs text-pink-700 font-semibold bg-pink-50 p-2 rounded"></div>
                 <div class="text-xs space-y-1 text-gray-600 pt-2 border-t">
                     <div class="flex justify-between"><span>Subtotal Produk:</span> <span id="cart-subtotal" class="font-semibold">Rp0</span></div>
                     <div class="flex justify-between"><span>Ongkos Kirim:</span> <span id="shipping-cost" class="font-semibold">Rp15.000</span></div>
-                    <div class="flex justify-between text-emerald-600 font-bold"><span>Subsidi / Diskon Platform:</span> <span id="promo-discount-text">-Rp15.000</span></div>
+                    <div class="flex justify-between text-pink-600 font-bold"><span>Subsidi / Diskon Platform:</span> <span id="promo-discount-text">-Rp15.000</span></div>
                     <hr>
-                    <div class="flex justify-between text-sm font-bold text-gray-900"><span>Total Tagihan:</span> <span id="cart-total-final" class="text-emerald-600">Rp0</span></div>
+                    <div class="flex justify-between text-sm font-bold text-gray-900"><span>Total Tagihan:</span> <span id="cart-total-final" class="text-pink-600">Rp0</span></div>
                 </div>
             </div>
-            <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur p-3 border-t shadow-lg max-w-md mx-auto flex justify-between items-center z-40">
+            <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur p-3 border-t shadow-lg max-w-md mx-auto flex justify-between items-center z-40 border-pink-200">
                 <div>
                     <p class="text-xs text-gray-500">Total Akhir:</p>
-                    <p id="footer-total-price" class="font-bold text-emerald-600 text-sm">Rp0</p>
+                    <p id="footer-total-price" class="font-bold text-pink-600 text-sm">Rp0</p>
                 </div>
-                <button onclick="checkoutOrder()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Buat Pesanan</button>
+                <button onclick="checkoutOrder()" class="btn-pink-premium px-4 py-2 rounded-lg text-sm font-semibold">Buat Pesanan</button>
             </div>
         </section>
 
         <!-- 4. DASHBOARD PENJUAL -->
         <section id="view-seller-dashboard" class="space-y-4 hidden mt-4">
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md flex justify-between items-center">
+            <div class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md flex justify-between items-center border border-pink-100">
                 <div class="flex items-center space-x-3">
                     <div id="seller-dashboard-logo" class="w-12 h-12 rounded-full overflow-hidden bg-transparent flex-shrink-0 border"></div>
                     <div>
                         <h3 id="seller-shop-name" class="font-bold text-lg">Toko Saya</h3>
                         <p id="seller-shop-category" class="text-xs text-gray-500 font-medium">Kategori: -</p>
-                        <p id="seller-status-text" class="text-xs text-emerald-600 font-semibold mt-0.5">Status: BUKA</p>
+                        <p id="seller-status-text" class="text-xs text-pink-600 font-semibold mt-0.5">Status: BUKA</p>
                     </div>
                 </div>
                 <div class="space-x-1">
@@ -299,14 +325,14 @@
             
             <div id="seller-deadline-warning-box"></div>
 
-            <div id="seller-signed-proposal-box" class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-2 text-xs">
-                <h4 class="font-bold text-emerald-700">📜 Dokumen Kesepakatan Mitra (Sah - 3 Pihak)</h4>
+            <div id="seller-signed-proposal-box" class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md space-y-2 text-xs border border-pink-100">
+                <h4 class="font-bold text-pink-700">📜 Dokumen Kesepakatan Mitra (Sah - 3 Pihak)</h4>
                 <p class="text-gray-500">Kesepakatan sistem 100% utuh tanpa potongan harga dasar.</p>
                 <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t text-center">
                     <div class="border p-2 rounded bg-gray-50 flex flex-col items-center">
                         <p class="font-bold text-[10px] text-gray-600 mb-1">Pihak Admin (Abdul Rojak)</p>
                         <div id="display-admin-signature-box">
-                            <p class="text-emerald-700 font-semibold text-[10px]">✓ Terverifikasi</p>
+                            <p class="text-pink-700 font-semibold text-[10px]">✓ Terverifikasi</p>
                         </div>
                     </div>
                     <div class="border p-2 rounded bg-gray-50">
@@ -320,7 +346,7 @@
                 </div>
             </div>
 
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
+            <div class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md space-y-3 border border-pink-100">
                 <h4 class="font-bold text-sm text-gray-700">Tambah Produk / Menu Baru</h4>
                 <form onsubmit="addSellerProduct(event)" class="space-y-2">
                     <input type="text" id="prod-name" placeholder="Nama Menu/Produk" required class="w-full p-2 border rounded-lg text-sm">
@@ -332,26 +358,26 @@
                     <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg text-xs font-semibold">Simpan Produk</button>
                 </form>
             </div>
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
+            <div class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md space-y-3 border border-pink-100">
                 <h4 class="font-bold text-sm text-gray-700">🛵 PO Masuk & Konfirmasi Setoran COD (HD)</h4>
                 <div id="seller-po-container" class="space-y-3 text-xs"></div>
             </div>
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3 mt-4">
-                <h4 class="font-bold text-sm text-emerald-700">📄 Invoice & Status Pembayaran Toko</h4>
+            <div class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md space-y-3 mt-4 border border-pink-100">
+                <h4 class="font-bold text-sm text-pink-700">📄 Invoice & Status Pembayaran Toko</h4>
                 <div id="seller-invoice-container" class="space-y-3 text-xs"></div>
             </div>
         </section>
 
         <!-- 4.1 DASHBOARD SALES & AFILIASI -->
         <section id="view-sales-dashboard" class="space-y-4 hidden mt-4">
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md flex justify-between items-center">
+            <div class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md flex justify-between items-center border border-pink-100">
                 <div>
                     <h3 id="sales-dashboard-name" class="font-bold text-lg text-purple-800">Dashboard Sales</h3>
                     <p class="text-xs font-bold text-purple-600 mt-0.5">Kode Unik Anda: <span id="sales-my-code" class="bg-purple-100 px-2 py-0.5 rounded text-xs"></span></p>
                 </div>
                 <button onclick="logout()" class="text-xs text-red-500 font-semibold">Keluar</button>
             </div>
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-2 text-xs">
+            <div class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md space-y-2 text-xs border border-pink-100">
                 <h4 class="font-bold text-purple-700">🌳 Informasi Jaringan & Toko Binaan</h4>
                 <p class="text-gray-600">Bagikan Kode Unik Anda ke pemilik toko atau sales anakan saat mereka mendaftar.</p>
                 <div id="sales-downline-list" class="space-y-2 mt-2"></div>
@@ -360,9 +386,9 @@
 
         <!-- 5. PANEL ADMIN -->
         <section id="view-admin-panel" class="space-y-4 hidden mt-4">
-            <div class="bg-white/95 backdrop-blur p-4 rounded-xl shadow-md space-y-3">
+            <div class="bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md space-y-3 border border-pink-100">
                 <div class="flex justify-between items-center">
-                    <h3 class="font-bold text-md text-emerald-600">⚙️ Panel Admin & Validasi</h3>
+                    <h3 class="font-bold text-md text-pink-600">⚙️ Panel Admin & Validasi</h3>
                     <button onclick="backFromAdmin()" class="text-xs text-gray-500 font-semibold bg-gray-200 px-3 py-1 rounded">Tutup</button>
                 </div>
                 <hr>
@@ -375,7 +401,7 @@
                     <textarea id="admin-setting-address" class="w-full p-2 border rounded-lg text-sm mt-1"></textarea>
                 </div>
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🔐 Ganti Kata Sandi Admin</label>
+                    <label class="text-xs font-bold text-pink-700">🔐 Ganti Kata Sandi Admin</label>
                     <input type="text" id="admin-setting-pass" placeholder="Kata Sandi Baru Admin" class="w-full p-2 border rounded-lg text-sm">
                 </div>
 
@@ -393,7 +419,7 @@
 
                 <!-- KELOLA TANDA TANGAN DIGITAL ADMIN UNTUK PROPOSAL -->
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">✍️ Tanda Tangan Digital Resmi Admin / Platform</label>
+                    <label class="text-xs font-bold text-pink-700">✍️ Tanda Tangan Digital Resmi Admin / Platform</label>
                     <p class="text-[11px] text-gray-500">Tanda tangan ini akan otomatis tersemat sah dalam dokumen/proposal kerja sama dengan Mitra Toko & Sales.</p>
                     <div class="border-2 border-dashed border-gray-300 rounded-lg p-2 bg-gray-50 flex flex-col items-center">
                         <canvas id="admin-sig-canvas" width="300" height="110" class="bg-white border rounded cursor-crosshair touch-none"></canvas>
@@ -406,14 +432,14 @@
 
                 <!-- KELOLA KATEGORI ETALASE PRODUK DI PANEL ADMIN -->
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🏷️ Kelola Kategori Etalase Produk & Ikon</label>
+                    <label class="text-xs font-bold text-pink-700">🏷️ Kelola Kategori Etalase Produk & Ikon</label>
                     <div class="space-y-2 bg-gray-50 p-2.5 border rounded-lg">
                         <input type="text" id="new-category-name" placeholder="Nama Kategori Baru..." class="w-full p-2 border rounded-lg text-xs">
                         <div>
                             <span class="text-[10px] text-gray-500 font-semibold">Upload Gambar / Ikon Kategori (Opsional):</span>
                             <input type="file" id="new-category-icon-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
                         </div>
-                        <button type="button" onclick="addNewCategory()" class="w-full bg-emerald-600 text-white py-1.5 rounded-lg text-xs font-semibold">Tambah Kategori Baru</button>
+                        <button type="button" onclick="addNewCategory()" class="w-full btn-pink-premium py-1.5 rounded-lg text-xs font-semibold">Tambah Kategori Baru</button>
                     </div>
                     <div id="admin-category-list" class="space-y-1.5 text-xs max-h-40 overflow-y-auto bg-white p-2 border rounded-lg"></div>
                 </div>
@@ -422,12 +448,12 @@
                     <label class="text-xs font-bold text-purple-700">💰 Rekap Global Komisi Masing-Masing Sales</label>
                     <div id="admin-global-sales-recap" class="space-y-2 text-xs max-h-60 overflow-y-auto bg-gray-50 p-2 border rounded mt-1"></div>
                 </div>
-                <button onclick="saveAdminSettings()" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-sm mt-2">Simpan Semua Pengaturan</button>
+                <button onclick="saveAdminSettings()" class="w-full btn-pink-premium py-2 rounded-lg font-semibold text-sm mt-2">Simpan Semua Pengaturan</button>
             </div>
 
             <!-- 💸 REKAP KOMISI BERJENJANG (SALES, TOKO, PEMBELI) -->
-            <div class="pt-3 border-t space-y-3">
-                <label class="text-xs font-bold text-emerald-700">💸 Pusat Rekap & Pencairan Komisi Berjenjang</label>
+            <div class="pt-3 border-t space-y-3 bg-white/95 backdrop-blur p-4 rounded-2xl shadow-md border border-pink-100">
+                <label class="text-xs font-bold text-pink-700">💸 Pusat Rekap & Pencairan Komisi Berjenjang</label>
                 
                 <!-- Tab Pemisah Komisi -->
                 <div class="flex space-x-1 bg-gray-100 p-1 rounded-lg text-xs">
@@ -443,14 +469,14 @@
 
     </main>
 
-    <!-- FOOTER UTAMA APLIKASI - DISELIPKAN INFORMASI NIB RESMI DI SEMUA HALAMAN -->
-    <footer class="bg-white/90 backdrop-blur border-t py-3 px-4 text-center text-xs text-gray-600 mt-auto space-y-1 shadow-inner">
-        <p class="font-bold text-emerald-800">🛒 Jastip Umma Shanum</p>
+    <!-- FOOTER UTAMA APLIKASI - NIB RESMI TERCETAK DI SINI -->
+    <footer class="bg-white/90 backdrop-blur border-t border-pink-200 py-3 px-4 text-center text-xs text-gray-600 mt-auto space-y-1 shadow-inner">
+        <p class="font-bold text-pink-700">🛍️ Jastip Umma Shanum</p>
         <p class="text-[11px] text-gray-500">
             Platform Layanan Belanja & Kemitraan UMKM Terpercaya. 
-            <span class="block text-emerald-700 font-semibold mt-0.5">NIB: 0311260134277 (Legalitas Resmi Berizin)</span>
+            <span class="block text-pink-600 font-semibold mt-0.5">NIB: 0311260134277 (Legalitas Resmi Berizin)</span>
         </p>
-        <p class="text-[10px] text-gray-400 pt-1 border-t border-gray-200">© 2026 Jastip Umma Shanum. Hak cipta dilindungi undang-undang.</p>
+        <p class="text-[10px] text-gray-400 pt-1 border-t border-pink-100">© 2026 Jastip Umma Shanum. Hak cipta dilindungi undang-undang.</p>
     </footer>
 
     <!-- MEMANGGIL FILE JAVASCRIPT EKSTERNAL -->
