@@ -372,18 +372,67 @@ function handleAuth(event) {
         const address = document.getElementById('auth-address').value.trim();
         if (!name || !address) { alert("Nama dan alamat wajib diisi!"); return; }
         
+        let generatedCode = activeRole === 'sales' ? (name.substring(0,3).toUpperCase() + Math.floor(100 + Math.random() * 900)) : (activeRole === 'buyer' ? 'BUY-' + Math.floor(1000 + Math.random() * 9000) : '');
+        let pendingRef = localStorage.getItem('umah_pending_ref') || '';
+        let refCodeInputEl = document.getElementById('auth-ref-code');
+        let refCodeInput = refCodeInputEl ? refCodeInputEl.value.trim().toUpperCase() : '';
+        let finalReferral = refCodeInput || pendingRef || '-';
+
+        let bankInfo = '';
+        if (activeRole === 'seller') {
+            bankInfo = document.getElementById('auth-bank-info') ? document.getElementById('auth-bank-info').value : '';
+        } else if (activeRole === 'buyer') {
+            bankInfo = document.getElementById('auth-bank-buyer') ? document.getElementById('auth-bank-buyer').value : '';
+        }
+
         if (activeRole === 'seller') {
             const storeLogoFile = document.getElementById('auth-store-logo-file');
             if (storeLogoFile && storeLogoFile.files && storeLogoFile.files[0]) {
                 compressImage(storeLogoFile.files[0], 200, 200, 0.9, function(base64Logo) {
-                    saveNewUser(name, wa, pass, address, base64Logo, signatureDataUrl);
+                    // 🛡️ Panggil OTP dulu sebelum data disimpan
+                    sendRegistrationOtp(activeRole, name, wa, pass, address, base64Logo, signatureDataUrl, bankInfo, finalReferral);
                 });
                 return;
             }
         }
-        saveNewUser(name, wa, pass, address, "", signatureDataUrl);
+        
+        // 🛡️ Panggil OTP dulu untuk pembeli / sales
+        sendRegistrationOtp(activeRole, name, wa, pass, address, "", signatureDataUrl, bankInfo, finalReferral);
     }
 }
+
+// ⭐ FUNGSI FINAL PENYIMPANAN DATA SETELAH OTP VALID + KIRIM PESAN SAMBUTAN VISI/MISI
+function finalizeRegistration(data) {
+    let user = {
+        id: 'usr_' + Date.now(),
+        name: data.name,
+        wa: data.wa,
+        pass: data.pass,
+        role: data.role,
+        category: data.role === 'seller' ? (document.getElementById('auth-category') ? document.getElementById('auth-category').value : 'Umum') : '',
+        addresses: [{ label: "Utama", detail: data.address }],
+        storeLogo: data.storeLogo,
+        signature: data.signature || "",
+        refCode: data.role === 'sales' ? (data.name.substring(0,3).toUpperCase() + Math.floor(100 + Math.random() * 900)) : (data.role === 'buyer' ? 'BUY-' + Math.floor(1000 + Math.random() * 9000) : ''),
+        referredBy: data.refCodeInput,
+        bank: data.bank,
+        isOpen: true,
+        commissions: []
+    };
+    
+    users.push(user);
+    localStorage.setItem('umah_users', JSON.stringify(users));
+    localStorage.removeItem('umah_pending_ref');
+
+    currentUser = user;
+    localStorage.setItem('umah_current_user', JSON.stringify(currentUser));
+
+    // Kirim Pesan Sambutan Visi, Misi & Motivasi ke WhatsApp
+    sendWelcomeWhatsAppNotification(currentUser);
+
+    checkSession();
+}
+
 
 // ⭐ PENYIMPANAN DATA USER (Hanya 1 Fungsi Utuh & Bersih)
 function saveNewUser(name, wa, pass, address, storeLogo, signature) {
@@ -1061,4 +1110,134 @@ function renderUserCommissionDashboard() {
             </div>
         </div>
     `;
+}
+
+// ⭐ SIMPAN DATA SEMENTARA UNTUK VERIFIKASI OTP
+let pendingRegistrationData = null;
+let generatedOtpCode = "";
+
+// 1. Fungsi Buat & Kirim Kode OTP ke WhatsApp
+function sendRegistrationOtp(userRole, name, wa, pass, address, storeLogo, signature, bankInfo, refCode) {
+    // Buat kode OTP acak 4 digit
+    generatedOtpCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+    // Simpan data sementara
+    pendingRegistrationData = {
+        role: userRole,
+        name: name,
+        wa: wa,
+        pass: pass,
+        address: address,
+        storeLogo: storeLogo,
+        signature: signature,
+        bank: bankInfo,
+        refCodeInput: refCode
+    };
+
+    let phone = wa.trim();
+    if (phone.startsWith('0')) {
+        phone = '62' + phone.substring(1);
+    } else if (!phone.startsWith('62') && !phone.startsWith('+')) {
+        phone = '62' + phone;
+    }
+
+    let message = `🔐 *KODE VERIFIKASI AKUN (OTP)*\n\n` +
+        `Halo Kak *${name}*,\n` +
+        `Terima kasih telah mendaftar di *${appConfig.brandName}*.\n\n` +
+        `Kode verifikasi WhatsApp Anda adalah:\n` +
+        `👉 *${generatedOtpCode}*\n\n` +
+        `Masukkan 4 digit kode di atas ke aplikasi untuk mengaktifkan akun Anda dan menghindari akun palsu. Jangan berikan kode ini ke siapapun!`;
+
+    // Buka WhatsApp untuk kirim OTP ke nomor pendaftar
+    let waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    window.open(waUrl, '_blank');
+
+    // Munculkan modal input OTP di layar
+    showOtpModal();
+}
+
+// 2. Tampilkan Modal Kotak Input OTP
+function showOtpModal() {
+    let modal = document.getElementById('modal-otp-verification');
+    if (!modal) {
+        // Buat modal secara otomatis jika belum ada di HTML
+        let modalHtml = `
+            <div id="modal-otp-verification" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+                <div class="bg-white p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl text-center">
+                    <div class="text-3xl">🛡️</div>
+                    <h3 class="font-bold text-lg text-emerald-800">Verifikasi Nomor WhatsApp</h3>
+                    <p class="text-xs text-gray-600">Kami telah membuka WhatsApp untuk mengirimkan 4 digit Kode OTP verifikasi ke nomor Anda. Silakan cek dan masukkan kodenya di bawah:</p>
+                    <input type="text" id="input-otp-code" maxlength="4" placeholder="Cth: 7842" class="w-full text-center p-3 border-2 border-emerald-500 rounded-xl text-2xl font-bold tracking-widest text-emerald-800">
+                    <button type="button" onclick="verifyOtpAndRegister()" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow hover:bg-emerald-700">✓ Verifikasi & Aktifkan Akun</button>
+                    <button type="button" onclick="closeOtpModal()" class="w-text-gray-400 text-xs text-gray-500 underline pt-1">Batal / Ulangi Pendaftaran</button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    } else {
+        modal.classList.remove('hidden');
+    }
+}
+
+function closeOtpModal() {
+    let modal = document.getElementById('modal-otp-verification');
+    if (modal) modal.classList.add('hidden');
+    pendingRegistrationData = null;
+}
+
+// 3. Cek Kode OTP yang Dimasukkan User & Selesaikan Pendaftaran
+function verifyOtpAndRegister() {
+    let userOtpInput = document.getElementById('input-otp-code').value.trim();
+
+    if (userOtpInput !== generatedOtpCode) {
+        alert("❌ Kode OTP salah! Pastikan Anda memasukkan 4 digit kode yang dikirimkan ke WhatsApp Anda.");
+        return;
+    }
+
+    alert("🎉 Verifikasi Berhasil! Akun Anda kini resmi aktif.");
+    closeOtpModal();
+
+    // Lanjutkan proses simpan data permanen ke localStorage
+    finalizeRegistration(pendingRegistrationData);
+}
+
+
+// ⭐ FUNGSI KIRIM PESAN SELAMAT DATANG OTOMATIS KE WHATSAPP USER BARU
+function sendWelcomeWhatsAppNotification(newUser) {
+    let phone = newUser.wa.trim();
+    if (phone.startsWith('0')) {
+        phone = '62' + phone.substring(1);
+    } else if (!phone.startsWith('62') && !phone.startsWith('+')) {
+        phone = '62' + phone;
+    }
+
+    let message = "";
+
+    if (newUser.role === 'sales') {
+        message = `Halo Kak *${newUser.name}*! 🎉\n\n` +
+            `Selamat bergabung sebagai *Mitra Sales (Afiliasi)* di *${appConfig.brandName}*!\n` +
+            `Kode Unik Afiliasi Anda: *${newUser.refCode}*\n\n` +
+            `🌟 *Misi & Visi Kita:* Bersama-sama memajukan ekonomi kerakyatan, mendigitalkan UMKM lokal, dan memperluas jaringan kebaikan di masyarakat.\n\n` +
+            `💪 *Pesan Motivasi:* Terima kasih atas semangat luar biasa Anda hari ini. Setiap toko binaan dan tautan yang Anda bagikan adalah ladang rezeki dan berkah bagi banyak orang. Tetap semangat menginspirasi!\n\n` +
+            `🔗 Link Akses Dashboard Anda:\n${window.location.origin + window.location.pathname}`;
+
+    } else if (newUser.role === 'seller') {
+        message = `Halo Kak *${newUser.name}* (${newUser.category || 'Mitra Toko'})! 🏪✨\n\n` +
+            `Selamat bergabung secara resmi sebagai *Mitra Penjual* di *${appConfig.brandName}*!\n\n` +
+            `🌟 *Komitmen Kami:* Sistem penjualan kami 100% transparan dengan modal dasar produk *utuh tanpa potongan* sepeser pun.\n\n` +
+            `💪 *Pesan Motivasi:* Produk lokal berkualitas dari tangan dingin Kakak hari ini pasti membawa berkah, rezeki yang melimpah, dan dikenal lebih banyak warga sekitar. Semangat terus memproduksi yang terbaik!\n\n` +
+            `🔗 Link Akses Toko Anda:\n${window.location.origin + window.location.pathname}`;
+
+    } else if (newUser.role === 'buyer') {
+        message = `Halo Kak *${newUser.name}*! 🛍️❤️\n\n` +
+            `Selamat datang dan terima kasih banyak telah bergabung di *${appConfig.brandName}*!\n\n` +
+            `🌟 *Dukungan Anda Berarti:* Kehadiran Kakak hari ini adalah bentuk dukungan nyata yang sangat berharga untuk memajukan, memberdayakan, dan mensejahterakan UMKM lokal kita.\n\n` +
+            `💪 *Pesan Motivasi:* Selamat berbelanja produk segar dan berkualitas langsung dari tetangga dan toko lokal terdekat. Nikmati kemudahan dan kenyamanannya!\n\n` +
+            `🔗 Mulai Belanja Sekarang:\n${window.location.origin + window.location.pathname}`;
+    }
+
+    if (message) {
+        let waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        window.open(waUrl, '_blank');
+    }
 }
