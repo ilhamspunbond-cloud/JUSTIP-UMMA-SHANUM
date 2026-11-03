@@ -1335,3 +1335,65 @@ window.addEventListener('DOMContentLoaded', () => {
     setupSignaturePad('seller-sig-canvas', 'sig-status-text');
 });
 
+// ⭐ Fungsi Tambah Mitra Sales Utama Langsung dari Panel Admin
+function adminRegisterSales() {
+    let nameInput = document.getElementById('admin-new-sales-name');
+    let waInput = document.getElementById('admin-new-sales-wa');
+    let passInput = document.getElementById('admin-new-sales-pass');
+    let codeInput = document.getElementById('admin-new-sales-code');
+
+    if (!nameInput || !waInput || !passInput || !codeInput) {
+        alert("Elemen form sales tidak lengkap!");
+        return;
+    }
+
+    let name = nameInput.value.trim();
+    let wa = waInput.value.trim();
+    let pass = passInput.value.trim();
+    let refCode = codeInput.value.trim().toUpperCase();
+
+    if (!name || !wa || !pass || !refCode) {
+        alert("Semua kolom data sales wajib diisi!");
+        return;
+    }
+
+    // Cek apakah nomor WA atau kode unik sales sudah terdaftar
+    let exists = users.some(u => u.wa === wa || (u.refCode && u.refCode === refCode));
+    if (exists) {
+        alert("Nomor WhatsApp atau Kode Unik Sales tersebut sudah terdaftar!");
+        return;
+    }
+
+    // Buat objek data sales baru
+    let newSalesUser = {
+        id: 'usr_' + Date.now(),
+        name: name,
+        wa: wa,
+        pass: pass,
+        role: 'sales',
+        category: '',
+        addresses: [{ label: "Utama", detail: "Kantor Pusat / Wilayah Sales" }],
+        storeLogo: "",
+        signature: "",
+        refCode: refCode,
+        referredBy: 'ADMIN-PUSAT',
+        bank: '',
+        isOpen: true,
+        commissions: []
+    };
+
+    // Masukkan ke array users dan simpan ke localStorage
+    users.push(newSalesUser);
+    localStorage.setItem('umah_users', JSON.stringify(users));
+
+    // Reset isi form input
+    nameInput.value = '';
+    waInput.value = '';
+    passInput.value = '';
+    codeInput.value = '';
+
+    alert("Berhasil! Mitra Sales Utama baru berhasil ditambahkan dan disimpan.");
+    
+    // Refresh tampilan rekap global di admin
+    renderAdminGlobalRecap();
+}
