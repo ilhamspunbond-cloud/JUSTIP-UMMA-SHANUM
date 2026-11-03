@@ -1336,6 +1336,7 @@ function clearSellerSignature() {
 }
 
 
+ 
  function clearSellerSignature() {
     const canvas = document.getElementById('seller-sig-canvas');
     if (!canvas) return;
@@ -1419,5 +1420,3 @@ function adminRegisterSales() {
     // Refresh tampilan rekap global di admin
     renderAdminGlobalRecap();
 }
-
-
