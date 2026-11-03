@@ -40,8 +40,8 @@
             </div>
         </div>
         <div class="flex items-center space-x-3">
-            <button onclick="openAdminOrSalesLogin()" class="bg-black/20 p-2 rounded-full hover:bg-black/30 transition" title="Pengaturan Admin & Cek Komisi Sales">
-                ⚙️
+            <button onclick="openAdminOrSalesLogin()" class="bg-black/20 p-2 rounded-full hover:bg-black/30 transition text-xs font-bold px-3 py-1.5 flex items-center space-x-1" title="Pengaturan Admin & Akses Mitra/Sales">
+                <span>⚙️ Menu Akses</span>
             </button>
         </div>
     </header>
@@ -65,7 +65,7 @@
                 </div>
             </div>
 
-            <!-- KARTU UTAMA HALAMAN DEPAN (Dibersihkan: Hanya Pembeli & Pendaftaran Mitra Terkurasi) -->
+            <!-- KARTU UTAMA HALAMAN DEPAN -->
             <div id="auth-selection-card" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md text-center space-y-4">
                 <div id="auth-brand-logo-display" class="flex justify-center mb-2">
                     <h2 id="login-brand-title" class="text-2xl font-bold text-emerald-600">Jastip Umma Shanum</h2>
@@ -79,49 +79,60 @@
                     <button onclick="unlockAudioAndProceed('seller-prop')" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold text-sm shadow hover:bg-purple-700 transition">
                         🤝 Daftar sebagai Mitra Penjual (Proposal & Syarat)
                     </button>
+                    <button onclick="showSalesRegistration()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm shadow hover:bg-blue-700 transition">
+                        👔 Daftar sebagai Mitra Sales (Afiliasi)
+                    </button>
                 </div>
                 
                 <div class="pt-4 border-t text-[11px] text-gray-400">
-                    Punya kode mitra atau akses khusus? Silakan klik ikon roda gigi (⚙️) di pojok atas.
+                    Punya kode mitra atau sandi khusus? Silakan klik tombol <b>⚙️ Menu Akses</b> di pojok atas.
                 </div>
             </div>
 
-         <!-- VIEW PROPOSAL KEMITRAAN & PERJANJIAN DIGITAL (SELLER PROPOSAL) -->
-<section id="view-seller-proposal" class="hidden max-w-xl mx-auto p-4 bg-white shadow-lg rounded-2xl my-6 space-y-4">
-    <div class="text-center border-b pb-3">
-        <h2 class="text-xl font-bold text-emerald-800">SURAT PERJANJIAN KERJASAMA KEMITRAAN</h2>
-        <p class="text-xs text-gray-500">Platform Jastip Umma Shanum & Mitra Toko UMKM</p>
-    </div>
+            <!-- VIEW PROPOSAL KEMITRAAN & PERJANJIAN DIGITAL (SELLER PROPOSAL + BENEFIT) -->
+            <section id="view-seller-proposal" class="hidden max-w-xl mx-auto p-4 bg-white shadow-lg rounded-2xl my-6 space-y-4">
+                <div class="text-center border-b pb-3">
+                    <h2 class="text-xl font-bold text-emerald-800">SURAT PERJANJIAN KERJASAMA KEMITRAAN</h2>
+                    <p class="text-xs text-gray-500">Platform Jastip Umma Shanum & Mitra Toko UMKM</p>
+                </div>
 
-    <!-- ISI KLAUSUL PERJANJIAN -->
-    <div class="text-xs text-gray-700 space-y-2 max-h-60 overflow-y-auto p-3 bg-gray-50 rounded-lg border">
-        <p class="font-bold text-emerald-700">KETENTUAN UMUM & OPERASIONAL:</p>
-        <p>1. <b>Sistem Harga & Keuntungan:</b> Mitra Toko berhak menetapkan harga modal bersih produk. Keuntungan platform diperoleh melalui sistem penyesuaian harga (markup) yang transparan tanpa memotong modal dasar penjual.</p>
-        <p>2. <b>Ketentuan Pembayaran & Setoran COD (7 Hari):</b> Setiap transaksi dengan metode pembayaran COD wajib disetorkan kepada pihak platform paling lambat <b>7 (tujuh) hari kalender</b> setelah dana diterima oleh Mitra Toko.</p>
-        <p>3. <b>Integritas Data & Perangkat:</b> Mitra Toko wajib menjaga kelangsungan akun. Apabila terjadi pembersihan data perangkat (*clear cache/data*), Pemilik Toko wajib melakukan login ulang dan <b>tidak dapat menggunakan alasan kehilangan data perangkat untuk menghindari kewajiban setoran dana COD</b>.</p>
-        <p>4. <b>Sanksi Kepatuhan & SLA:</b> Apabila dalam batas waktu 7 hari dana modal COD belum disetorkan dan divalidasi oleh Admin, maka Platform berhak memberikan peringatan keras, menonaktifkan status toko sementara, hingga pemutusan kerja sama secara sepihak.</p>
-        <p class="font-bold text-emerald-700 mt-2">PENGESAHAN PIHAK-PIHAK (TRIPARTIT):</p>
-        <p>Perjanjian ini diikat secara sah melalui persetujuan elektronik dan tanda tangan digital antara <b>Pemilik Toko</b>, <b>Mitra Sales Pendamping (Upline)</b>, dan <b>Manajemen Platform (Admin)</b>.</p>
-    </div>
+                <!-- 🌟 PENJELASAN BENEFIT / KEUNTUNGAN MITRA & SALES -->
+                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl space-y-2 text-xs text-emerald-900">
+                    <p class="font-bold text-emerald-800">💡 KEUNTUNGAN & BENEFIT BERGABUNG:</p>
+                    <p>✅ <b>Untuk Mitra Toko:</b> Modal dasar <b>100% utuh tanpa potongan sepeser pun</b>. Produk Anda dipasarkan digital secara luas ke warga sekitar tanpa biaya pendaftaran.</p>
+                    <p>✅ <b>Untuk Mitra Sales (Afiliasi):</b> Peluang pendapatan pasif melimpah melalui komisi dari rekrutmen toko/pelanggan baru, serta jaringan sales binaan.</p>
+                    <p>✅ <b>Untuk Pelanggan:</b> Kemudahan belanja produk lokal terdekat dengan layanan cepat dan subsidi diskon menarik.</p>
+                </div>
 
-    <!-- AREA TANDA TANGAN DIGITAL -->
-    <div class="space-y-2">
-        <label class="text-xs font-bold text-gray-700 block text-center">✍️ Tanda Tangan Digital Mitra Toko (Pemilik)</label>
-        <div class="border-2 border-dashed border-gray-300 rounded-lg p-2 bg-gray-50 flex flex-col items-center">
-            <canvas id="seller-sig-canvas" width="320" height="130" class="bg-white border rounded cursor-crosshair touch-none"></canvas>
-            <div class="flex justify-between w-full mt-2 px-2">
-                <span id="sig-status-text" class="text-[10px] text-gray-500 font-semibold">Belum ditandatangani</span>
-                <button type="button" onclick="clearSellerSignature()" class="text-red-500 text-xs font-bold px-2 py-0.5 bg-red-50 rounded border border-red-200">Hapus / Ulang</button>
-            </div>
-        </div>
-    </div>
+                <!-- ISI KLAUSUL PERJANJIAN -->
+                <div class="text-xs text-gray-700 space-y-2 max-h-48 overflow-y-auto p-3 bg-gray-50 rounded-lg border">
+                    <p class="font-bold text-emerald-700">KETENTUAN UMUM & OPERASIONAL:</p>
+                    <p>1. <b>Sistem Harga & Keuntungan:</b> Mitra Toko berhak menetapkan harga modal bersih produk. Keuntungan platform diperoleh melalui sistem penyesuaian harga (markup) yang transparan tanpa memotong modal dasar penjual.</p>
+                    <p>2. <b>Ketentuan Pembayaran & Setoran COD (7 Hari):</b> Setiap transaksi dengan metode pembayaran COD wajib disetorkan kepada pihak platform paling lambat <b>7 (tujuh) hari kalender</b> setelah dana diterima oleh Mitra Toko.</p>
+                    <p>3. <b>Integritas Data & Perangkat:</b> Mitra Toko wajib menjaga kelangsungan akun. Apabila terjadi pembersihan data perangkat (*clear cache/data*), Pemilik Toko wajib melakukan login ulang dan <b>tidak dapat menggunakan alasan kehilangan data perangkat untuk menghindari kewajiban setoran dana COD</b>.</p>
+                    <p>4. <b>Sanksi Kepatuhan & SLA:</b> Apabila dalam batas waktu 7 hari dana modal COD belum disetorkan dan divalidasi oleh Admin, maka Platform berhak memberikan peringatan keras, menonaktifkan status toko sementara, hingga pemutusan kerja sama secara sepihak.</p>
+                    <p class="font-bold text-emerald-700 mt-2">PENGESAHAN PIHAK-PIHAK (TRIPARTIT):</p>
+                    <p>Perjanjian ini diikat secara sah melalui persetujuan elektronik dan tanda tangan digital antara <b>Pemilik Toko</b>, <b>Mitra Sales Pendamping (Upline)</b>, dan <b>Manajemen Platform (Admin)</b>.</p>
+                </div>
 
-    <!-- TOMBOL AKSI PROPOSAL -->
-    <div class="flex space-x-2 pt-2">
-        <button type="button" onclick="cancelProposal()" class="w-1/2 bg-gray-300 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Batal</button>
-        <button type="button" onclick="agreeProposalAndProceed()" class="w-1/2 bg-emerald-600 text-white py-2.5 rounded-xl text-xs font-bold shadow-md hover:bg-emerald-700">Setuju & Lanjutkan Pendaftaran</button>
-    </div>
-</section>
+                <!-- AREA TANDA TANGAN DIGITAL -->
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-gray-700 block text-center">✍️ Tanda Tangan Digital Mitra Toko (Pemilik)</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-2 bg-gray-50 flex flex-col items-center">
+                        <canvas id="seller-sig-canvas" width="320" height="130" class="bg-white border rounded cursor-crosshair touch-none"></canvas>
+                        <div class="flex justify-between w-full mt-2 px-2">
+                            <span id="sig-status-text" class="text-[10px] text-gray-500 font-semibold">Belum ditandatangani</span>
+                            <button type="button" onclick="clearSellerSignature()" class="text-red-500 text-xs font-bold px-2 py-0.5 bg-red-50 rounded border border-red-200">Hapus / Ulang</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOMBOL AKSI PROPOSAL -->
+                <div class="flex space-x-2 pt-2">
+                    <button type="button" onclick="cancelProposal()" class="w-1/2 bg-gray-300 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Batal</button>
+                    <button type="button" onclick="agreeProposalAndProceed()" class="w-1/2 bg-emerald-600 text-white py-2.5 rounded-xl text-xs font-bold shadow-md hover:bg-emerald-700">Setuju & Lanjutkan Pendaftaran</button>
+                </div>
+            </section>
 
             <!-- HALAMAN 1.2: FORM PENDAFTARAN / LOGIN -->
             <div id="dynamic-auth-form" class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md hidden space-y-4">
@@ -145,7 +156,6 @@
                         <label class="text-xs font-semibold text-gray-600">Alamat Lengkap / Wilayah (Cth: Rajeg, Tangerang)</label>
                         <textarea id="auth-address" placeholder="Cth: Jl. Raya Rajeg No.10, Tangerang" class="w-full p-2 border rounded-lg text-sm"></textarea>
                     </div>
-                    <!-- INPUT KODE REFERENSI SALES (OPSIONAL) -->
                     <div id="field-ref-code" class="hidden">
                         <label class="text-xs font-semibold text-gray-600">Kode Referensi Sales (Opsional)</label>
                         <input type="text" id="auth-ref-code" placeholder="Cth: ROJAK88 (Kosongkan jika tidak ada)" class="w-full p-2 border rounded-lg text-sm font-semibold text-purple-700 uppercase">
@@ -275,9 +285,11 @@
                 <h4 class="font-bold text-emerald-700">📜 Dokumen Kesepakatan Mitra (Sah - 3 Pihak)</h4>
                 <p class="text-gray-500">Kesepakatan sistem 100% utuh tanpa potongan harga dasar.</p>
                 <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t text-center">
-                    <div class="border p-2 rounded bg-gray-50">
-                        <p class="font-bold text-[10px] text-gray-600">Pihak Admin (Abdul Rojak)</p>
-                        <p class="text-emerald-700 font-semibold text-[10px] mt-1">✓ Terverifikasi</p>
+                    <div class="border p-2 rounded bg-gray-50 flex flex-col items-center">
+                        <p class="font-bold text-[10px] text-gray-600 mb-1">Pihak Admin (Abdul Rojak)</p>
+                        <div id="display-admin-signature-box">
+                            <p class="text-emerald-700 font-semibold text-[10px]">✓ Terverifikasi</p>
+                        </div>
                     </div>
                     <div class="border p-2 rounded bg-gray-50">
                         <p class="font-bold text-[10px] text-gray-600">Sales Pendamping</p>
@@ -349,77 +361,48 @@
                     <input type="text" id="admin-setting-pass" placeholder="Kata Sandi Baru Admin" class="w-full p-2 border rounded-lg text-sm">
                 </div>
 
+                <!-- KELOLA SALES UTAMA & SANDI AKSES AWAL DI PANEL ADMIN -->
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-purple-700">👔 Pendaftaran Sales Utama & Sandi Akses</label>
+                    <div class="space-y-2 bg-purple-50 p-3 border border-purple-200 rounded-lg">
+                        <input type="text" id="admin-new-sales-name" placeholder="Nama Lengkap Sales Utama" class="w-full p-2 border rounded-lg text-xs">
+                        <input type="text" id="admin-new-sales-wa" placeholder="No. WhatsApp Sales (ID Utama)" class="w-full p-2 border rounded-lg text-xs">
+                        <input type="text" id="admin-new-sales-pass" placeholder="Kata Sandi Awal Sales" class="w-full p-2 border rounded-lg text-xs">
+                        <input type="text" id="admin-new-sales-code" placeholder="Kode Unik Sales (Cth: ROJAK88)" class="w-full p-2 border rounded-lg text-xs font-semibold text-purple-700 uppercase">
+                        <button type="button" onclick="adminRegisterSales()" class="w-full bg-purple-600 text-white py-1.5 rounded-lg text-xs font-semibold">Daftarkan Sales Utama</button>
+                    </div>
+                </div>
 
-                <!-- KELOLA KATEGORI ETALASE PRODUK DI PANEL ADMIN (DENGAN UPLOAD IKON) -->
-<div class="pt-2 border-t space-y-2">
-    <label class="text-xs font-bold text-emerald-700">🏷️ Kelola Kategori Etalase Produk & Ikon</label>
-    <div class="space-y-2 bg-gray-50 p-2.5 border rounded-lg">
-        <input type="text" id="new-category-name" placeholder="Nama Kategori Baru (Cth: Tas Spunbond)..." class="w-full p-2 border rounded-lg text-xs">
-        <div>
-            <span class="text-[10px] text-gray-500 font-semibold">Upload Gambar / Ikon Kategori (Opsional):</span>
-            <input type="file" id="new-category-icon-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
-        </div>
-        <button type="button" onclick="addNewCategory()" class="w-full bg-emerald-600 text-white py-1.5 rounded-lg text-xs font-semibold">Tambah Kategori Baru</button>
-    </div>
-    
-    <div id="admin-category-list" class="space-y-1.5 text-xs max-h-40 overflow-y-auto bg-white p-2 border rounded-lg">
-        <!-- Daftar kategori aktif akan muncul di sini -->
-    </div>
-</div>
+                <!-- KELOLA TANDA TANGAN DIGITAL ADMIN UNTUK PROPOSAL -->
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">✍️ Tanda Tangan Digital Resmi Admin / Platform</label>
+                    <p class="text-[11px] text-gray-500">Tanda tangan ini akan otomatis tersemat sah dalam dokumen/proposal kerja sama dengan Mitra Toko & Sales.</p>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-2 bg-gray-50 flex flex-col items-center">
+                        <canvas id="admin-sig-canvas" width="300" height="110" class="bg-white border rounded cursor-crosshair touch-none"></canvas>
+                        <div class="flex justify-between w-full mt-2 px-2">
+                            <span id="admin-sig-status" class="text-[10px] text-gray-500 font-semibold">Belum ada tanda tangan</span>
+                            <button type="button" onclick="clearAdminSignature()" class="text-red-500 text-xs font-bold px-2 py-0.5 bg-red-50 rounded border border-red-200">Hapus / Ulang</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KELOLA KATEGORI ETALASE PRODUK DI PANEL ADMIN -->
+                <div class="pt-2 border-t space-y-2">
+                    <label class="text-xs font-bold text-emerald-700">🏷️ Kelola Kategori Etalase Produk & Ikon</label>
+                    <div class="space-y-2 bg-gray-50 p-2.5 border rounded-lg">
+                        <input type="text" id="new-category-name" placeholder="Nama Kategori Baru..." class="w-full p-2 border rounded-lg text-xs">
+                        <div>
+                            <span class="text-[10px] text-gray-500 font-semibold">Upload Gambar / Ikon Kategori (Opsional):</span>
+                            <input type="file" id="new-category-icon-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-white">
+                        </div>
+                        <button type="button" onclick="addNewCategory()" class="w-full bg-emerald-600 text-white py-1.5 rounded-lg text-xs font-semibold">Tambah Kategori Baru</button>
+                    </div>
+                    <div id="admin-category-list" class="space-y-1.5 text-xs max-h-40 overflow-y-auto bg-white p-2 border rounded-lg"></div>
+                </div>
                 
-                <!-- KELOMPOK PENGATURAN API EKSTERNAL -->
                 <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🔌 Konfigurasi API Eksternal & Pembayaran</label>
-                    
-                    <div class="space-y-1">
-                        <span class="text-[11px] text-gray-600 font-semibold">API Key Shipping Cost (RajaOngkir):</span>
-                        <input type="text" id="admin-setting-rajaongkir-key" class="w-full p-2 border rounded-lg text-xs font-mono" placeholder="Tempel API Key RajaOngkir...">
-                    </div>
-
-                    <div class="space-y-1 mt-2">
-                        <span class="text-[11px] text-gray-600 font-semibold">Payment Gateway API Key (Cth: Xendit / Midtrans):</span>
-                        <input type="text" id="admin-setting-payment-key" class="w-full p-2 border rounded-lg text-xs font-mono" placeholder="Tempel API Key Payment Gateway...">
-                    </div>
-
-                    <div class="space-y-1 mt-2">
-                        <span class="text-[11px] text-gray-600 font-semibold">QRISly API Key (Generate QRIS Otomatis):</span>
-                        <input type="text" id="admin-setting-qrisly-key" class="w-full p-2 border rounded-lg text-xs font-mono" placeholder="Tempel API Key QRISly...">
-                    </div>
-                </div>
-
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-purple-700">💰 Rekap Global Komisi Masing-Masing Sales & Kirim WA</label>
+                    <label class="text-xs font-bold text-purple-700">💰 Rekap Global Komisi Masing-Masing Sales</label>
                     <div id="admin-global-sales-recap" class="space-y-2 text-xs max-h-60 overflow-y-auto bg-gray-50 p-2 border rounded mt-1"></div>
-                </div>
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🎵 Pengaturan URL Ringtone / Suara Notifikasi</label>
-                    <div class="space-y-1">
-                        <span class="text-[11px] text-gray-600 font-semibold">Ringtone Penjual (Order Masuk):</span>
-                        <input type="text" id="admin-setting-seller-audio" class="w-full p-2 border rounded-lg text-xs" placeholder="URL Audio MP3...">
-                    </div>
-                    <div class="space-y-1 mt-1">
-                        <span class="text-[11px] text-gray-600 font-semibold">Ringtone Pembeli (Sukses Checkout):</span>
-                        <input type="text" id="admin-setting-buyer-audio" class="w-full p-2 border rounded-lg text-xs" placeholder="URL Audio MP3...">
-                    </div>
-                </div>
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">💰 Pengaturan Markup & Diskon Platform</label>
-                    <div class="space-y-1">
-                        <span class="text-[11px] text-gray-600 font-semibold">Markup Profit Per Produk (Rp):</span>
-                        <input type="number" id="admin-setting-markup" class="w-full p-2 border rounded-lg text-sm">
-                    </div>
-                    <div class="space-y-1 mt-1">
-                        <span class="text-[11px] text-gray-600 font-semibold">Subsidi Diskon Platform (%):</span>
-                        <input type="number" id="admin-setting-discount" class="w-full p-2 border rounded-lg text-sm">
-                    </div>
-                </div>
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">📥 Validasi Bukti Transfer Setoran COD</label>
-                    <div id="admin-cod-proof-list" class="space-y-2 text-xs max-h-60 overflow-y-auto bg-gray-50 p-2 border rounded"></div>
-                </div>
-                <div class="pt-2 border-t space-y-2">
-                    <label class="text-xs font-bold text-emerald-700">🖼️ Upload Logo Judul Merek</label>
-                    <input type="file" id="admin-marketplace-logo-file" accept="image/*" class="w-full p-1 border rounded text-xs mt-1 bg-transparent">
                 </div>
                 <button onclick="saveAdminSettings()" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-sm mt-2">Simpan Semua Pengaturan</button>
             </div>
