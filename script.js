@@ -1336,8 +1336,7 @@ function clearSellerSignature() {
 }
 
 
-
-function clearSellerSignature() {
+ function clearSellerSignature() {
     const canvas = document.getElementById('seller-sig-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -1421,8 +1420,4 @@ function adminRegisterSales() {
     renderAdminGlobalRecap();
 }
 
-
-
-    
- 
 
