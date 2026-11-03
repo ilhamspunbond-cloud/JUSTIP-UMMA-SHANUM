@@ -1336,6 +1336,22 @@ function clearSellerSignature() {
 }
 
 
+
+function clearSellerSignature() {
+    const canvas = document.getElementById('seller-sig-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    setupSignaturePad('seller-sig-canvas', 'sig-status-text');
+    
+    const statusText = document.getElementById('sig-status-text');
+    if (statusText) {
+        statusText.innerText = "Belum ditandatangani";
+        statusText.className = "text-[10px] text-gray-500 font-semibold";
+    }
+}
+
 // Jalankan fungsi saat halaman dimuat
 window.addEventListener('DOMContentLoaded', () => {
     setupSignaturePad('admin-sig-canvas', 'admin-sig-status');
@@ -1404,3 +1420,9 @@ function adminRegisterSales() {
     // Refresh tampilan rekap global di admin
     renderAdminGlobalRecap();
 }
+
+
+
+    
+ 
+
