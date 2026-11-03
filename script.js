@@ -1242,15 +1242,22 @@ function sendWelcomeWhatsAppNotification(newUser) {
     }
 }
 
-       
+    // Inisialisasi Tanda Tangan Global (Bisa untuk Toko & Admin Sekaligus)
+function initAllSignaturePads() {
+    // 1. Canvas Tanda Tangan Mitra Toko
+    setupSignaturePad('seller-sig-canvas', 'sig-status-text');
+    
+    // 2. Canvas Tanda Tangan Admin
+    setupSignaturePad('admin-sig-canvas', 'admin-sig-status');
+}
 
-// ⭐ Perbaikan Fungsi Tanda Tangan agar Bisa Dikunci Setelah Ditandatangani
+// Fungsi Utama: Bebas Coret-coret Dulu, Dikunci Manual
 function setupSignaturePad(canvasId, statusId) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let isDrawing = false;
-    let isLocked = false; // 🔒 Status penguncian kanvas
+    let isLocked = false;
 
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 2;
@@ -1264,35 +1271,41 @@ function setupSignaturePad(canvasId, statusId) {
     }
 
     function startDrawing(e) {
-        if (isLocked) return; // 🚫 Kalau sudah dikunci, abaikan sentuhan/coretan
+        if (isLocked) return;
         isDrawing = true;
         const pos = getPos(e);
         ctx.beginPath();
         ctx.moveTo(pos.x, pos.y);
-        e.preventDefault();
+        if(e.cancelable) e.preventDefault();
     }
 
     function draw(e) {
-        if (!isDrawing || isLocked) return; // 🚫 Terkunci
+        if (!isDrawing || isLocked) return;
         const pos = getPos(e);
         ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
-        e.preventDefault();
+        if(e.cancelable) e.preventDefault();
     }
 
     function stopDrawing() {
         if (!isDrawing) return;
         isDrawing = false;
-        isLocked = true; // 🔒 Otomatis KUNCI kanvas setelah lepas jari/mouse!
+        
+        // Simpan data gambar ke variabel global sesuai canvas-nya
+        if (canvasId === 'seller-sig-canvas') {
+            signatureDataUrl = canvas.toDataURL();
+        } else if (canvasId === 'admin-sig-canvas') {
+            adminSignatureDataUrl = canvas.toDataURL();
+        }
 
         const statusText = document.getElementById(statusId);
         if (statusText) {
-            statusText.innerText = "✓ Tanda Tangan Terkunci & Sah";
+            statusText.innerText = "✓ Tanda tangan tersimpan (bisa diedit ulang)";
             statusText.className = "text-[10px] text-emerald-600 font-semibold";
         }
     }
 
-    // Event Listener Mouse & Touch
+    // Event Listener Mouse & Touch (Support HP & Laptop)
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing);
@@ -1303,37 +1316,6 @@ function setupSignaturePad(canvasId, statusId) {
     canvas.addEventListener('touchend', stopDrawing);
 }
 
-// ⭐ Fungsi Hapus / Reset (Membuka Kunci Kembali)
-function clearAdminSignature() {
-    const canvas = document.getElementById('admin-sig-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Muat ulang setup supaya kuncinya terbuka lagi pas dihapus
-    setupSignaturePad('admin-sig-canvas', 'admin-sig-status');
-    
-    const statusText = document.getElementById('admin-sig-status');
-    if (statusText) {
-        statusText.innerText = "Belum ada tanda tangan";
-        statusText.className = "text-[10px] text-gray-500 font-semibold";
-    }
-}
-
-function clearSellerSignature() {
-    const canvas = document.getElementById('seller-sig-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    setupSignaturePad('seller-sig-canvas', 'sig-status-text');
-    
-    const statusText = document.getElementById('sig-status-text');
-    if (statusText) {
-        statusText.innerText = "Belum ditandatangani";
-        statusText.className = "text-[10px] text-gray-500 font-semibold";
-    }
-}
 
 
 // Jalankan fungsi saat halaman dimuat
@@ -1404,3 +1386,9 @@ function adminRegisterSales() {
     // Refresh tampilan rekap global di admin
     renderAdminGlobalRecap();
 }
+
+// ⭐ Tambahan Fungsi Pendaftaran Sales yang Kurang
+function showSalesRegistration() {
+    showAuthMode('sales');
+}
+
